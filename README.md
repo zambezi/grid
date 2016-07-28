@@ -1,8 +1,7 @@
 Zambezi Grid
 ============
 
-
-The Platform Team Grid Component is a [D3](http://d3js.org) component for drawing financial grids.
+The Zambezi Grid Component is a [D3](http://d3js.org) component for drawing financial grids.
 
 Installation
 ------------
