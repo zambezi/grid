@@ -1,7 +1,7 @@
 Zambezi Grid
 ============
 
-The Zambezi Grid Component is a [D3](http://d3js.org) component for drawing financial grids.
+The Zambezi Grid Component is a [D3](http://d3js.org) component for drawing HTML data grids.
 
 Installation
 ------------
