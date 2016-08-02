@@ -9,5 +9,7 @@ export default {
   external: [ ],
   sourceMap: true,
   plugins: [ babel(babelrc()) ],
-  globals: { }
+  globals: {
+    '@zambezi/d3-utils': 'd3Utils'
+  }
 }
