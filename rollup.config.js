@@ -6,7 +6,7 @@ export default {
   dest: 'dist/grid.js',
   format: 'umd',
   moduleName: 'grid',
-  external: [ ],
+  external: [ 'd3-selection', '@zambezi/fun', 'underscore', '@zambezi/d3-utils' ],
   sourceMap: true,
   plugins: [ babel(babelrc()) ],
   globals: {
