@@ -7,7 +7,16 @@
 <script src="../dist/grid.js"></script>
 <script>
   var table = grid.createGrid()
-    , target = d3.select('.grid-target')
 
-  target.call(table)
+   d3.select('.grid-target')
+      .datum(
+        [
+          { a: 1, b: 2 }
+        , { a: 3, b: 4 }
+        , { a: 5, b: 6 }
+        , { a: 7, b: 8 }
+        ]
+      )
+      .call(table)
+
 </script>
