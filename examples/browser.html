@@ -1,13 +1,13 @@
 <!doctype html>
 <h2>grid example</h2>
-<div id="target"></div>
+<div class="grid-target"></div>
 <script src="../node_modules/underscore/underscore.js"></script>
 <script src="../node_modules/d3-selection/build/d3-selection.js"></script>
 <script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
 <script src="../dist/grid.js"></script>
 <script>
   var table = grid.createGrid()
-    , target = d3.select('#target')
+    , target = d3.select('.grid-target')
 
   target.call(table)
 </script>
