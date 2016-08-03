@@ -6,6 +6,7 @@ import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, call, each } from '@zambezi/d3-utils'
 import { createProcessRowData } from './process-row-data'
+import { createMarkRowIndices } from './mark-row-indices'
 
 export function createGrid() {
 
@@ -14,6 +15,7 @@ export function createGrid() {
       , processRowData = createProcessRowData()
       , grid = compose(
           each(console.log.bind(console, 'grid drawn'))
+        , call(createMarkRowIndices())
         , call(processRowData)
         , call(setupTemplate)
         , each(calculateColumnLayout)
