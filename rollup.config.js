@@ -10,6 +10,8 @@ export default {
   sourceMap: true,
   plugins: [ babel(babelrc()) ],
   globals: {
-    '@zambezi/d3-utils': 'd3Utils'
+    '@zambezi/d3-utils': 'd3Utils',
+    'underscore': '_',
+    'd3-selection': 'd3'
   }
 }
