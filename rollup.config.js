@@ -11,6 +11,7 @@ export default {
   plugins: [ babel(babelrc()) ],
   globals: {
     '@zambezi/d3-utils': 'd3Utils',
+    '@zambezi/fun': 'fun',
     'underscore': '_',
     'd3-selection': 'd3'
   }
