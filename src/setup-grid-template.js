@@ -1,4 +1,4 @@
-import defaultTemplate from './basic-grid-template'
+import { defaultTemplate } from './basic-grid-template'
 import { appendIfMissing } from '@zambezi/d3-utils'
 import { select } from 'd3-selection'
 
