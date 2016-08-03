@@ -13,6 +13,8 @@ export function createGrid() {
         , each(ensureData)
         , each(ensureId)
         )
+      , api = rebind()
+            .from(setupTemplate, 'template')
 
-  return grid
+  return api(grid)
 }
