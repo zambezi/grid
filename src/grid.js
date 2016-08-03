@@ -1,10 +1,11 @@
-import { rebind } from '@zambezi/d3-utils'
+import { rebind, call } from '@zambezi/d3-utils'
 import { createSetupGridTemplate } from './setup-grid-template'
+import { compose } from 'underscore'
 
 export function createGrid() {
-  function grid(s) {
-    s.text('this is the grid—!').call(createSetupGridTemplate())
-  }
+
+  const setupTemplate = createSetupGridTemplate()
+      , grid = compose(call(setupTemplate))
 
   return grid
 }
