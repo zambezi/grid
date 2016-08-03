@@ -5,13 +5,16 @@ import { createSetupGridTemplate } from './setup-grid-template'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, call, each } from '@zambezi/d3-utils'
+import { createProcessRowData } from './process-row-data'
 
 export function createGrid() {
 
   const setupTemplate = createSetupGridTemplate()
       , ensureColumns = createEnsureColumns()
+      , processRowData = createProcessRowData()
       , grid = compose(
           each(console.log.bind(console, 'grid drawn'))
+        , call(processRowData)
         , call(setupTemplate)
         , each(calculateColumnLayout)
         , call(ensureColumns)
@@ -21,6 +24,7 @@ export function createGrid() {
       , api = rebind()
             .from(setupTemplate, 'template')
             .from(ensureColumns, 'columns')
+            .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
 
   return api(grid)
 }
