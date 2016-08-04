@@ -32,6 +32,8 @@ export function createProcessSizeAndClipping() {
       , availableFreeWidth
       , root = select(this)
 
+    if (!rowHeight) rowHeight = produceRowHeight()
+
     root.on('grid-scroll.size-and-clipping', onGridScroll)
 
     measureBlocks()
@@ -151,6 +153,17 @@ export function createProcessSizeAndClipping() {
 
     function updateScroll() {
       d.scroll = clone(scroll)
+    }
+
+    function produceRowHeight() {
+      const body = root.select('.zambezi-grid-body')
+          , fakeSection = body.append('ul').classed('body-section transient', true)
+          , fakeRow = fakeSection.append('li').classed('zambezi-grid-row', true)
+          , rowStyle = window.getComputedStyle(fakeRow.node(), null)
+          , rowHeight = parseFloat(rowStyle.height)
+
+      fakeSection.remove()
+      return rowHeight
     }
 
     function updateBoundsClipping() {
