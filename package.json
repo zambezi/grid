@@ -27,11 +27,12 @@
     "babel-preset-es2015-rollup": "^1.1.1",
     "babel-register": "^6.9.0",
     "babelrc-rollup": "^2.0.0",
-    "mocha": "^2.5.3",
     "mkdirp": "^0.5.1",
+    "mocha": "^2.5.3",
     "rimraf": "^2.5.3",
     "rollup": "^0.26.3",
-    "rollup-plugin-babel": "^2.3.9"
+    "rollup-plugin-babel": "^2.3.9",
+    "rollup-plugin-postcss": "^0.1.1"
   },
   "dependencies": {
     "d3-selection": "^1.0.0",
