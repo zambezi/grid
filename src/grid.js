@@ -8,6 +8,8 @@ import { rebind, call, each } from '@zambezi/d3-utils'
 import { createProcessRowData } from './process-row-data'
 import { createMarkRowIndices } from './mark-row-indices'
 
+import './grid.css'
+
 export function createGrid() {
 
   const setupTemplate = createSetupGridTemplate()
