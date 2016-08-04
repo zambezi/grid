@@ -1,5 +1,6 @@
 import babel from 'rollup-plugin-babel'
 import babelrc from 'babelrc-rollup'
+import postcss from 'rollup-plugin-postcss'
 
 export default {
   entry: 'src/index.js',
@@ -8,7 +9,15 @@ export default {
   moduleName: 'grid',
   external: [ 'd3-selection', '@zambezi/fun', 'underscore', '@zambezi/d3-utils' ],
   sourceMap: true,
-  plugins: [ babel(babelrc()) ],
+  plugins: [
+    postcss(
+      {
+        plugins: [ ]
+      , extensions: ['.css', '.sss']
+      }
+    )
+  , babel(babelrc())
+  ],
   globals: {
     '@zambezi/d3-utils': 'd3Utils',
     '@zambezi/fun': 'fun',
