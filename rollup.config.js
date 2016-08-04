@@ -7,7 +7,13 @@ export default {
   dest: 'dist/grid.js',
   format: 'umd',
   moduleName: 'grid',
-  external: [ 'd3-selection', '@zambezi/fun', 'underscore', '@zambezi/d3-utils' ],
+  external: [ 
+    '@zambezi/d3-utils' 
+  , '@zambezi/fun'
+  , 'd3-format'
+  , 'd3-selection'
+  , 'underscore'
+  ],
   sourceMap: true,
   plugins: [
     postcss(
@@ -22,6 +28,7 @@ export default {
     '@zambezi/d3-utils': 'd3Utils',
     '@zambezi/fun': 'fun',
     'underscore': '_',
-    'd3-selection': 'd3'
+    'd3-selection': 'd3',
+    'd3-format': 'd3'
   }
 }
