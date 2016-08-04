@@ -11,6 +11,14 @@
 <script>
 
   var table = grid.createGrid()
+        .columns(
+          [
+            { key: 'c', locked: 'left', width: 50  }
+          , { key: 'a', width: 500  }
+          , { key: 'b', width: 500  }
+          , { key: 'd', width: 70, locked: 'right'  }
+          ]
+        )
 
    d3.select('.grid-target')
       .style('height', '500px')
