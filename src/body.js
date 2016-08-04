@@ -46,7 +46,7 @@ export function createBody() {
   function bodyEach(d, i) {
     const bundle = d
         , root = select(this)
-        , target = root.select('.platform-grid-body')
+        , target = root.select('.zambezi-grid-body')
         , id = root.attr('id')
         , blockData = bodyBlockLayout(bundle)
         , blocksUpdate = target.selectAll('.body-section')
@@ -75,10 +75,7 @@ export function createBody() {
 
     function updateBlocksAndCells() {
       blocks.each(updateBlockLayout)
-          .call(
-            cells.sheet(sheet).gridId(id)
-              // .dispatcher(bundle.dispatcher)
-          )
+          .call(cells.sheet(sheet).gridId(id))
     }
 
     function dispatchLinesChange() {
@@ -178,6 +175,4 @@ export function createBody() {
       select(this).classed(d.className, true)
     }
   }
-
-
 }
