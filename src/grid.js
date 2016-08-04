@@ -1,5 +1,5 @@
 import { calculateColumnLayout } from './calculate-column-layout'
-import { compose } from 'underscore'
+import { compose, wrap } from 'underscore'
 import { createBody } from './body'
 import { createEnsureColumns } from './ensure-columns'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
@@ -11,7 +11,7 @@ import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
-import { rebind, call, each } from '@zambezi/d3-utils'
+import { rebind, call, each, redraw, throttle } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -23,7 +23,7 @@ export function createGrid() {
       , processSizeAndClipping = createProcessSizeAndClipping()
       , body = createBody()
       , grid = compose(
-          each(console.log.bind(console, 'grid drawn'))
+          each(() => console.groupEnd('draw'))
         , call(createScrollers())
         , call(body)
         , each(createLayOutBodyAndOverlays())
@@ -36,6 +36,7 @@ export function createGrid() {
         , call(ensureColumns)
         , each(ensureData)
         , each(ensureId)
+        , each(() => console.group('draw'))
         )
       , api = rebind()
             .from(setupTemplate, 'template')
@@ -43,5 +44,5 @@ export function createGrid() {
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
 
-  return api(grid)
+  return api(redraw(throttle(grid)))
 }
