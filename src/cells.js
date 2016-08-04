@@ -52,7 +52,7 @@ export function createCells() {
 
   return cells
 
-  function cellsEach(d, i) {
+  function cellsEach(cellBlock, i) {
     const block = this
         , list = select(this)
         , visibleCellsHash = cellBlock.visibleCellsHash
@@ -92,7 +92,7 @@ export function createCells() {
 
         , cellsExit = cellsUpdate.exit()
               .remove()
-              .each(dispatcher['cell-exit'])
+              // .each(dispatcher['cell-exit'])
 
         , cellsEnter = cellsUpdate.enter()
             .select(append)
@@ -132,7 +132,7 @@ export function createCells() {
   function runColumnComponents(d, i, j) {
     const cell = this
     if (!d.column.components) return
-    d.dispatcher = dispatcher
+    // d.dispatcher = dispatcher
     d.column.components.forEach(runColumnComponent)
     function runColumnComponent(component) {
       component.call(cell, d, i, j)
@@ -152,6 +152,10 @@ export function createCells() {
 
     sheet(selector, { top: top(d) })
   }
+}
+
+function columnClass(d, i) {
+  select(this).classed('c-' + d.column.id , true)
 }
 
 function useClass(rowClass) {

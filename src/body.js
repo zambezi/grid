@@ -119,9 +119,10 @@ export function createBody() {
           , minWidth = px(Math.max(d.actualWidth || 0, measuredWidth))
           , forceSizeTarget = select(
               (!isUndefined(d.scrollTop) || !isUndefined(d.scrollLeft))
-            && this)
+            && this
+            )
             .call(
-              ensure.targetHeight(measuredHeight)
+              ensureSize.targetHeight(measuredHeight)
                   .targetWidth(measuredWidth)
             )
 
