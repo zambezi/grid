@@ -13,14 +13,11 @@
 
    d3.select('.grid-target')
       .style('height', '500px')
-      .datum(
-        [
-          { a: 1, b: 2 }
-        , { a: 3, b: 4 }
-        , { a: 5, b: 6 }
-        , { a: 7, b: 8 }
-        ]
-      )
+      .datum(_.range(1, 5000).map(toRow))
       .call(table)
+
+  function toRow(d) {
+    return { a: d, b: d * 11, c: d * 111, d: d * 1111 }
+  }
 
 </script>
