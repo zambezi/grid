@@ -1,0 +1,23 @@
+.zambezi-grid-body-overlay,
+.zambezi-grid-headers-overlay,
+.zambezi-grid-overlay {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+  top: 0;
+  left: 0;
+  width: 0;
+  bottom: 0;
+}
+
+.is-cropped-h .zambezi-grid-body-overlay,
+.is-cropped-h .zambezi-grid-headers-overlay,
+.is-cropped-h .zambezi-grid-overlay {
+  bottom: 14px;
+}
+
+.is-ie.is-cropped-h .zambezi-grid-body-overlay,
+.is-ie.is-cropped-h .zambezi-grid-headers-overlay,
+.is-ie.is-cropped-h .zambezi-grid-overlay {
+  bottom: 16px;
+}
