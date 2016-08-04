@@ -7,6 +7,7 @@ import { createMarkRowIndices } from './mark-row-indices'
 import { createMeasureGridArea }  from './measure-grid-area'
 import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
+import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
@@ -23,6 +24,7 @@ export function createGrid() {
       , body = createBody()
       , grid = compose(
           each(console.log.bind(console, 'grid drawn'))
+        , call(createScrollers())
         , call(body)
         , each(createLayOutBodyAndOverlays())
         , call(processSizeAndClipping)
