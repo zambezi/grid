@@ -2,7 +2,7 @@ import { appendFromTemplate, selectionChanged } from '@zambezi/d3-utils'
 import { property, batch, identity } from '@zambezi/fun'
 import { select } from 'd3-selection'
 
-const appendCell = appendFromTemplate(
+const appendDefaultCell = appendFromTemplate(
         '<span class="zambezi-grid-cell">'
       + '<span class="formatted-text"></span>'
       + '</span>'
@@ -52,10 +52,10 @@ export function createCells() {
 
   return cells
 
-  function cellsEach(cellBlock, i) {
+  function cellsEach(d, i) {
     const block = this
         , list = select(this)
-        , visibleCellsHash = cellBlock.visibleCellsHash
+        , visibleCellsHash = d.visibleCellsHash
         , columnComponentsAndNotifyUpdate = batch(
             runColumnComponents
           // , dispatcher['cell-update']
@@ -66,7 +66,7 @@ export function createCells() {
           )
 
         , rows = list.selectAll('.zambezi-grid-row')
-            .data(cellBlock, id)
+            .data(d, id)
 
         , rowsExit = rows.exit()
               .remove()
@@ -76,10 +76,11 @@ export function createCells() {
             .select(appendRow)
               // .each(dispatcher['row-enter'])
 
-        , updatedRows = rows.select(rowIndexChanged).each(updateRow)
-
         , rowChanged = rows
               // .each(dispatcher['row-update'])
+            .merge(rowsEnter)
+            .select(rowIndexChanged)
+              .each(updateRow)
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
@@ -87,7 +88,7 @@ export function createCells() {
             )
               // .each(dispatcher['row-changed'])
 
-        , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
+    const cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
             .data(identity, id)
 
         , cellsExit = cellsUpdate.exit()
