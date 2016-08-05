@@ -14,21 +14,24 @@
   var table = grid.createGrid()
           .columns(
             [
-              { key: 'name' }
+              { key: 'name', locked: 'left', width: 200 }
             , { key: 'email' }
-            , { key: 'address.city' }
-            , { key: 'address.ukCountry' }
-            , { key: 'address.ukCounty' }
+            , { key: 'phone' }
+            , { key: 'username' }
+            , { 
+                label: 'address'
+              , children: [
+                  { label: 'city', key: 'address.city', width: 300 }
+                , { label: 'country', key: 'address.ukCountry' }
+                , { label: 'county', key: 'address.ukCounty' }
+                ]
+              }
             ]
           )
 
    d3.select('.grid-target')
       .style('height', '500px')
-      .datum(_.range(1, 5000).map(faker.Helpers.createCard))
+      .datum(_.range(1, 2000).map(faker.Helpers.createCard))
       .call(table)
-
-  function toRow(d) {
-    return { a: d, b: d * 11, c: d * 111, d: d * 1111 }
-  }
 
 </script>
