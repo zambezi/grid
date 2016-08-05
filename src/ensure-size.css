@@ -1,0 +1,9 @@
+.zambezi-scroll-anchor {
+  display: block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  visibility: hidden; 
+  background-color: red;
+  pointer-events: none;
+}

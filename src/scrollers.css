@@ -1,0 +1,47 @@
+.v-scroller {
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 14px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.is-ie .v-scroller {
+  width: 18px;
+}
+
+.is-cropped-v .v-scroller {
+  display: block;
+}
+
+.h-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 14px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+}
+
+.is-ie .h-scroller {
+  height: 18px;
+}
+
+.is-cropped-h .h-scroller {
+  display: block;
+}
+
+.v-scroller .scroller-content {
+  width: 1px;
+  height: 2000px;
+}
+
+.h-scroller .scroller-content {
+  width: 2000px;
+  height: 1px;
+}

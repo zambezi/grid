@@ -1,11 +1,43 @@
 <!doctype html>
 <h2>grid example</h2>
-<table id="target"></table>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
 <script src="../node_modules/d3-selection/build/d3-selection.js"></script>
+<script src="../node_modules/d3-format/build/d3-format.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
 <script src="../dist/grid.js"></script>
 <script>
-  var table = grid.createGrid()
-    , target = d3.select('#target')
 
-  target.call(table)
+  var table = grid.createGrid()
+          .columns(
+            [
+              { key: 'name', locked: 'left', width: 200 }
+            , { key: 'email' }
+            , { key: 'phone' }
+            , { key: 'username' }
+            , { 
+                label: 'address'
+              , children: [
+                  { label: 'city', key: 'address.city', width: 300 }
+                , { label: 'country', key: 'address.ukCountry' }
+                , { label: 'county', key: 'address.ukCounty' }
+                ]
+              }
+            ]
+          )
+    , rows = _.range(1, 2000).map(faker.Helpers.createCard)
+
+  rows[10].locked = 'top'
+  rows[11].locked = 'top'
+  rows[101].locked = 'bottom'
+  rows[102].locked = 'bottom'
+
+  d3.select('.grid-target')
+      .style('height', '500px')
+      .datum(rows)
+      .call(table)
+
 </script>

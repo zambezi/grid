@@ -1,0 +1,28 @@
+.zambezi-grid {
+  position: relative;
+  font-size: 11px;
+}
+
+.zambezi-grid * {
+  box-sizing: border-box;
+}
+
+.zambezi-grid ul,
+.zambezi-grid ol,
+.zambezi-grid p {
+  margin: 0;
+  padding: 0;
+}
+
+.zambezi-grid-stirrup {
+  position: absolute;
+}
+
+.zambezi-grid .hide {
+  display: none;
+}
+
+.zambezi-grid input,
+.zambezi-grid .btn {
+  height: 24px;
+}
