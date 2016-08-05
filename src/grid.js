@@ -12,7 +12,7 @@ import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
-import { rebind, call, each, redraw, throttle } from '@zambezi/d3-utils'
+import { rebind, call, each, redraw, createResize, throttle } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -22,6 +22,7 @@ export function createGrid() {
       , ensureColumns = createEnsureColumns()
       , processRowData = createProcessRowData()
       , processSizeAndClipping = createProcessSizeAndClipping()
+      , resize = createResize()
       , body = createBody()
       , grid = compose(
           each(() => console.groupEnd('draw'))
@@ -33,6 +34,7 @@ export function createGrid() {
         , call(createMeasureGridArea())
         , call(createMarkRowIndices())
         , call(processRowData)
+        , call(resize)
         , call(setupTemplate)
         , each(calculateColumnLayout)
         , call(ensureColumns)
@@ -41,10 +43,11 @@ export function createGrid() {
         , each(() => console.group('draw'))
         )
       , api = rebind()
-            .from(setupTemplate, 'template')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
+            .from(resize, 'wait:resizeWait')
+            .from(setupTemplate, 'template')
 
   return api(redraw(throttle(grid)))
 }

@@ -10,7 +10,8 @@ export function createMeasureGridArea() {
     , headersBounds
 
   function measureGridArea(s) {
-    s.each(measureGridAreaEach)
+    s.on('size-dirty.measure-grid-body', onSizeDirty)
+      .each(measureGridAreaEach)
   }
 
   return measureGridArea
