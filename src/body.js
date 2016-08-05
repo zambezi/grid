@@ -89,6 +89,13 @@ export function createBody() {
           .classed('is-scrolled-up', isScrolledBottom)
           .select(verticalScrollChanged.key(verticalScroll))
           .each(updateVerticalScroll)
+
+      blocks.classed('is-scrolled-left', isScrolledLeft)
+          .classed('is-scrolled-right' , isScrolledRight)
+          .select(
+            horizontalScrollChanged.key(horizontalScroll)
+          )
+          .each(updateHorizontalScroll)
     }
 
     function updateRowHeightStyles() {
