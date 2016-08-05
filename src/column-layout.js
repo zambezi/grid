@@ -8,6 +8,7 @@ const valueByKey = {}
 
 export function columnLayout(columns) {
   const result = validateAndSegregateColumns(columns)
+  columns.hasDoubleRowHeader = columns.some(visibleWithChildren)
   return result
 }
 
@@ -152,4 +153,9 @@ function clearTransientChildProperties(column) {
   delete column.parentColumn
   delete column.childIndex
   delete column.childTotal
+}
+
+function visibleWithChildren(column) {
+  if (column.hidden) return false
+  return column.children && column.children.some(d => !d.hidden)
 }
