@@ -47,23 +47,24 @@ export function createHeaders() {
         , blocksEnter = blocks.enter()
             .append('ul')
               .classed('zambezi-grid-header-block', true)
-        , cells = blocks
+        , blocksAll = blocks.merge(blocksEnter)
+        , cells = blocksAll
               .classed('is-horizontal-short', isHorizontalShort)
             .selectAll('.zambezi-grid-top-level-header')
             .data(cellData, cellId)
-        , cellsEnter = cells.enter().select(appendHeader)
+        , cellsEnter = cells.enter()
+            .select(appendHeader)
               .classed('zambezi-grid-top-level-header', true)
         , cellsExit = cells.exit().remove()
 
     scrollChanged.key(functor(layout.scroll.left))
 
-    blocks.merge(blocksEnter)
-      .call(updateBlock)
-
     cells.merge(cellsEnter)
       .select(columnCellsChanged)
         .call(drawNestedElements)
         .call(updateCells)
+
+    blocksAll.call(updateBlock)
   }
 
   function appendHeader(d, i) {
