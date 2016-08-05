@@ -9,7 +9,6 @@ const appendDefaultCell = appendFromTemplate(
       )
     , appendRow = appendFromTemplate('<li class="zambezi-grid-row"></li>')
     , changed = selectionChanged()
-    , rowIndexChanged = selectionChanged().key(property('index'))
     , firstLastChanged = selectionChanged().key(firstAndLast)
     , id = property('id')
     , isFirst = property('isFirst')
@@ -77,18 +76,17 @@ export function createCells() {
               // .each(dispatcher['row-enter'])
 
         , rowChanged = rows
-              // .each(dispatcher['row-update'])
             .merge(rowsEnter)
-            .select(rowIndexChanged)
-              .each(updateRow)
+              // .each(dispatcher['row-update'])
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
               )
             )
+              .each(updateRow)
               // .each(dispatcher['row-changed'])
 
-    const cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
+        , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
             .data(identity, id)
 
         , cellsExit = cellsUpdate.exit()
@@ -98,6 +96,7 @@ export function createCells() {
         , cellsEnter = cellsUpdate.enter()
             .select(append)
               .each(columnClassAndNotifyEnter)
+
         , cellsMerged = cellsUpdate.merge(cellsEnter)
 
     cellsMerged.select(firstLastChanged).each(updateFirstLast)
