@@ -3,6 +3,7 @@
 <div class="grid-target"></div>
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
 <script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
 <script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
 <script src="../node_modules/d3-selection/build/d3-selection.js"></script>
 <script src="../node_modules/d3-format/build/d3-format.js"></script>
@@ -11,18 +12,19 @@
 <script>
 
   var table = grid.createGrid()
-        .columns(
-          [
-            { key: 'c', locked: 'left', width: 50  }
-          , { key: 'a', width: 500  }
-          , { key: 'b', width: 500  }
-          , { key: 'd', width: 70, locked: 'right'  }
-          ]
-        )
+          .columns(
+            [
+              { key: 'name' }
+            , { key: 'email' }
+            , { key: 'address.city' }
+            , { key: 'address.ukCountry' }
+            , { key: 'address.ukCounty' }
+            ]
+          )
 
    d3.select('.grid-target')
       .style('height', '500px')
-      .datum(_.range(1, 5000).map(toRow))
+      .datum(_.range(1, 5000).map(faker.Helpers.createCard))
       .call(table)
 
   function toRow(d) {
