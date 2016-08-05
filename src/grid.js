@@ -2,6 +2,7 @@ import { calculateColumnLayout } from './calculate-column-layout'
 import { compose, wrap } from 'underscore'
 import { createBody } from './body'
 import { createEnsureColumns } from './ensure-columns'
+import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
 import { createMarkRowIndices } from './mark-row-indices'
 import { createMeasureGridArea }  from './measure-grid-area'
@@ -25,6 +26,7 @@ export function createGrid() {
       , grid = compose(
           each(() => console.groupEnd('draw'))
         , call(createScrollers())
+        , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
         , call(processSizeAndClipping)
