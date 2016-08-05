@@ -28,10 +28,16 @@
               }
             ]
           )
+    , rows = _.range(1, 2000).map(faker.Helpers.createCard)
 
-   d3.select('.grid-target')
+  rows[10].locked = 'top'
+  rows[11].locked = 'top'
+  rows[101].locked = 'bottom'
+  rows[102].locked = 'bottom'
+
+  d3.select('.grid-target')
       .style('height', '500px')
-      .datum(_.range(1, 2000).map(faker.Helpers.createCard))
+      .datum(rows)
       .call(table)
 
 </script>
