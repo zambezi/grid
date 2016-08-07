@@ -10,6 +10,7 @@ import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
 import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
+import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
@@ -25,9 +26,11 @@ export function createGrid() {
       , processSizeAndClipping = createProcessSizeAndClipping()
       , resize = createResize()
       , body = createBody()
+      , sortRowHeaders = createSortRowHeaders()
       , grid = compose(
           each(() => console.groupEnd('draw'))
         , call(createScrollers())
+        , call(sortRowHeaders)
         , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
@@ -49,6 +52,7 @@ export function createGrid() {
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
             .from(resize, 'wait:resizeWait')
+            .from(sortRowHeaders, 'sortableByDefault')
             .from(setupTemplate, 'template')
 
   return api(redraw(throttle(grid)))
