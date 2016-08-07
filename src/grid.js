@@ -10,6 +10,7 @@ import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
 import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
+import { createSortRows } from './sort-rows'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, call, each, redraw, createResize, throttle } from '@zambezi/d3-utils'
@@ -33,6 +34,7 @@ export function createGrid() {
         , call(processSizeAndClipping)
         , call(createMeasureGridArea())
         , call(createMarkRowIndices())
+        , call(createSortRows())
         , call(processRowData)
         , call(resize)
         , call(setupTemplate)

@@ -12,6 +12,7 @@ export default {
   , '@zambezi/fun'
   , 'd3-format'
   , 'd3-selection'
+  , 'd3-array'
   , 'underscore'
   ]
 , sourceMap: true
@@ -29,6 +30,7 @@ export default {
   , '@zambezi/fun': 'fun'
   , 'underscore': '_'
   , 'd3-selection': 'd3'
+  , 'd3-array': 'd3'
   , 'd3-format': 'd3'
   }
 }

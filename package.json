@@ -39,6 +39,7 @@
   "dependencies": {
     "@zambezi/d3-utils": "^3.0.0-2",
     "@zambezi/fun": "^2.0.0-1",
+    "d3-array": "^1.0.1",
     "d3-format": "^1.0.2",
     "d3-selection": "^1.0.0",
     "underscore": "^1.8.3"
