@@ -1,6 +1,7 @@
 import { calculateColumnLayout } from './calculate-column-layout'
 import { compose, wrap } from 'underscore'
 import { createBody } from './body'
+import { createColumnDrag } from './column-drag'
 import { createColumnSizers } from './column-sizers'
 import { createEnsureColumns } from './ensure-columns'
 import { createHeaders } from './headers'
@@ -25,6 +26,7 @@ export function createGrid() {
       , ensureColumns = createEnsureColumns()
       , processRowData = createProcessRowData()
       , processSizeAndClipping = createProcessSizeAndClipping()
+      , columnDrag = createColumnDrag()
       , resize = createResize()
       , columnSizers = createColumnSizers()
       , body = createBody()
@@ -34,6 +36,7 @@ export function createGrid() {
         , call(sortRowHeaders)
         , call(createScrollers())
         , call(columnSizers)
+        , call(columnDrag)
         , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
@@ -56,6 +59,7 @@ export function createGrid() {
             .from(processSizeAndClipping, 'scroll')
             .from(resize, 'wait:resizeWait')
             .from(sortRowHeaders, 'sortableByDefault')
+            .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(setupTemplate, 'template')
 
   return api(redraw(throttle(grid, 10)))

@@ -19,9 +19,13 @@
   border-top: 1px solid #0E1D33;
   width: 10px;
   top: 24px;
-  height: 25px;
   left: 0;
   list-style-type: none;
+  height: 25px;
+}
+
+.zambezi-grid-nested-headers,
+.zambezi-grid-nested-headers > .zambezi-grid-header {
   height: 25px;
 }
 
@@ -54,6 +58,11 @@
 {
   height: 50px;
 }
+
+.is-double-header .zambezi-grid-nested-headers > .zambezi-grid-header {
+  height: 25px;
+}
+
 
 .is-double-header .zambezi-grid-headers > .zambezi-grid-header {
   padding-top: 18px;
