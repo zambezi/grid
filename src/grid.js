@@ -1,6 +1,7 @@
 import { calculateColumnLayout } from './calculate-column-layout'
 import { compose, wrap } from 'underscore'
 import { createBody } from './body'
+import { createColumnSizers } from './column-sizers'
 import { createEnsureColumns } from './ensure-columns'
 import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
@@ -23,10 +24,12 @@ export function createGrid() {
       , processRowData = createProcessRowData()
       , processSizeAndClipping = createProcessSizeAndClipping()
       , resize = createResize()
+      , columnSizers = createColumnSizers()
       , body = createBody()
       , grid = compose(
           each(() => console.groupEnd('draw'))
         , call(createScrollers())
+        , call(columnSizers)
         , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
@@ -43,6 +46,7 @@ export function createGrid() {
         , each(() => console.group('draw'))
         )
       , api = rebind()
+            .from(columnSizers, 'resizeColumnsByDefault')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
