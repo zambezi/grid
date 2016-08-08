@@ -1,0 +1,112 @@
+.zambezi-grid-column-drop {
+  display: none;
+}
+
+.zambezi-grid-column-drop.is-reordering {
+  display: block;
+}
+
+.zambezi-grid-column-drop-target {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  list-style-type: none;
+  width: 20px;
+  pointer-events: auto;
+}
+
+.zambezi-grid-header.is-draggable,
+.zambezi-grid-double-header.is-draggable
+{
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  cursor: grab;
+  -webkit-user-drag: element;
+}
+
+.zambezi-grid-double-header .double-header-highlight-area {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.zambezi-grid-header.is-draggable:hover,
+.zambezi-grid-double-header.is-draggable .double-header-highlight-area:hover
+{
+  background-color: yellow;
+  box-shadow: none;
+}
+
+.zambezi-grid-header.is-column-drag-source,
+.zambezi-grid-double-header.is-column-drag-source {
+  box-shadow: none;
+  background-color: red;
+  border: none;
+}
+
+.zambezi-grid-column-drop-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 6px;
+  right: 0;
+  width: 7px;
+  background-color: yellow;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+
+  opacity: 0;
+}
+
+.zambezi-grid-column-drop-indicator-overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.zambezi-grid-column-drop-target.is-accepting .zambezi-grid-column-drop-indicator {
+  transition: opacity 0.1s linear;
+  opacity: 1;
+}
+
+.zambezi-grid-column-drop-target.is-nested .zambezi-grid-column-drop-indicator
+{
+  top: 25px;
+}
+
+.zambezi-grid-cell {
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -ms-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s;
+}
+
+@-webkit-keyframes column-dropped {
+  from { background-color: rgba(199, 234, 255, 1); }
+  to { background-color: rgba(199, 234, 255, 0); }
+}
+
+@-moz-keyframes column-dropped {
+  from { background-color: rgba(199, 234, 255, 1); }
+  to { background-color: rgba(199, 234, 255, 0); }
+}
+
+@-ms-keyframes column-dropped {
+  from { background-color: rgba(199, 234, 255, 1); }
+  to { background-color: rgba(199, 234, 255, 0); }
+}
+
+@-o-keyframes column-dropped {
+  from { background-color: rgba(199, 234, 255, 1); }
+  to { background-color: rgba(199, 234, 255, 0); }
+}
+
+@keyframes column-dropped {
+  from { background-color: rgba(199, 234, 255, 1); }
+  to { background-color: rgba(199, 234, 255, 0); }
+}
