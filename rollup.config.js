@@ -13,6 +13,7 @@ export default {
   , 'd3-format'
   , 'd3-selection'
   , 'd3-timer'
+  , 'd3-ease'
   , 'd3-transition'
   , 'underscore'
   ]
@@ -32,6 +33,7 @@ export default {
   , 'd3-format': 'd3'
   , 'd3-selection': 'd3'
   , 'd3-timer': 'd3'
+  , 'd3-ease': 'd3'
   , 'd3-transition': 'd3'
   , 'underscore': '_'
   }

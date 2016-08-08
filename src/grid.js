@@ -27,8 +27,7 @@ export function createGrid() {
       , columnSizers = createColumnSizers()
       , body = createBody()
       , grid = compose(
-          each(() => console.groupEnd('draw'))
-        , call(createScrollers())
+          call(createScrollers())
         , call(columnSizers)
         , call(createHeaders())
         , call(body)
@@ -53,5 +52,5 @@ export function createGrid() {
             .from(resize, 'wait:resizeWait')
             .from(setupTemplate, 'template')
 
-  return api(redraw(throttle(grid)))
+  return api(redraw(throttle(grid, 10)))
 }

@@ -1,6 +1,7 @@
 import { appendFromTemplate, selectionChanged, createDispatchCustomEvent, rebind } from '@zambezi/d3-utils'
 import { createColumnSizerLayout } from './column-sizer-layout'
 import { debounce } from 'underscore'
+import { easeLinear } from 'd3-ease'
 import { select, mouse } from 'd3-selection'
 import { timer } from 'd3-timer'
 import { transition } from 'd3-transition'
@@ -102,7 +103,7 @@ export function createColumnSizers() {
       if (findCandidateFreeWidth() < minFreeColumnWidth) return
 
       column.width = newWidth
-      dispatchRedraw.call(this)
+      target.each(dispatchRedraw)
 
       function findCandidateFreeWidth() {
 
