@@ -42,7 +42,6 @@
 .zambezi-grid-header.is-column-drag-source,
 .zambezi-grid-double-header.is-column-drag-source {
   box-shadow: none;
-  background-color: red;
   border: none;
 }
 

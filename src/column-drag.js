@@ -72,7 +72,6 @@ export function createColumnDrag() {
               .call(setDraggableProperties)
 
     function onDragStart(d) {
-      console.log('onDragStart', d)
       const dataTransfer = event.dataTransfer
           , source = select(this)
 
@@ -119,13 +118,12 @@ export function createColumnDrag() {
                     , cancelDropNavigation
                   )
                 )
-          , targetsExit = targets.exit().remove().each((d) => console.log('remove', d))
+          , targetsExit = targets.exit().remove()
 
       targets.merge(targetsEnter).each(clearDropStyles).style('left', left)
     }
 
     function onDragEnd(d) {
-      console.log('onDragEnd', d)
       columnDragged = null
       list.classed('is-reordering', false)
     }
@@ -145,8 +143,6 @@ export function createColumnDrag() {
     }
 
     function onDragOver(d, i) {
-      console.log('onDragOver', d)
-
       const target = select(this)
           , position = d
           , dropPositionX = mouse(this)[0]
