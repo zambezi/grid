@@ -1,0 +1,33 @@
+.zambezi-grid-header.is-sort-ascending,
+.zambezi-grid-header.is-sort-descending {
+  background-color: #BBB;
+  box-shadow:
+    inset 0 1px 0 yellow
+  , inset 0 2px 0 black
+  ;
+  padding-right: 16px;
+}
+
+.zambezi-grid-header.is-sort-ascending:after,
+.zambezi-grid-header.is-sort-descending:after
+{
+  content: "↑";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  display: block;
+
+}
+
+.zambezi-grid-header.is-sortable {
+  cursor: pointer;
+}
+
+.zambezi-grid-header.is-sortable:hover {
+  background-color: yellow;
+}
+
+.zambezi-grid-header.is-sort-descending:after
+{
+  content: "↓";
+}
