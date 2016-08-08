@@ -1,6 +1,7 @@
 import { calculateColumnLayout } from './calculate-column-layout'
 import { compose, wrap } from 'underscore'
 import { createBody } from './body'
+import { createColumnSizers } from './column-sizers'
 import { createEnsureColumns } from './ensure-columns'
 import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
@@ -25,12 +26,14 @@ export function createGrid() {
       , processRowData = createProcessRowData()
       , processSizeAndClipping = createProcessSizeAndClipping()
       , resize = createResize()
+      , columnSizers = createColumnSizers()
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
       , grid = compose(
-          each(() => console.groupEnd('draw'))
-        , call(createScrollers())
+          call(createScrollers())
         , call(sortRowHeaders)
+        , call(createScrollers())
+        , call(columnSizers)
         , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
@@ -45,9 +48,9 @@ export function createGrid() {
         , call(ensureColumns)
         , each(ensureData)
         , each(ensureId)
-        , each(() => console.group('draw'))
         )
       , api = rebind()
+            .from(columnSizers, 'resizeColumnsByDefault')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
@@ -55,5 +58,5 @@ export function createGrid() {
             .from(sortRowHeaders, 'sortableByDefault')
             .from(setupTemplate, 'template')
 
-  return api(redraw(throttle(grid)))
+  return api(redraw(throttle(grid, 10)))
 }
