@@ -52,10 +52,7 @@ export function createColumnSizers() {
               .duration(3000) // keep them for a few seconds, might be picked
                               // up again soon.
               .remove()       // ... remove if they haven't.
-              .each((d) => console.log('remove', d))
         , sizers = sizersUpdate.merge(sizersEnter)
-
-    console.log('positions', positions)
 
     sizers.on('mousedown.column-sizers', onSizerMousedown)
     sizers.filter('.is-recycled')

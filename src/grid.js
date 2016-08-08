@@ -42,7 +42,6 @@ export function createGrid() {
         , call(ensureColumns)
         , each(ensureData)
         , each(ensureId)
-        , each(() => console.group('draw'))
         )
       , api = rebind()
             .from(columnSizers, 'resizeColumnsByDefault')
