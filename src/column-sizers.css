@@ -1,0 +1,42 @@
+.zambezi-grid-resizers.is-dragging {
+  cursor: col-resize;
+}
+
+.zambezi-grid-resizer {
+  list-style-type: none;
+  position: absolute;
+  width: 7px;
+  top: 0;
+  bottom: 0;
+  cursor: col-resize;
+  pointer-events: auto;
+}
+
+.zambezi-grid-resizer.is-recycled {
+  display: none;
+}
+
+.zambezi-grid-resizer.is-nested {
+  top: 25px;
+}
+
+.zambezi-grid-resizer:hover,
+.zambezi-grid-resizer.is-dragging {
+  transition:
+    border 0.1s linear 0.2s
+  , background 0.1s linear 0.2s
+  ;
+  background-color: yellow;
+  border-left: 1px solid #0E1D33;
+  border-right: 1px solid #0E1D33;
+}
+
+
+.zambezi-grid {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

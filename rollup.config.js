@@ -10,8 +10,12 @@ export default {
 , external: [
     '@zambezi/d3-utils'
   , '@zambezi/fun'
+  , 'd3-array'
+  , 'd3-ease'
   , 'd3-format'
   , 'd3-selection'
+  , 'd3-timer'
+  , 'd3-transition'
   , 'underscore'
   ]
 , sourceMap: true
@@ -27,8 +31,12 @@ export default {
 , globals: {
     '@zambezi/d3-utils': 'd3Utils'
   , '@zambezi/fun': 'fun'
-  , 'underscore': '_'
-  , 'd3-selection': 'd3'
+  , 'd3-array': 'd3'
+  , 'd3-ease': 'd3'
   , 'd3-format': 'd3'
+  , 'd3-selection': 'd3'
+  , 'd3-timer': 'd3'
+  , 'd3-transition': 'd3'
+  , 'underscore': '_'
   }
 }
