@@ -78,8 +78,8 @@ export function createBody() {
           .call(cells.sheet(sheet).gridId(id))
     }
 
-    function dispatchLinesChange() {
-      console.warn('dispatch, do! FPP', arguments)
+    function dispatchLinesChange(min, max) {
+      target.dispatch('lines-change', { bubbles: true, detail: { min, max } } )
     }
 
     function updateScroll() {
