@@ -33,8 +33,7 @@ export function createGrid() {
       , sortRowHeaders = createSortRowHeaders()
       , autodirty = createAutoDirty()
       , grid = compose(
-          call((d)=> console.groupEnd('draw'))
-        , call(createScrollers())
+          call(createScrollers())
         , call(sortRowHeaders)
         , call(columnSizers)
         , call(columnDrag)
@@ -52,7 +51,6 @@ export function createGrid() {
         , call(ensureColumns)
         , each(ensureData)
         , each(ensureId)
-        , call((d)=> console.group('draw'))
         )
       , api = rebind()
             .from(columnSizers, 'resizeColumnsByDefault')
