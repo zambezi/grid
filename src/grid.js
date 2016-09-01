@@ -16,7 +16,7 @@ import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
-import { rebind, call, each, redraw, createResize, throttle } from '@zambezi/d3-utils'
+import { rebind, call, each, redraw, createResize, createAutoDirty, throttle } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -31,6 +31,7 @@ export function createGrid() {
       , columnSizers = createColumnSizers()
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
+      , autodirty = createAutoDirty()
       , grid = compose(
           call(createScrollers())
         , call(sortRowHeaders)
@@ -62,5 +63,5 @@ export function createGrid() {
             .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(setupTemplate, 'template')
 
-  return api(redraw(throttle(grid, 10)))
+  return api(autodirty(redraw(throttle(grid, 10))))
 }
