@@ -12,8 +12,6 @@ const verticalScrollChanged = selectionChanged()
     , scrollTop = property('scroll.top')
     , scrollLeft = property('scroll.left')
     , appendScrollerContent = appendIfMissing('div.scroller-content')
-    , dispatchGridScroll = createDispatchCustomEvent().type('grid-scroll')
-    , dispatchRedraw = createDispatchCustomEvent().type('redraw')
 
 export function createScrollers() {
 
@@ -95,8 +93,8 @@ export function createScrollers() {
 
       select(this)
           .datum({ top, left })
-          .each(dispatchGridScroll)
-          .each(dispatchRedraw)
+          .dispatch('grid-scroll', { bubbles: true })
+          .dispatch('redraw', { bubbles: true })
     }
 
     function verticalScrollChangedKey() {
