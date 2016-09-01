@@ -17,8 +17,11 @@ export function createScrollers() {
 
   const sheet = createGridSheet()
 
+  let sizeValidationRound = 0
+
   function scrollers(s) {
     s.each(scrollersEach)
+        .on('size-dirty.scroller-invalidation', () => sizeValidationRound++)
   }
 
   return scrollers
@@ -98,15 +101,15 @@ export function createScrollers() {
     }
 
     function verticalScrollChangedKey() {
-      return bundle.scroll.top + 'v' + bundle.rows.free.measuredHeight
+      return `${ bundle.scroll.top } v ${ bundle.rows.free.measuredHeight } R ${ sizeValidationRound}`
     }
 
     function horizontalScrollChangedKey() {
-      return bundle.scroll.left + 'h' + bundle.columns.free.measuredWidth
+      return `${ bundle.scroll.left } h ${ bundle.columns.free.measuredWidth } R ${ sizeValidationRound }`
     }
 
     function clippingChangedKey() {
-      return bundle.bodyBounds.clippedHorizontal + ':' + bundle.bodyBounds.clippedVertical
+      return `${ bundle.bodyBounds.clippedHorizontal }: ${ bundle.bodyBounds.clippedVertical } ${ sizeValidationRound}`
     }
   }
 }
