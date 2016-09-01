@@ -34,11 +34,13 @@ export function createBody() {
             .from(cells, 'rowChangedKey', 'rowKey')
             .from(bodyBlockLayout, 'virtualizeRows', 'virtualizeColumns')
 
+  let sizeValidationRound = 0
+
   let lastOnChangeArgs
 
   function body(s) {
     bodyBlockLayout.rowKey(cells.rowKey())
-    s.each(bodyEach)
+    s.each(bodyEach).on('size-dirty', () => sizeValidationRound++)
   }
 
   return api(body)
@@ -58,8 +60,8 @@ export function createBody() {
         , blocks = blocksUpdate.merge(blocksEnter)
         , rows = bundle.rows
         , bodyBounds = bundle.bodyBounds
-        , verticalScroll = scrollChanged(bundle.scroll.top)
-        , horizontalScroll = scrollChanged(bundle.scroll.left)
+        , verticalScroll = scrollChanged(bundle.scroll.top, sizeValidationRound)
+        , horizontalScroll = scrollChanged(bundle.scroll.left, sizeValidationRound)
         , updateLinesChange = onChange(dispatchLinesChange)
 
     updateRowHeightStyles()
@@ -143,7 +145,7 @@ export function createBody() {
       }
     }
 
-    function scrollChanged(scroll) {
+    function scrollChanged(scroll, validationId) {
       return functor(
         `
         ${ bodyBounds.width }
@@ -157,6 +159,8 @@ export function createBody() {
         ${ rows.bottom.length }
         ▓
         ${ scroll }
+        ∵
+        ${ validationId }
         `
       )
     }
