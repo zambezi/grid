@@ -2,7 +2,7 @@ import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGridSheet } from './grid-sheet'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
-import { selectionChanged, appendIfMissing, createDispatchCustomEvent } from '@zambezi/d3-utils'
+import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
 

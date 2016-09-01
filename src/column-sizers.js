@@ -1,4 +1,4 @@
-import { appendFromTemplate, selectionChanged, createDispatchCustomEvent, rebind } from '@zambezi/d3-utils'
+import { appendFromTemplate, selectionChanged, rebind } from '@zambezi/d3-utils'
 import { createColumnSizerLayout } from './column-sizer-layout'
 import { debounce } from 'underscore'
 import { easeLinear } from 'd3-ease'
@@ -7,8 +7,8 @@ import { timer } from 'd3-timer'
 import { transition } from 'd3-transition'
 
 import './column-sizers.css'
-const dispatchRedraw = createDispatchCustomEvent().type('redraw')
-    , appendSizer = appendFromTemplate('<li class="zambezi-grid-resizer"></li>')
+
+const appendSizer = appendFromTemplate('<li class="zambezi-grid-resizer"></li>')
 
 export function createColumnSizers() {
 
@@ -100,7 +100,7 @@ export function createColumnSizers() {
       if (findCandidateFreeWidth() < minFreeColumnWidth) return
 
       column.width = newWidth
-      target.each(dispatchRedraw)
+      target.dispatch('redraw')
 
       function findCandidateFreeWidth() {
 

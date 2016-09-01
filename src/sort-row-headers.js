@@ -1,14 +1,11 @@
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
-import { selectionChanged, createDispatchCustomEvent } from '@zambezi/d3-utils'
+import { selectionChanged } from '@zambezi/d3-utils'
 
 import './sort-row-headers.css'
 
 const sortAscending = property('sortAscending')
     , sortDescending = property('sortDescending')
-    , dispatchRedraw = createDispatchCustomEvent().type('redraw')
-    , dispatchDataDirty = createDispatchCustomEvent().type('data-dirty')
-    , dispatchSortChanged = createDispatchCustomEvent().type('sort-changed')
 
 export function createSortRowHeaders() {
   const changed = selectionChanged().key(sortDirection)
@@ -54,16 +51,10 @@ export function createSortRowHeaders() {
       if (wasDescending) d.sortAscending = true
       else if (!wasAscending)  d.sortDescending = true
 
-      /*
-      dispatcher['data-dirty']()
-      customDispatch('sort-changed', false, true, d).call(context)
-      dispatcher['redraw']()
-      */
-
       target
-          .each(dispatchDataDirty)
-          .each(dispatchSortChanged.detail(d))
-          .each(dispatchRedraw)
+          .dispatch('data-dirty')
+          .dispatch('sort-changed', { detail: d })
+          .dispatch('redraw')
 
       function clearColumnSort(d, i) {
         d.sortAscending = false

@@ -2,7 +2,7 @@ import { columnDragTargetLayout as dragTargetLayout } from './column-drag-target
 import { compose, isUndefined } from 'underscore'
 import { createGridSheet } from './grid-sheet'
 import { select, event, mouse } from 'd3-selection'
-import { appendFromTemplate, selectionChanged, fromTarget, createDispatchCustomEvent } from '@zambezi/d3-utils'
+import { appendFromTemplate, selectionChanged, fromTarget } from '@zambezi/d3-utils'
 
 import './column-drag.css'
 
@@ -13,7 +13,6 @@ const template = `<li class="zambezi-grid-column-drop-target">
     , dropWidth = 20
     , dropCenterTolerance = 3
     , append = appendFromTemplate(template)
-    , dispatchRedraw = createDispatchCustomEvent().type('redraw')
     , left = pixels('left')
 
 export function createColumnDrag() {
@@ -112,7 +111,7 @@ export function createColumnDrag() {
                   'drop.column-drag'
                 , compose(
                       highlightMovedColumnCells
-                    , dispatchRedraw
+                    , () => list.dispatch('redraw', { bubbles: true })
                     , dropColumnInDestination
                     , removeColumnFromOrigin
                     , cancelDropNavigation
