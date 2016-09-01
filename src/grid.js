@@ -14,6 +14,7 @@ import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, call, each, redraw, createResize, createAutoDirty, throttle } from '@zambezi/d3-utils'
@@ -29,11 +30,13 @@ export function createGrid() {
       , columnDrag = createColumnDrag()
       , resize = createResize()
       , columnSizers = createColumnSizers()
+      , dispatch = createDispatch('draw')
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
       , autodirty = createAutoDirty()
       , grid = compose(
-          call(createScrollers())
+          call(() => dispatch.call('draw'))
+        , call(createScrollers())
         , call(sortRowHeaders)
         , call(columnSizers)
         , call(columnDrag)
@@ -53,14 +56,15 @@ export function createGrid() {
         , each(ensureId)
         )
       , api = rebind()
+            .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
+            .from(dispatch, 'on')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
             .from(resize, 'wait:resizeWait')
-            .from(sortRowHeaders, 'sortableByDefault')
-            .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(setupTemplate, 'template')
+            .from(sortRowHeaders, 'sortableByDefault')
 
   return api(autodirty(redraw(throttle(grid, 10))))
 }
