@@ -3,6 +3,7 @@ import { createBodyBlockLayout } from './body-block-layout'
 import { createCells } from './cells'
 import { createEnsureSize } from './ensure-size'
 import { createGridSheet } from './grid-sheet'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { format } from 'd3-format'
 import { functor } from '@zambezi/fun'
 import { isUndefined, isEqual } from 'underscore'
@@ -29,10 +30,12 @@ export function createBody() {
   const cells = createCells()
       , sheet = createGridSheet()
       , bodyBlockLayout = createBodyBlockLayout()
+      , dispatch = createDispatch('visible-lines-change')
       , ensureSize = createEnsureSize()
       , api = rebind()
             .from(cells, 'rowChangedKey', 'rowKey')
             .from(bodyBlockLayout, 'virtualizeRows', 'virtualizeColumns')
+            .from(dispatch, 'on')
 
   let sizeValidationRound = 0
 
@@ -81,7 +84,7 @@ export function createBody() {
     }
 
     function dispatchLinesChange(min, max) {
-      target.dispatch('lines-change', { bubbles: true, detail: { min, max } } )
+      dispatch.call('visible-lines-change', this, min, max)
     }
 
     function updateScroll() {
