@@ -36,6 +36,8 @@
               }
             ]
           )
+          .on('draw', console.log.bind(console, 'DRAW'))
+          .on('visible-lines-change', console.log.bind(console, 'VISIBLE LINES CHANGE'))
     , rows = _.range(1, 2000).map(faker.Helpers.createCard)
 
   rows[10].locked = 'top'

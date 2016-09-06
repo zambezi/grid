@@ -14,9 +14,11 @@ import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
-import { rebind, call, each, redraw, createResize, throttle } from '@zambezi/d3-utils'
+import { rebind, redispatch, call, each, redraw, createResize, createAutoDirty,
+          throttle } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -29,12 +31,14 @@ export function createGrid() {
       , columnDrag = createColumnDrag()
       , resize = createResize()
       , columnSizers = createColumnSizers()
+      , dispatchDraw = createDispatch('draw')
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
+      , autodirty = createAutoDirty()
       , grid = compose(
-          call(createScrollers())
-        , call(sortRowHeaders)
+          call(() => dispatchDraw.call('draw'))
         , call(createScrollers())
+        , call(sortRowHeaders)
         , call(columnSizers)
         , call(columnDrag)
         , call(createHeaders())
@@ -52,15 +56,22 @@ export function createGrid() {
         , each(ensureData)
         , each(ensureId)
         )
+
+      , redispatcher = redispatch()
+            .from(dispatchDraw, 'draw')
+            .from(body, 'visible-lines-change')
+            .create()
+
       , api = rebind()
+            .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
+            .from(redispatcher, 'on')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
             .from(resize, 'wait:resizeWait')
-            .from(sortRowHeaders, 'sortableByDefault')
-            .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(setupTemplate, 'template')
+            .from(sortRowHeaders, 'sortableByDefault')
 
-  return api(redraw(throttle(grid, 10)))
+  return api(autodirty(redraw(throttle(grid, 10))))
 }

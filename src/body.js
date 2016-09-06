@@ -3,6 +3,7 @@ import { createBodyBlockLayout } from './body-block-layout'
 import { createCells } from './cells'
 import { createEnsureSize } from './ensure-size'
 import { createGridSheet } from './grid-sheet'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { format } from 'd3-format'
 import { functor } from '@zambezi/fun'
 import { isUndefined, isEqual } from 'underscore'
@@ -29,16 +30,20 @@ export function createBody() {
   const cells = createCells()
       , sheet = createGridSheet()
       , bodyBlockLayout = createBodyBlockLayout()
+      , dispatch = createDispatch('visible-lines-change')
       , ensureSize = createEnsureSize()
       , api = rebind()
             .from(cells, 'rowChangedKey', 'rowKey')
             .from(bodyBlockLayout, 'virtualizeRows', 'virtualizeColumns')
+            .from(dispatch, 'on')
+
+  let sizeValidationRound = 0
 
   let lastOnChangeArgs
 
   function body(s) {
     bodyBlockLayout.rowKey(cells.rowKey())
-    s.each(bodyEach)
+    s.each(bodyEach).on('size-dirty', () => sizeValidationRound++)
   }
 
   return api(body)
@@ -58,8 +63,8 @@ export function createBody() {
         , blocks = blocksUpdate.merge(blocksEnter)
         , rows = bundle.rows
         , bodyBounds = bundle.bodyBounds
-        , verticalScroll = scrollChanged(bundle.scroll.top)
-        , horizontalScroll = scrollChanged(bundle.scroll.left)
+        , verticalScroll = scrollChanged(bundle.scroll.top, sizeValidationRound)
+        , horizontalScroll = scrollChanged(bundle.scroll.left, sizeValidationRound)
         , updateLinesChange = onChange(dispatchLinesChange)
 
     updateRowHeightStyles()
@@ -78,8 +83,8 @@ export function createBody() {
           .call(cells.sheet(sheet).gridId(id))
     }
 
-    function dispatchLinesChange() {
-      console.warn('dispatch, do! FPP', arguments)
+    function dispatchLinesChange(min, max) {
+      dispatch.call('visible-lines-change', this, min, max)
     }
 
     function updateScroll() {
@@ -143,7 +148,7 @@ export function createBody() {
       }
     }
 
-    function scrollChanged(scroll) {
+    function scrollChanged(scroll, validationId) {
       return functor(
         `
         ${ bodyBounds.width }
@@ -157,6 +162,8 @@ export function createBody() {
         ${ rows.bottom.length }
         ▓
         ${ scroll }
+        ∵
+        ${ validationId }
         `
       )
     }

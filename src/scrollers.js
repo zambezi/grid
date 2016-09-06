@@ -2,7 +2,7 @@ import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGridSheet } from './grid-sheet'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
-import { selectionChanged, appendIfMissing, createDispatchCustomEvent } from '@zambezi/d3-utils'
+import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
 
@@ -12,15 +12,16 @@ const verticalScrollChanged = selectionChanged()
     , scrollTop = property('scroll.top')
     , scrollLeft = property('scroll.left')
     , appendScrollerContent = appendIfMissing('div.scroller-content')
-    , dispatchGridScroll = createDispatchCustomEvent().type('grid-scroll')
-    , dispatchRedraw = createDispatchCustomEvent().type('redraw')
 
 export function createScrollers() {
 
   const sheet = createGridSheet()
 
+  let sizeValidationRound = 0
+
   function scrollers(s) {
     s.each(scrollersEach)
+        .on('size-dirty.scroller-invalidation', () => sizeValidationRound++)
   }
 
   return scrollers
@@ -95,20 +96,20 @@ export function createScrollers() {
 
       select(this)
           .datum({ top, left })
-          .each(dispatchGridScroll)
-          .each(dispatchRedraw)
+          .dispatch('grid-scroll', { bubbles: true })
+          .dispatch('redraw', { bubbles: true })
     }
 
     function verticalScrollChangedKey() {
-      return bundle.scroll.top + 'v' + bundle.rows.free.measuredHeight
+      return `${ bundle.scroll.top } v ${ bundle.rows.free.measuredHeight } R ${ sizeValidationRound}`
     }
 
     function horizontalScrollChangedKey() {
-      return bundle.scroll.left + 'h' + bundle.columns.free.measuredWidth
+      return `${ bundle.scroll.left } h ${ bundle.columns.free.measuredWidth } R ${ sizeValidationRound }`
     }
 
     function clippingChangedKey() {
-      return bundle.bodyBounds.clippedHorizontal + ':' + bundle.bodyBounds.clippedVertical
+      return `${ bundle.bodyBounds.clippedHorizontal }: ${ bundle.bodyBounds.clippedVertical } ${ sizeValidationRound}`
     }
   }
 }
