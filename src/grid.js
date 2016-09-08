@@ -18,7 +18,7 @@ import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, redispatch, call, each, redraw, createResize, createAutoDirty,
-          throttle } from '@zambezi/d3-utils'
+          throttle, throttleToAnimationFrame } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -73,5 +73,5 @@ export function createGrid() {
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
 
-  return api(autodirty(redraw(throttle(grid, 10))))
+  return api(autodirty(redraw(throttle(throttleToAnimationFrame(grid), 10))))
 }
