@@ -59,7 +59,12 @@ export function createGrid() {
 
       , redispatcher = redispatch()
             .from(dispatchDraw, 'draw')
-            .from(body, 'visible-lines-change')
+            .from(
+              body
+            , 'visible-lines-change'
+            , 'cell-update'
+            , 'cell-enter'
+            )
             .create()
 
       , api = rebind()

@@ -1,4 +1,6 @@
-import { appendFromTemplate, selectionChanged } from '@zambezi/d3-utils'
+import { appendFromTemplate, selectionChanged, rebind, forward } from '@zambezi/d3-utils'
+import { dispatch as createDispatch } from 'd3-dispatch'
+import { partial } from 'underscore'
 import { property, batch } from '@zambezi/fun'
 import { select } from 'd3-selection'
 
@@ -16,6 +18,18 @@ const appendDefaultCell = appendFromTemplate(
     , rowIndexMatch = /(\bgrid-row-index-\d+\b|$)/
 
 export function createCells() {
+
+  const dispatcher = createDispatch(
+          'cell-enter'
+        , 'cell-exit'
+        , 'cell-update'
+        , 'row-changed'
+        , 'row-enter'
+        , 'row-exit'
+        , 'row-update'
+        )
+      , api = rebind().from(dispatcher, 'on')
+
   let rowKey
     , rowChangedKey
     , sheet
@@ -49,7 +63,7 @@ export function createCells() {
     return cells
   }
 
-  return cells
+  return api(cells)
 
   function cellsEach(d, i) {
     const block = this
@@ -57,10 +71,12 @@ export function createCells() {
         , visibleCellsHash = d.visibleCellsHash
         , columnComponentsAndNotifyUpdate = batch(
             runColumnComponents
+          , forward(dispatcher, 'cell-update')
           // , dispatcher['cell-update']
           )
         , columnClassAndNotifyEnter = batch(
             columnClass
+          , forward(dispatcher, 'cell-enter')
           // , dispatcher['cell-enter']
           )
 
@@ -101,6 +117,7 @@ export function createCells() {
 
     cellsMerged.select(firstLastChanged).each(updateFirstLast)
     cellsMerged.each(columnComponentsAndNotifyUpdate)
+          //.each(function() { console.debug('each', this, ...arguments)})
   }
 
   function updateFirstLast() {
@@ -132,7 +149,6 @@ export function createCells() {
   function runColumnComponents(d, i, j) {
     const cell = this
     if (!d.column.components) return
-    // d.dispatcher = dispatcher
     d.column.components.forEach(runColumnComponent)
     function runColumnComponent(component) {
       component.call(cell, d, i, j)

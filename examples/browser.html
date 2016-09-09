@@ -36,6 +36,7 @@
               }
             ]
           )
+          .on('cell-update', onCellUpdate)
     , rows = _.range(1, 2000).map(faker.Helpers.createCard)
 
   rows[10].locked = 'top'
@@ -47,6 +48,11 @@
       .style('height', '500px')
       .datum(rows)
       .call(table)
+
+  function onCellUpdate(cell, i) {
+    console.log('onCellUpdate', this, cell, i)
+    // console.debug('onCellUpdate', this, ...arguments)
+  }
 
 </script>
 </body>
