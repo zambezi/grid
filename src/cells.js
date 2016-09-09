@@ -72,12 +72,10 @@ export function createCells() {
         , columnComponentsAndNotifyUpdate = batch(
             runColumnComponents
           , forward(dispatcher, 'cell-update')
-          // , dispatcher['cell-update']
           )
         , columnClassAndNotifyEnter = batch(
             columnClass
           , forward(dispatcher, 'cell-enter')
-          // , dispatcher['cell-enter']
           )
 
         , rows = list.selectAll('.zambezi-grid-row')
@@ -85,29 +83,29 @@ export function createCells() {
 
         , rowsExit = rows.exit()
               .remove()
-              // .each(dispatcher['row-exit'])
+              .each(forward(dispatcher, 'row-exit'))
 
         , rowsEnter = rows.enter()
             .select(appendRow)
-              // .each(dispatcher['row-enter'])
+              .each(forward(dispatcher, 'row-enter'))
 
         , rowChanged = rows
             .merge(rowsEnter)
-              // .each(dispatcher['row-update'])
+              .each(forward(dispatcher, 'row-update'))
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
               )
             )
               .each(updateRow)
-              // .each(dispatcher['row-changed'])
+              .each(forward(dispatcher, 'row-changed'))
 
         , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
             .data(d => d, id)
 
         , cellsExit = cellsUpdate.exit()
               .remove()
-              // .each(dispatcher['cell-exit'])
+              .each(forward(dispatcher, 'cell-exit'))
 
         , cellsEnter = cellsUpdate.enter()
             .select(append)
@@ -117,7 +115,6 @@ export function createCells() {
 
     cellsMerged.select(firstLastChanged).each(updateFirstLast)
     cellsMerged.each(columnComponentsAndNotifyUpdate)
-          //.each(function() { console.debug('each', this, ...arguments)})
   }
 
   function updateFirstLast() {

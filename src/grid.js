@@ -62,8 +62,13 @@ export function createGrid() {
             .from(
               body
             , 'visible-lines-change'
-            , 'cell-update'
             , 'cell-enter'
+            , 'cell-exit'
+            , 'cell-update'
+            , 'row-changed'
+            , 'row-enter'
+            , 'row-exit'
+            , 'row-update'
             )
             .create()
 

@@ -33,7 +33,16 @@ export function createBody() {
       , dispatch = createDispatch('visible-lines-change')
       , redispatcher = redispatch()
             .from(dispatch, 'visible-lines-change')
-            .from(cells, 'cell-update', 'cell-enter')
+            .from(
+              cells
+            , 'cell-enter'
+            , 'cell-exit'
+            , 'cell-update'
+            , 'row-changed'
+            , 'row-enter'
+            , 'row-exit'
+            , 'row-update'
+            )
             .create()
 
       , ensureSize = createEnsureSize()
