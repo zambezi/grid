@@ -1,5 +1,5 @@
 import { appendFromTemplate, selectionChanged } from '@zambezi/d3-utils'
-import { property, batch, identity } from '@zambezi/fun'
+import { property, batch } from '@zambezi/fun'
 import { select } from 'd3-selection'
 
 const appendDefaultCell = appendFromTemplate(
@@ -87,7 +87,7 @@ export function createCells() {
               // .each(dispatcher['row-changed'])
 
         , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
-            .data(identity, id)
+            .data(d => d, id)
 
         , cellsExit = cellsUpdate.exit()
               .remove()
