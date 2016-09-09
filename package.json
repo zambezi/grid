@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@zambezi/d3-utils": "^3.0.0",
-    "@zambezi/fun": "^2.0.0-1",
+    "@zambezi/fun": "^2.0.1",
     "d3-array": "^1.0.1",
     "d3-dispatch": "^1.0.1",
     "d3-ease": "^1.0.1",
