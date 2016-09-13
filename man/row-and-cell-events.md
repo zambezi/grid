@@ -15,7 +15,7 @@ A reference to the DOM element is available through the _this_ keyword.
 
 ```javascript
 const grid = createGrid()
-        .on("cell-update", onCellUpdate)
+        .on('cell-update', onCellUpdate)
     , threshold = 300
 
 select('.grid-target').datum(

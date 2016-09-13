@@ -5,8 +5,7 @@ Summary
 
 
 - Basics
-
-  [row and cell events](man/row-and-cell-events.md)
+  - [Row and cell events](man/row-and-cell-events.md)
 
 ---
 
