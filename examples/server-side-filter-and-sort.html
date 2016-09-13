@@ -15,14 +15,15 @@
   var table = grid.createGrid()
           .columns(
             [
-              { key: 'name', locked: 'left', width: 200 }
+              { key: 'i', label: 'index', locked: 'left', width: 50 }
+            , { key: 'name' }
             , { key: 'email', sortDescending: true }
             , { key: 'phone' }
             , { key: 'username' }
             , { 
                 label: 'address'
               , children: [
-                  { label: 'city', key: 'address.city', width: 300 }
+                  { label: 'city', key: 'address.city' }
                 , { label: 'country', key: 'address.ukCountry' }
                 , { label: 'county', key: 'address.ukCounty' }
                 ]
@@ -30,13 +31,38 @@
             ]
           )
           .serverSideFilterAndSort(true)
+          .on(
+            'visible-lines-change.fetch-data'
+          , _.throttle(fakeFetchRemoteData, 200, { leading: false }) // throttling is up to the client
+          )
 
-    , rows = _.range(1, 2000).map(faker.Helpers.createCard)
+    , rows = Array(50000) // create long empty array
+    , target = d3.select('.grid-target')
+          .style('height', '500px')
+          .datum(rows)
 
-  d3.select('.grid-target')
-      .style('height', '500px')
-      .datum(rows)
-      .call(table)
+  draw()
+
+  function draw() {
+    target.call(table)
+  }
+
+  function fakeFetchRemoteData(min, max) {
+
+    setTimeout(patchAndRedraw, 100) // some added latency, just for fun
+
+    function patchAndRedraw() {
+      d3.range(Math.max(0, min - 2), Math.min(max + 2, rows.length)).forEach(patchRow)
+      draw()
+    }
+
+    function patchRow(i) {
+      if (rows[i]) return
+      console.debug('patchRow', i)
+      rows[i] = Object.assign({i}, faker.Helpers.createCard())
+    }
+
+  }
 
 </script>
 </body>
