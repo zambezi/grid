@@ -4,6 +4,7 @@ import { createBody } from './body'
 import { createColumnDrag } from './column-drag'
 import { createColumnSizers } from './column-sizers'
 import { createEnsureColumns } from './ensure-columns'
+import { createExportServerSideFilterAndSort } from './export-server-side-filter-and-sort'
 import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
 import { createMarkRowIndices } from './mark-row-indices'
@@ -18,7 +19,7 @@ import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
 import { rebind, redispatch, call, each, redraw, createResize, createAutoDirty,
-          throttle, throttleToAnimationFrame } from '@zambezi/d3-utils'
+    throttle, throttleToAnimationFrame } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -34,6 +35,7 @@ export function createGrid() {
       , dispatchDraw = createDispatch('draw')
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
+      , serverSideFilterAndSort = createExportServerSideFilterAndSort()
       , autodirty = createAutoDirty()
       , grid = compose(
           call(() => dispatchDraw.call('draw'))
@@ -53,6 +55,7 @@ export function createGrid() {
         , call(setupTemplate)
         , each(calculateColumnLayout)
         , call(ensureColumns)
+        , call(serverSideFilterAndSort)
         , each(ensureData)
         , each(ensureId)
         )
@@ -65,11 +68,12 @@ export function createGrid() {
       , api = rebind()
             .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
-            .from(redispatcher, 'on')
             .from(ensureColumns, 'columns')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
+            .from(redispatcher, 'on')
             .from(resize, 'wait:resizeWait')
+            .from(serverSideFilterAndSort, 'serverSideFilterAndSort')
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
 
