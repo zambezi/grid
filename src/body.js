@@ -9,7 +9,7 @@ import { functor } from '@zambezi/fun'
 import { isUndefined, isEqual } from 'underscore'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
-import { selectionChanged, rebind } from '@zambezi/d3-utils'
+import { selectionChanged, rebind, redispatch } from '@zambezi/d3-utils'
 
 import './body.css'
 
@@ -31,11 +31,25 @@ export function createBody() {
       , sheet = createGridSheet()
       , bodyBlockLayout = createBodyBlockLayout()
       , dispatch = createDispatch('visible-lines-change')
+      , redispatcher = redispatch()
+            .from(dispatch, 'visible-lines-change')
+            .from(
+              cells
+            , 'cell-enter'
+            , 'cell-exit'
+            , 'cell-update'
+            , 'row-changed'
+            , 'row-enter'
+            , 'row-exit'
+            , 'row-update'
+            )
+            .create()
+
       , ensureSize = createEnsureSize()
       , api = rebind()
             .from(cells, 'rowChangedKey', 'rowKey')
             .from(bodyBlockLayout, 'virtualizeRows', 'virtualizeColumns')
-            .from(dispatch, 'on')
+            .from(redispatcher, 'on')
 
   let sizeValidationRound = 0
 

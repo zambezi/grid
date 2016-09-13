@@ -8,6 +8,11 @@ Installation
 
 You can `npm i @zambezi/grid` the component and can check the 'examples' folder for usage.
 
+Documentation
+-------------
+
+See [SUMMARY](SUMMARY.md) for detailed usage.
+
 Found an issue, or want to contribute?
 --------------------------------------
 

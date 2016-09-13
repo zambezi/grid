@@ -1,4 +1,6 @@
-import { appendFromTemplate, selectionChanged } from '@zambezi/d3-utils'
+import { appendFromTemplate, selectionChanged, rebind, forward } from '@zambezi/d3-utils'
+import { dispatch as createDispatch } from 'd3-dispatch'
+import { partial } from 'underscore'
 import { property, batch } from '@zambezi/fun'
 import { select } from 'd3-selection'
 
@@ -16,6 +18,18 @@ const appendDefaultCell = appendFromTemplate(
     , rowIndexMatch = /(\bgrid-row-index-\d+\b|$)/
 
 export function createCells() {
+
+  const dispatcher = createDispatch(
+          'cell-enter'
+        , 'cell-exit'
+        , 'cell-update'
+        , 'row-changed'
+        , 'row-enter'
+        , 'row-exit'
+        , 'row-update'
+        )
+      , api = rebind().from(dispatcher, 'on')
+
   let rowKey
     , rowChangedKey
     , sheet
@@ -49,7 +63,7 @@ export function createCells() {
     return cells
   }
 
-  return cells
+  return api(cells)
 
   function cellsEach(d, i) {
     const block = this
@@ -57,11 +71,11 @@ export function createCells() {
         , visibleCellsHash = d.visibleCellsHash
         , columnComponentsAndNotifyUpdate = batch(
             runColumnComponents
-          // , dispatcher['cell-update']
+          , forward(dispatcher, 'cell-update')
           )
         , columnClassAndNotifyEnter = batch(
             columnClass
-          // , dispatcher['cell-enter']
+          , forward(dispatcher, 'cell-enter')
           )
 
         , rows = list.selectAll('.zambezi-grid-row')
@@ -69,29 +83,29 @@ export function createCells() {
 
         , rowsExit = rows.exit()
               .remove()
-              // .each(dispatcher['row-exit'])
+              .each(forward(dispatcher, 'row-exit'))
 
         , rowsEnter = rows.enter()
             .select(appendRow)
-              // .each(dispatcher['row-enter'])
+              .each(forward(dispatcher, 'row-enter'))
 
         , rowChanged = rows
             .merge(rowsEnter)
-              // .each(dispatcher['row-update'])
+              .each(forward(dispatcher, 'row-update'))
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
               )
             )
               .each(updateRow)
-              // .each(dispatcher['row-changed'])
+              .each(forward(dispatcher, 'row-changed'))
 
         , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')
             .data(d => d, id)
 
         , cellsExit = cellsUpdate.exit()
               .remove()
-              // .each(dispatcher['cell-exit'])
+              .each(forward(dispatcher, 'cell-exit'))
 
         , cellsEnter = cellsUpdate.enter()
             .select(append)
@@ -132,7 +146,6 @@ export function createCells() {
   function runColumnComponents(d, i, j) {
     const cell = this
     if (!d.column.components) return
-    // d.dispatcher = dispatcher
     d.column.components.forEach(runColumnComponent)
     function runColumnComponent(component) {
       component.call(cell, d, i, j)

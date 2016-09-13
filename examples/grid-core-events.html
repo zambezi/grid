@@ -36,6 +36,13 @@
               }
             ]
           )
+          .on('cell-enter', handlerFor('cell-enter'))
+          .on('cell-exit', handlerFor('cell-exit'))
+          .on('cell-update', handlerFor('cell-update'))
+          .on('row-changed', handlerFor('row-changed'))
+          .on('row-enter', handlerFor('row-enter'))
+          .on('row-exit', handlerFor('row-exit'))
+          .on('row-update', handlerFor('row-update'))
 
     , rows = _.range(1, 2000).map(faker.Helpers.createCard)
 
@@ -48,6 +55,12 @@
       .style('height', '500px')
       .datum(rows)
       .call(table)
+
+  function handlerFor(type) {
+    return function handle() {
+      console.log(type, 'called on', this, 'with', arguments)
+    }
+  }
 
 </script>
 </body>
