@@ -33,7 +33,7 @@
           .serverSideFilterAndSort(true)
           .on(
             'visible-lines-change.fetch-data'
-          , _.throttle(fakeFetchRemoteData, 200, { leading: false }) // throttling is up to the client
+          , _.throttle(fakeFetchRemoteData, 100, { leading: false }) // throttling is up to the client
           )
           .on(
             'sort-changed'
@@ -56,8 +56,10 @@
     setTimeout(patchAndRedraw, 100) // some added latency, just for fun
 
     function patchAndRedraw() {
+      console.groupCollapsed(`new data ${min} - ${max}`)
       d3.range(Math.max(0, min - 2), Math.min(max + 2, rows.length)).forEach(patchRow)
       draw()
+      console.groupEnd(`new data ${min} - ${max}`)
     }
 
     function patchRow(i) {
