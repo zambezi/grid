@@ -35,6 +35,10 @@
             'visible-lines-change.fetch-data'
           , _.throttle(fakeFetchRemoteData, 200, { leading: false }) // throttling is up to the client
           )
+          .on(
+            'sort-changed'
+          , (column) =>  console.info('sort changed, ', column)
+          )
 
     , rows = Array(50000) // create long empty array
     , target = d3.select('.grid-target')

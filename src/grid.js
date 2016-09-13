@@ -63,6 +63,7 @@ export function createGrid() {
       , redispatcher = redispatch()
             .from(dispatchDraw, 'draw')
             .from(body, 'visible-lines-change')
+            .from(sortRowHeaders, 'sort-changed')
             .create()
 
       , api = rebind()
