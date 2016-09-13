@@ -7,6 +7,9 @@ Summary
 - Basics
   - [Row and cell events](man/row-and-cell-events.md)
 
+- Advanced
+  - [Server side filter and sorting](man/server-side-filter-and-sort.md)
+
 ---
 
 - [Authors](AUTHORS.md)
