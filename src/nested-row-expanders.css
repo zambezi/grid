@@ -1,0 +1,39 @@
+body {
+  background-color: yellow;
+}
+
+
+.zambezi-grid-cell > .nested-indicator {
+}
+
+.zambezi-grid-cell > .nested-indicator.is-expand:after {
+  content: '▣';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-expand:hover {
+  color: red;
+}
+
+.zambezi-grid-cell > .nested-indicator.is-collapse:after {
+  content: '▢';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-collapse:hover {
+  color: red;
+}
+
+.zambezi-grid-cell > .nested-indicator.is-up-right:after {
+  content: '└';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-vertical-right:after {
+  content: '├';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-horizontal:after {
+  content: '─';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-vertical:after {
+  content: '│';
+}
