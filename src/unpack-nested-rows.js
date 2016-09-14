@@ -21,7 +21,6 @@ export function createUnpackNestedRows() {
   }
 
   function onDataDirty() {
-    console.debug('onDataDirty (from unpack nested rows)')
     cache = null
   }
 
