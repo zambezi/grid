@@ -18,14 +18,15 @@
               components: [
                 grid.createNestedRowExpanders()
               ]
+            , key: 'label'
             , label: 'expanders'
-            , width: 500
+            , width: 200
             , resizable: false
             , sortable: false
             , draggable: false
 
             }
-          , { key: 'label' }
+          , { key: 'label', sortDescending: true }
           ]
         )
     , rows = [
@@ -41,7 +42,15 @@
             , children: [
                 { label: 'B2a' }
               , { label: 'B2b' }
-              , { label: 'B2c' }
+              , { 
+                  label: 'B2c'
+                , children: [
+                    { label: 'B2c0' }
+                  , { label: 'B2c1' }
+                  , { label: 'B2c2' }
+                  , { label: 'B2c3' }
+                  ]
+                }
               , { label: 'B2d' }
               ]
             }
