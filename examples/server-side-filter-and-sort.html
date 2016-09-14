@@ -1,0 +1,74 @@
+<!doctype html>
+<head><meta charset="utf-8" /></head>
+<body>
+<h2>grid example</h2>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+
+  var table = grid.createGrid()
+          .columns(
+            [
+              { key: 'i', label: 'index', locked: 'left', width: 50 }
+            , { key: 'name' }
+            , { key: 'email', sortDescending: true }
+            , { key: 'phone' }
+            , { key: 'username' }
+            , { 
+                label: 'address'
+              , children: [
+                  { label: 'city', key: 'address.city' }
+                , { label: 'country', key: 'address.ukCountry' }
+                , { label: 'county', key: 'address.ukCounty' }
+                ]
+              }
+            ]
+          )
+          .serverSideFilterAndSort(true)
+          .on(
+            'visible-lines-change.fetch-data'
+          , _.throttle(fakeFetchRemoteData, 100, { leading: false }) // throttling is up to the client
+          )
+          .on(
+            'sort-changed'
+          , (column) =>  console.info('sort changed, ', column)
+          )
+
+    , rows = Array(50000) // create long empty array
+    , target = d3.select('.grid-target')
+          .style('height', '500px')
+          .datum(rows)
+
+  draw()
+
+  function draw() {
+    target.call(table)
+  }
+
+  function fakeFetchRemoteData(min, max) {
+
+    setTimeout(patchAndRedraw, 100) // some added latency, just for fun
+
+    function patchAndRedraw() {
+      console.groupCollapsed(`new data ${min} - ${max}`)
+      d3.range(Math.max(0, min - 2), Math.min(max + 2, rows.length)).forEach(patchRow)
+      draw()
+      console.groupEnd(`new data ${min} - ${max}`)
+    }
+
+    function patchRow(i) {
+      if (rows[i]) return
+      console.debug('patchRow', i)
+      rows[i] = Object.assign({i}, faker.Helpers.createCard())
+    }
+
+  }
+
+</script>
+</body>

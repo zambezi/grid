@@ -27,6 +27,7 @@
     "babel-preset-es2015-rollup": "1.1.1",
     "babel-register": "6.9.0",
     "babelrc-rollup": "2.0.0",
+    "d3": "^4.2.3",
     "faker": "1.0.0",
     "mkdirp": "0.5.1",
     "mocha": "2.5.3",
