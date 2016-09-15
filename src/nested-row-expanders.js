@@ -23,6 +23,7 @@ export function createNestedRowExpanders() {
         , row = d.row
         , column = d.column
         , value = d.value
+
         , hasNested = !!(row.children && row.children.length)
         , isExpanded = row.expanded
         , nestLevel = row.nestLevel
@@ -39,32 +40,33 @@ export function createNestedRowExpanders() {
 
     merge.classed('formatted-text', false)
         .each(updateNestedIndicatorClasses)
-      .select(isNestedIndicator)
-        .text(' ')
+      .filter(isNestedIndicator)
+        .text('')
         .classed('nested-indicator', true)
         .classed('nested-text-field', false)
         .on('click.expand-collapse', onClick)
 
-    /*
     merge
-      .select(isNestedTextField)
+      .filter(isNestedTextField)
         .text(String)
         .classed('nested-text-field', true)
         .classed('nested-indicator', false)
         .on('click.expand-collapse', null)
-    */
 
     function updateNestedIndicatorClasses(d) {
       const indicator = select(this)
       classes.forEach(c => indicator.classed(c, c == d))
     }
 
-    function isNestedIndicator(_, i) {
-      return (i < parentLinesData.length - 1) ? this : null
+    function isNestedIndicator(d, i) {
+      if (i < parentLinesData.length - 1) console.log(d, 'isNestedIndicator')
+      else console.log(d, 'is not nested indicator')
+
+      return (i < parentLinesData.length - 1)
     }
 
     function isNestedTextField(d, i) {
-      return !isNestedIndicator(d, i) ? this : null
+      return !isNestedIndicator(d, i) 
     }
 
     function onClick(state, i) {
