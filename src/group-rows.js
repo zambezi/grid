@@ -29,6 +29,5 @@ export function createGroupRows() {
     }
 
     d.rows = cache
-
   }
 }

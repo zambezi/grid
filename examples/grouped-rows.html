@@ -46,7 +46,7 @@
             ]
           )
 
-    , rows = _.range(1, 100).map(faker.Helpers.createCard)
+    , rows = _.range(1, 800).map(faker.Helpers.createCard)
 
   function countryRollup(row) {
     row.address = { ukCountry: row.children[0].address.ukCountry }
@@ -59,8 +59,8 @@
   }
 
   function debugFormat(row) {
-    if (row.nestLevel == 0) return row.address.ukCountry
-    if (row.nestLevel == 1) return row.name[0]
+    if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children.length})`
+    if (row.nestLevel == 1) return `${row.name[0]} (${row.children.length}) `
     return row.name.split(' ')[0]
   }
 

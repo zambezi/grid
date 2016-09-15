@@ -4,20 +4,15 @@ const separator = '∵'
 
 export function createGroupRowsLayout() {
   let groupings = []
-    , nestedRowsMap
+    , nestedRowsMap 
 
   function groupRowsLayout(d) {
-    console.debug('groupRowsLayout', d, groupings)
-
     if (!groupings.length) return d
     return group(0, d)
 
     function group(depth, rows, previousKey) {
 
       if (depth >= groupings.length) return rows
-
-      console.groupCollapsed('group:' + depth)
-
       const grouping = groupings[depth]
           , key = grouping.key
           , rollupKey = previousKey || ''
@@ -25,16 +20,13 @@ export function createGroupRowsLayout() {
           , parentRowByKey  = {}
           , groupedRows = []
 
+      if (!nestedRowsMap) nestedRowsMap = {}
 
-      nestedRowsMap = nestedRowsMap || {}
       rows.forEach(categorize)
-
 
       const rolledUpRows = groupedRows.map(rollup)
 
       if (depth < groupings.length) rolledUpRows.forEach(groupChildren)
-
-      console.groupEnd('group:' + depth)
 
       return rolledUpRows
 
@@ -52,13 +44,12 @@ export function createGroupRowsLayout() {
             , childrenRows = []
             , rowKey = rollupKey + (rollupKey ? separator : '') + k
 
-        console.debug('categorize', k)
-
         let parentRow = parentRowByKey[k]
 
         if (!parentRow) {
           groupedRows.push(
             parentRowByKey[k]
+          = nestedRowsMap[rowKey]
           = parentRow
           = Object.assign(
                 nestedRowsMap[rowKey] || {}
@@ -66,12 +57,10 @@ export function createGroupRowsLayout() {
                   children: [ ]
                 , isRollup: true
                 , rollupRowKey: rowKey
-                , expanded: true
-                /*
-                , expanded: nestedRowsMap
-                      && nestedRowsMap[rowKey]
-                      && nestedRowsMap[rowKey].expanded
-                */
+                , expanded: 
+                       nestedRowsMap
+                    && nestedRowsMap[rowKey]
+                    && nestedRowsMap[rowKey].expanded
                 }
             )
           )
@@ -85,12 +74,7 @@ export function createGroupRowsLayout() {
   groupRowsLayout.groupings = function(value) {
     if (!arguments.length) return groupings
     groupings = value
-    return groupRowsLayout
-  }
-
-  groupRowsLayout.nestedRowsMap = function(value) {
-    if (!arguments.length) return nestedRowsMap
-    nestedRowsMap = value
+    nestedRowsMap = null
     return groupRowsLayout
   }
 
