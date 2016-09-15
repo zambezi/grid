@@ -32,21 +32,25 @@
           .groupings(
             [
               {
-                key: fun.property('address.country')
+                key: fun.property('address.ukCountry')
               , rollup: countryRollup
+              }
+            , {
+                key: r => r.name[0]
+              , rollup: firstLetterRollup
               }
             ]
           )
 
-    , rows = _.range(1, 2000).map(faker.Helpers.createCard)
-
-  rows[10].locked = 'top'
-  rows[11].locked = 'top'
-  rows[101].locked = 'bottom'
-  rows[102].locked = 'bottom'
+    , rows = _.range(1, 100).map(faker.Helpers.createCard)
 
   function countryRollup(row) {
-    row.address = { country: row.children[0].address.country }
+    row.address = { ukCountry: row.children[0].address.ukCountry }
+    return row
+  }
+
+  function firstLetterRollup(row) {
+    row.name = row.children[0].name[0]
     return row
   }
 
