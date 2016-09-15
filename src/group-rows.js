@@ -18,12 +18,16 @@ export function createGroupRows() {
 
   function groupRowsEach(d, i) {
 
-    console.debug('groupRowsEach', layout(d), this)
-
     const target = select(this)
               .on('data-dirty.group-rows', () => cache = null)
 
-    if (!cache) cache = layout(d.rows || d)
+    if (!cache) {
+      console.warn('cache miss o_o')
+      cache = layout(d.rows || d)
+    } else {
+      console.info('cache hit  ^_^')
+    }
+
     d.rows = cache
 
   }

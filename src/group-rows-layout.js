@@ -14,7 +14,6 @@ export function createGroupRowsLayout() {
 
     function group(depth, rows, previousKey) {
 
-
       if (depth >= groupings.length) return rows
 
       console.groupCollapsed('group:' + depth)
@@ -36,7 +35,6 @@ export function createGroupRowsLayout() {
       if (depth < groupings.length) rolledUpRows.forEach(groupChildren)
 
       console.groupEnd('group:' + depth)
-
 
       return rolledUpRows
 
