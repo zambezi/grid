@@ -20,17 +20,10 @@ export function createNestedRowExpanders() {
   function nestedRowExpanders(d, i) {
 
     const cell = d3.select(this).classed('nested-expander-cell', true)
-        , row = d.row
         , column = d.column
         , value = d.value
-
-        , hasNested = !!(row.children && row.children.length)
-        , isExpanded = row.expanded
-        , nestLevel = row.nestLevel
-        , parentRow = row.parentRow
-        , isChild = !!parentRow
-        , isLast = row.isLast
-        , parentLinesData = buildParentLineData()
+        , row = d.row
+        , parentLinesData = buildParentLineData(row).concat(column.format(value))
         , update = cell.select(changed.key(functor(parentLinesData.join('×'))))
             .selectAll('.nested-indicator, .nested-text-field, .formatted-text')
             .data(parentLinesData)
@@ -59,9 +52,6 @@ export function createNestedRowExpanders() {
     }
 
     function isNestedIndicator(d, i) {
-      if (i < parentLinesData.length - 1) console.log(d, 'isNestedIndicator')
-      else console.log(d, 'is not nested indicator')
-
       return (i < parentLinesData.length - 1)
     }
 
@@ -84,26 +74,32 @@ export function createNestedRowExpanders() {
           .dispatch('data-dirty', { bubbles: true })
           .dispatch('redraw', { bubbles: true })
     }
-
-    function buildParentLineData() {
-      const result = [
-              hasNested ? isExpanded ? collapse : expand
-            : isChild   ? horizontal : ''
-            ]
-
-      if (isChild) result.unshift(isLast ?  upRight : verticalRight)
-
-      prependParentRowExtension(parentRow)
-
-      return result.concat(column.format(value))
-
-      function prependParentRowExtension(row) {
-        if (!row) return
-        if (!row.parentRow) return
-        result.unshift(row.isLast ? '' : vertical)
-        prependParentRowExtension(row.parentRow)
-      }
-    }
   }
   return nestedRowExpanders
+}
+
+function buildParentLineData(row) {
+  const hasNested = !!(row.children && row.children.length)
+      , isExpanded = row.expanded
+      , nestLevel = row.nestLevel
+      , parentRow = row.parentRow
+      , isChild = !!parentRow
+      , isLast = row.isLast
+      , result = [
+          hasNested ? isExpanded ? collapse : expand
+        : isChild   ? horizontal : ''
+        ]
+
+  if (isChild) result.unshift(isLast ?  upRight : verticalRight)
+
+  prependParentRowExtension(parentRow)
+
+  return result
+
+  function prependParentRowExtension(row) {
+    if (!row) return
+    if (!row.parentRow) return
+    result.unshift(row.isLast ? '' : vertical)
+    prependParentRowExtension(row.parentRow)
+  }
 }
