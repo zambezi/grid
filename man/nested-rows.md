@@ -40,9 +40,12 @@ const grid = createGrid()
           )
 ```
 
+The _nested row expanders_ component will also render label, and will use the standard column formatter and key properties to do so. 
+If you want to use the expanders without a label, you can configure a formatter to return an empty string for that column.
+
 If you want certain rows to be expanded from the outset, set on them an `expanded` property set to true.
 
 The grid supports arbitrarily nested rows.
 Nested columns can have their own `children` columns with deeper nested rows.
 
-* Note that cells that use the nested rows expanded components don't support truncation.
+NOTE: cells that use the nested rows expanded components don't support truncation.
