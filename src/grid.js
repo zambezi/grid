@@ -15,6 +15,7 @@ import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
+import { createUnpackNestedRows } from './unpack-nested-rows'
 import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
@@ -49,6 +50,7 @@ export function createGrid() {
         , call(processSizeAndClipping)
         , call(createMeasureGridArea())
         , call(createMarkRowIndices())
+        , call(createUnpackNestedRows())
         , call(createSortRows())
         , call(processRowData)
         , call(resize)

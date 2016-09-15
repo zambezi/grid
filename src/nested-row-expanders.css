@@ -1,0 +1,49 @@
+.zambezi-grid-cell.nested-expander-cell {
+  overflow: visible;
+}
+
+.zambezi-grid-cell > .nested-indicator {
+  font-size: 16px;
+  font-family: monospace;
+  white-space: pre;
+  color: #555;
+}
+
+.zambezi-grid-cell > .nested-text-field {
+  margin-left: 8px;
+  position: relative;
+  top: -1px;
+}
+
+.zambezi-grid-cell > .nested-indicator.is-collapse:hover,
+.zambezi-grid-cell > .nested-indicator.is-expand:hover {
+  color: black;
+}
+
+.zambezi-grid-cell > .nested-indicator:after {
+  content: ' ';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-expand:after {
+  content: '▣';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-collapse:after {
+  content: '▢';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-up-right:after {
+  content: '└';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-vertical-right:after {
+  content: '├';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-horizontal:after {
+  content: '─';
+}
+
+.zambezi-grid-cell > .nested-indicator.is-vertical:after {
+  content: '│';
+}
