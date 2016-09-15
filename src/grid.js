@@ -84,6 +84,7 @@ export function createGrid() {
             .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
             .from(ensureColumns, 'columns')
+            .from(groupRows, 'groupings')
             .from(processRowData, 'filters', 'filtersUse', 'skipRowLocking')
             .from(processSizeAndClipping, 'scroll')
             .from(redispatcher, 'on')

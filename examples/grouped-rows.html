@@ -19,13 +19,21 @@
             , { key: 'email', sortDescending: true }
             , { key: 'phone' }
             , { key: 'username' }
-            , { 
+            , {
                 label: 'address'
               , children: [
                   { label: 'city', key: 'address.city', width: 300 }
                 , { label: 'country', key: 'address.ukCountry' }
                 , { label: 'county', key: 'address.ukCounty' }
                 ]
+              }
+            ]
+          )
+          .groupings(
+            [
+              {
+                key: fun.property('address.country')
+              , rollup: countryRollup
               }
             ]
           )
@@ -36,6 +44,11 @@
   rows[11].locked = 'top'
   rows[101].locked = 'bottom'
   rows[102].locked = 'bottom'
+
+  function countryRollup(row) {
+    row.address = { country: row.children[0].address.country }
+    return row
+  }
 
   d3.select('.grid-target')
       .style('height', '500px')
