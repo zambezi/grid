@@ -60,9 +60,6 @@ export function createNestedRowExpanders() {
     }
 
     function onClick(state, i) {
-
-      console.debug('onClick', state)
-
       const row = cell.datum().row 
 
       if (state !== collapse && state !== expand) return
