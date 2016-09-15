@@ -56,11 +56,11 @@ export function createNestedRowExpanders() {
     }
 
     function isNestedTextField(d, i) {
-      return !isNestedIndicator(d, i) 
+      return !isNestedIndicator(d, i)
     }
 
     function onClick(state, i) {
-      const row = cell.datum().row 
+      const row = cell.datum().row
 
       if (state !== collapse && state !== expand) return
       unwrap(row).expanded = !row.expanded
