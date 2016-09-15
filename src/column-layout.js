@@ -6,6 +6,8 @@ import { updateTextIfChanged } from './update-text-if-changed'
 const valueByKey = {}
     , defaultFormat = wrap(String, emptyIfUndefinedFormat)
 
+let columnIdCount = 0xA 
+
 export function columnLayout(columns) {
   const result = validateAndSegregateColumns(columns)
   columns.hasDoubleRowHeader = columns.some(visibleWithChildren)
@@ -67,10 +69,12 @@ function validateAndSegregateColumns(columns) {
     function newId(column) {
       var label = column.label
         , k = (
-            column.key || (label && label.toLowerCase()) || '').replace(/\W+/g, '-')
+            column.key 
+          || (label && label.toLowerCase()) || '').replace(/\W+/g, '-')
+
         , columnKeyCount = k && predefinedColumnId[k]
 
-      if (!k) return 'c-' + (++columnIdCount).toString(16).toUpperCase()
+      if (!k) return 'gen-' + (columnIdCount++).toString(16).toUpperCase()
       if (columnKeyCount) return k + '-' + ++predefinedColumnId[k]
 
       predefinedColumnId[k] = 1
