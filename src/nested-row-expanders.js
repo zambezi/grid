@@ -39,8 +39,7 @@ export function createNestedRowExpanders() {
         .classed('nested-text-field', false)
         .on('click.expand-collapse', onClick)
 
-    merge
-      .filter(isNestedTextField)
+    merge.filter(isNestedTextField)
         .text(String)
         .classed('nested-text-field', true)
         .classed('nested-indicator', false)
