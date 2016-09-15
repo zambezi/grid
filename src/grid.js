@@ -5,6 +5,7 @@ import { createColumnDrag } from './column-drag'
 import { createColumnSizers } from './column-sizers'
 import { createEnsureColumns } from './ensure-columns'
 import { createExportServerSideFilterAndSort } from './export-server-side-filter-and-sort'
+import { createGroupRows } from './group-rows'
 import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
 import { createMarkRowIndices } from './mark-row-indices'
@@ -19,8 +20,7 @@ import { createUnpackNestedRows } from './unpack-nested-rows'
 import { dispatch as createDispatch } from 'd3-dispatch'
 import { ensureData } from './ensure-data'
 import { ensureId } from './ensure-id'
-import { rebind, redispatch, call, each, redraw, createResize, createAutoDirty,
-    throttle, throttleToAnimationFrame } from '@zambezi/d3-utils'
+import { rebind, redispatch, call, each, redraw, createResize, createAutoDirty, throttle, throttleToAnimationFrame } from '@zambezi/d3-utils'
 
 import './grid.css'
 
@@ -34,6 +34,7 @@ export function createGrid() {
       , resize = createResize()
       , columnSizers = createColumnSizers()
       , dispatchDraw = createDispatch('draw')
+      , groupRows = createGroupRows()
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
       , serverSideFilterAndSort = createExportServerSideFilterAndSort()
@@ -56,6 +57,7 @@ export function createGrid() {
         , call(resize)
         , call(setupTemplate)
         , each(calculateColumnLayout)
+        , call(groupRows)
         , call(ensureColumns)
         , call(serverSideFilterAndSort)
         , each(ensureData)
