@@ -2,6 +2,11 @@
 <head><meta charset="utf-8" /></head>
 <body>
 <h2>grid example</h2>
+<p>
+  <button class="no-grouping">no groupings</button>
+  <button class="group-by-country">group by uk country</button>
+  <button class="group-by-country-and-name">group by uk country and first letter of name</button>
+</p>
 <div class="grid-target"></div>
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
 <script src="../node_modules/underscore/underscore.js"></script>
@@ -21,7 +26,10 @@
                 components: [ grid.createNestedRowExpanders() ]
               , format: debugFormat
               , sortable: false
-              , width: 120
+              , width: 150
+              , hidden: true
+              , id: 'expanders'
+              , label: 'custom expanders'
               }
             , {
                 label: 'address'
@@ -33,20 +41,70 @@
               }
             ]
           )
-          .groupings(
-            [
-              {
-                key: fun.property('address.ukCountry')
-              , rollup: countryRollup
-              }
-            , {
-                key: r => r.name[0]
-              , rollup: firstLetterRollup
-              }
-            ]
-          )
 
     , rows = _.range(1, 800).map(faker.Helpers.createCard)
+    , target = d3.select('.grid-target')
+          .style('height', '500px')
+          .datum(rows)
+          .call(table)
+
+  d3.select('.no-grouping')
+      .on('click.configure', onNoGrouping)
+      .on('click.expanders', hideCustomExpanders)
+      .on('click.redraw', redraw)
+
+  d3.select('.group-by-country')
+      .on('click.configure', onGroupByCountry)
+      .on('click.expanders', showCustomExpanders)
+      .on('click.redraw', redraw)
+
+  d3.select('.group-by-country-and-name')
+      .on('click.configure', onGroupByCountryAndName)
+      .on('click.expanders', showCustomExpanders)
+      .on('click.redraw', redraw)
+
+  function onNoGrouping() {
+    table.groupings([])
+  }
+
+  function onGroupByCountry() {
+    table.groupings(
+      [
+        {
+          key: fun.property('address.ukCountry')
+        , rollup: countryRollup
+        }
+      ]
+    )
+  }
+
+  function onGroupByCountryAndName() {
+    table.groupings(
+      [
+        {
+          key: fun.property('address.ukCountry')
+        , rollup: countryRollup
+        }
+      , {
+          key: r => r.name[0]
+        , rollup: firstLetterRollup
+        }
+      ]
+    )
+
+  }
+
+  function hideCustomExpanders() {
+    _.findWhere(table.columns(), {id: 'expanders'}).hidden = true
+  }
+
+  function showCustomExpanders() {
+    _.findWhere(table.columns(), {id: 'expanders'}).hidden = false
+  }
+
+  function redraw() {
+    target.call(table)
+  }
 
   function countryRollup(row) {
     row.address = { ukCountry: row.children[0].address.ukCountry }
@@ -59,15 +117,10 @@
   }
 
   function debugFormat(row) {
-    if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children.length})`
-    if (row.nestLevel == 1) return `${row.name[0]} (${row.children.length}) `
+    if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children && row.children.length})`
+    if (row.nestLevel == 1) return `${row.name[0]} (${row.children && row.children.length}) `
     return row.name.split(' ')[0]
   }
-
-  d3.select('.grid-target')
-      .style('height', '500px')
-      .datum(rows)
-      .call(table)
 
 </script>
 </body>
