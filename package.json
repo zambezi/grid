@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.7.0-grouped-rows.0",
+  "version": "0.7.0-grouped-rows.1",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",
