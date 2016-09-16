@@ -1,0 +1,77 @@
+<!doctype html>
+<head><meta charset="utf-8" /></head>
+<body>
+<h2>grid example</h2>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+
+  var table = grid.createGrid()
+          .columns(
+            [
+              {
+                components: [ grid.createNestedRowExpanders() ]
+              , format: hierarchyFormat
+              , sortable: false
+              , width: 170
+              , id: 'expanders'
+              , label: 'Tree'
+              , locked: 'left'
+              }
+            , { 
+                label: 'Name'
+              , format: grid.formatNonRollup(fun.property('name')) 
+              , sort: fun.compareWith(d3.ascending, fun.property('name'))
+              , sortAscending: true
+              }
+            , { key: 'email', label: 'Email' }
+            , { key: 'phone', label: 'Phone' }
+            , { key: 'address.city', label: 'City' }
+            ]
+          )
+          .groupings(
+            [
+              { key: d => d.address.ukCountry , rollup: countryRollup }
+            , { key: r => r.name[0] , rollup: firstLetterRollup }
+            , { key: d => d.address.ukCounty , rollup: countyRollup }
+            ]
+          )
+
+    , rows = _.range(1, 5000).map(faker.Helpers.createCard)
+    , target = d3.select('.grid-target')
+          .style('height', '500px')
+          .datum(rows)
+          .call(table)
+
+  function hierarchyFormat(row) {
+    switch (row.nestLevel) {
+      case 0: return row.address ? row.address.ukCountry : ''
+      case 1: return row.name ? row.name[0] : ''
+      case 2: return row.address ? `${row.address.ukCounty} (${row.children.length})` : ''
+      default: return row.name.split(' ')[0]
+    }
+  }
+
+  function firstLetterRollup(row) {
+    row.name = row.children[0].name[0]
+    return row
+  }
+
+  function countryRollup(row) {
+    row.address = { ukCountry: row.children[0].address.ukCountry }
+    return row
+  }
+
+  function countyRollup(row) {
+    row.address = { ukCounty: row.children[0].address.ukCounty }
+    return row
+  }
+
+</script>
+</body>
