@@ -24,7 +24,7 @@
             , { key: 'email', sortDescending: true }
             , {
                 components: [ grid.createNestedRowExpanders() ]
-              , format: debugFormat
+              , format: twoLevelFormat
               , sortable: false
               , width: 150
               , hidden: true
@@ -56,11 +56,13 @@
   d3.select('.group-by-country')
       .on('click.configure', onGroupByCountry)
       .on('click.expanders', showCustomExpanders)
+      .on('click.formatter', configureOneLevelFormatter)
       .on('click.redraw', redraw)
 
   d3.select('.group-by-country-and-name')
       .on('click.configure', onGroupByCountryAndName)
       .on('click.expanders', showCustomExpanders)
+      .on('click.formatter', configureTwoLevelFormatter)
       .on('click.redraw', redraw)
 
   function onNoGrouping() {
@@ -91,7 +93,14 @@
         }
       ]
     )
+  }
 
+  function configureTwoLevelFormatter() {
+    _.findWhere(table.columns(), {id: 'expanders'}).format = twoLevelFormat
+  }
+
+  function configureOneLevelFormatter() {
+    _.findWhere(table.columns(), {id: 'expanders'}).format = oneLevelFormat
   }
 
   function hideCustomExpanders() {
@@ -118,9 +127,14 @@
     return row
   }
 
-  function debugFormat(row) {
+  function twoLevelFormat(row) {
     if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children && row.children.length})`
     if (row.nestLevel == 1) return `${row.name[0]} (${row.children && row.children.length}) `
+    return row.name.split(' ')[0]
+  }
+
+  function oneLevelFormat(row) {
+    if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children && row.children.length})`
     return row.name.split(' ')[0]
   }
 
