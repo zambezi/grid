@@ -1,5 +1,6 @@
 import { createGroupRowsLayout } from './group-rows-layout'
-import { rebind } from '@zambezi/d3-utils'
+import { property } from '@zambezi/fun'
+import { rebind, selectionChanged } from '@zambezi/d3-utils'
 import { select } from 'd3-selection'
 
 import './group-rows.css'
@@ -17,7 +18,6 @@ export function createGroupRows() {
   return rebind().from(layout, 'groupings')(groupRows)
 
   function groupRowsEach(d, i) {
-
     const target = select(this)
               .on('data-dirty.group-rows', () => cache = null)
 

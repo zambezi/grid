@@ -14,6 +14,7 @@ import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
 import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
+import { createShareDispatcher } from './share-dispatcher'
 import { createSortRowHeaders } from './sort-row-headers'
 import { createSortRows } from './sort-rows'
 import { createUnpackNestedRows } from './unpack-nested-rows'
@@ -38,31 +39,8 @@ export function createGrid() {
       , body = createBody()
       , sortRowHeaders = createSortRowHeaders()
       , serverSideFilterAndSort = createExportServerSideFilterAndSort()
+      , shareDispatcher = createShareDispatcher()
       , autodirty = createAutoDirty()
-      , grid = compose(
-          call(() => dispatchDraw.call('draw'))
-        , call(createScrollers())
-        , call(sortRowHeaders)
-        , call(columnSizers)
-        , call(columnDrag)
-        , call(createHeaders())
-        , call(body)
-        , each(createLayOutBodyAndOverlays())
-        , call(processSizeAndClipping)
-        , call(createMeasureGridArea())
-        , call(createMarkRowIndices())
-        , call(createUnpackNestedRows())
-        , call(createSortRows())
-        , call(processRowData)
-        , call(resize)
-        , call(setupTemplate)
-        , each(calculateColumnLayout)
-        , call(groupRows)
-        , call(ensureColumns)
-        , call(serverSideFilterAndSort)
-        , each(ensureData)
-        , each(ensureId)
-        )
 
       , redispatcher = redispatch()
             .from(dispatchDraw, 'draw')
@@ -92,6 +70,32 @@ export function createGrid() {
             .from(serverSideFilterAndSort, 'serverSideFilterAndSort')
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
+
+      , grid = compose(
+          call(() => dispatchDraw.call('draw'))
+        , call(createScrollers())
+        , call(sortRowHeaders)
+        , call(columnSizers)
+        , call(columnDrag)
+        , call(createHeaders())
+        , call(body)
+        , each(createLayOutBodyAndOverlays())
+        , call(processSizeAndClipping)
+        , call(createMeasureGridArea())
+        , call(createMarkRowIndices())
+        , call(createUnpackNestedRows())
+        , call(createSortRows())
+        , call(processRowData)
+        , call(resize)
+        , call(setupTemplate)
+        , each(calculateColumnLayout)
+        , call(groupRows)
+        , call(ensureColumns)
+        , call(serverSideFilterAndSort)
+        , each(shareDispatcher.dispatcher(redispatcher))
+        , each(ensureData)
+        , each(ensureId)
+        )
 
   return api(autodirty(redraw(throttle(throttleToAnimationFrame(grid), 10))))
 }
