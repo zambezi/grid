@@ -6,6 +6,7 @@
   <button class="no-grouping">no groupings</button>
   <button class="group-by-country">group by uk country</button>
   <button class="group-by-country-and-name">group by uk country and first letter of name</button>
+  <button class="group-by-country-county-and-name">group by uk country, county, and first letter of name</button>
 </p>
 <div class="grid-target"></div>
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
@@ -20,7 +21,7 @@
   var table = grid.createGrid()
           .columns(
             [
-              { key: 'name', locked: 'left', width: 200 }
+              { key: 'name', width: 200 }
             , { key: 'email', sortDescending: true }
             , {
                 components: [ grid.createNestedRowExpanders() ]
@@ -65,6 +66,12 @@
       .on('click.formatter', configureTwoLevelFormatter)
       .on('click.redraw', redraw)
 
+  d3.select('.group-by-country-county-and-name')
+      .on('click.configure', onGroupByCountryCountyAndName)
+      .on('click.expanders', showCustomExpanders)
+      .on('click.formatter', configureThreeLevelFormatter)
+      .on('click.redraw', redraw)
+
   function onNoGrouping() {
     table.groupings([])
   }
@@ -75,6 +82,25 @@
         {
           key: fun.property('address.ukCountry')
         , rollup: countryRollup
+        }
+      ]
+    )
+  }
+
+  function onGroupByCountryCountyAndName() {
+    table.groupings(
+      [
+        {
+          key: fun.property('address.ukCountry')
+        , rollup: countryRollup
+        }
+      , {
+          key: fun.property('address.ukCounty')
+        , rollup: countyRollup
+        }
+      , {
+          key: r => r.name[0]
+        , rollup: firstLetterRollup
         }
       ]
     )
@@ -99,6 +125,10 @@
     _.findWhere(table.columns(), {id: 'expanders'}).format = twoLevelFormat
   }
 
+  function configureThreeLevelFormatter() {
+    _.findWhere(table.columns(), {id: 'expanders'}).format = threeLevelFormat
+  }
+
   function configureOneLevelFormatter() {
     _.findWhere(table.columns(), {id: 'expanders'}).format = oneLevelFormat
   }
@@ -116,14 +146,25 @@
   }
 
   function countryRollup(row) {
-    if (!row.address) row.expanded = true // auto-expand only first time.
     row.address = { ukCountry: row.children[0].address.ukCountry }
+    return row
+  }
+
+  function countyRollup(row) {
+    row.address = { ukCounty: row.children[0].address.ukCounty }
     return row
   }
 
   function firstLetterRollup(row) {
     row.name = row.children[0].name[0]
     return row
+  }
+
+  function threeLevelFormat(row) {
+    if (row.nestLevel == 0) return `${row.address.ukCountry} (${row.children && row.children.length})`
+    if (row.nestLevel == 1) return `${row.address.ukCounty} (${row.children && row.children.length}) `
+    if (row.nestLevel == 2) return `${row.name[0]} (${row.children && row.children.length}) `
+    return row.name.split(' ')[0]
   }
 
   function twoLevelFormat(row) {
