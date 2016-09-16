@@ -116,7 +116,6 @@
   }
 
   function countryRollup(row) {
-    console.log('countryRollup', row)
     if (!row.address) row.expanded = true // auto-expand only first time.
     row.address = { ukCountry: row.children[0].address.ukCountry }
     return row
