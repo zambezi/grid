@@ -1,6 +1,5 @@
 import { appendFromTemplate, selectionChanged, rebind, forward } from '@zambezi/d3-utils'
 import { dispatch as createDispatch } from 'd3-dispatch'
-import { partial } from 'underscore'
 import { property, batch } from '@zambezi/fun'
 import { select } from 'd3-selection'
 
@@ -153,16 +152,10 @@ export function createCells() {
   }
 
   function updateRow(d) {
-    var index = d.index
-      , className = this.className
-      , rowClass = 'grid-row-index-' + index
-      , newClassName = className.replace(rowIndexMatch, useClass(rowClass))
-      , selector = `#${ gridId } .zambezi-grid-body .${ rowClass }`
+    const index = d.index
+        , selector = `#${ gridId } [data-grid-row-index="${index}"]`
 
-    if (className == newClassName) return
-
-    this.className = newClassName
-
+    this.dataset.gridRowIndex = index
     sheet(selector, { top: top(d) })
   }
 }
