@@ -8,6 +8,7 @@ Summary
 
 - Advanced
   - [Nested rows](man/nested-rows.md)
+  - [Grouped rows](man/grouped-rows.md)
   - [Server side filter and sorting](man/server-side-filter-and-sort.md)
 
 ---
