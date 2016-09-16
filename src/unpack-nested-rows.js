@@ -26,7 +26,7 @@ export function createUnpackNestedRows() {
         .on('data-dirty.unpack-nested-rows', onDataDirty)
 
     d.rows = cache
-    d.dispatcher.on('row-update.group-rows', setRowNestLevel)
+    d.dispatcher.on('row-update.unpack-nested-rows', setRowNestLevel)
 
   }
 

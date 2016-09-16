@@ -1,9 +1,14 @@
 import { createGroupRowsLayout } from './group-rows-layout'
 import { property } from '@zambezi/fun'
-import { rebind, selectionChanged } from '@zambezi/d3-utils'
+import { rebind } from '@zambezi/d3-utils'
 import { select } from 'd3-selection'
+import { selectionChanged } from '@zambezi/d3-utils'
 
 import './group-rows.css'
+
+const isRollupRow = property('row.isRollup')
+    , isRollupChanged = selectionChanged()
+          .key(isRollupRow)
 
 export function createGroupRows() {
 
@@ -21,13 +26,14 @@ export function createGroupRows() {
     const target = select(this)
               .on('data-dirty.group-rows', () => cache = null)
 
-    if (!cache) {
-      console.warn('cache miss o_o')
-      cache = layout(d.rows || d)
-    } else {
-      console.info('cache hit  ^_^')
-    }
+    d.dispatcher.on('row-update.group-rows', onRowUpdate)
 
+    if (!cache) cache = layout(d.rows || d)
     d.rows = cache
+  }
+
+  function onRowUpdate(d, i) {
+    select(this).select(isRollupChanged)
+        .classed('is-rollup-row', isRollupRow)
   }
 }
