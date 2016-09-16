@@ -4,7 +4,7 @@ const separator = '∵'
 
 export function createGroupRowsLayout() {
   let groupings = []
-    , nestedRowsMap 
+    , nestedRowsMap
 
   function groupRowsLayout(d) {
     if (!groupings.length) return d
@@ -57,7 +57,7 @@ export function createGroupRowsLayout() {
                   children: [ ]
                 , isRollup: true
                 , rollupRowKey: rowKey
-                , expanded: 
+                , expanded:
                        nestedRowsMap
                     && nestedRowsMap[rowKey]
                     && nestedRowsMap[rowKey].expanded
