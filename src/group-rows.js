@@ -1,8 +1,9 @@
 import { createGroupRowsLayout } from './group-rows-layout'
-import { property } from '@zambezi/fun'
+import { partial } from 'underscore'
+import { property, negate } from '@zambezi/fun'
 import { rebind } from '@zambezi/d3-utils'
 import { select } from 'd3-selection'
-import { selectionChanged } from '@zambezi/d3-utils'
+import { selectionChanged, emptyIfFormat } from '@zambezi/d3-utils'
 
 import './group-rows.css'
 
@@ -36,4 +37,12 @@ export function createGroupRows() {
     select(this).select(isRollupChanged)
         .classed('is-rollup-row', isRollupRow)
   }
+}
+
+export function formatRollup(formatter) {
+  return partial(emptyIfFormat, negate(property('isRollup')), formatter)
+}
+
+export function formatNonRollup(formatter) {
+  return partial(emptyIfFormat, property('isRollup'), formatter)
 }
