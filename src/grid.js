@@ -12,6 +12,7 @@ import { createMarkRowIndices } from './mark-row-indices'
 import { createMeasureGridArea }  from './measure-grid-area'
 import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
+import { createRunExternalComponents } from './run-external-components'
 import { createScrollers } from './scrollers'
 import { createSetupGridTemplate } from './setup-grid-template'
 import { createShareDispatcher } from './share-dispatcher'
@@ -37,11 +38,11 @@ export function createGrid() {
       , dispatchDraw = createDispatch('draw')
       , groupRows = createGroupRows()
       , body = createBody()
+      , runExternalComponents = createRunExternalComponents()
       , sortRowHeaders = createSortRowHeaders()
       , serverSideFilterAndSort = createExportServerSideFilterAndSort()
       , shareDispatcher = createShareDispatcher()
       , autodirty = createAutoDirty()
-
       , redispatcher = redispatch()
             .from(dispatchDraw, 'draw')
             .from(sortRowHeaders, 'sort-changed')
@@ -73,6 +74,7 @@ export function createGrid() {
 
       , grid = compose(
           call(() => dispatchDraw.call('draw'))
+        , call(runExternalComponents)
         , call(createScrollers())
         , call(sortRowHeaders)
         , call(columnSizers)
