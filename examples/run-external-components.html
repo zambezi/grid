@@ -32,7 +32,7 @@
                   )
     , table = grid.createGrid()
           .use(createSomeComponent())
-          .usePre(s => s.select('.zambezi-grid-body').style('background-color', color(Math.sin(++c / 10))))
+          .use(s => s.select('.zambezi-grid-body').style('background-color', color(Math.sin(++c / 10))))
 
   d3.select('.grid-target')
       .style('height', '500px')
