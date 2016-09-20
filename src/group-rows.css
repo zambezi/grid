@@ -1,0 +1,15 @@
+.zambezi-grid-row.is-rollup-row {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.zambezi-grid-row.is-rollup-row > .zambezi-grid-cell {
+  border-right: none;
+}
+
+.zambezi-grid-row.is-rollup-row[data-nest-level="1"] {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.zambezi-grid-row.is-rollup-row[data-nest-level="2"] {
+  background-color: rgba(0, 0, 0, 0.025);
+}

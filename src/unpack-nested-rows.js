@@ -1,5 +1,10 @@
+import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
+import { selectionChanged } from '@zambezi/d3-utils'
 import { wrap } from './wrap-row'
+
+const rowNestedLevelChanged = selectionChanged()
+          .key(property('row.nestLevel'))
 
 export function createUnpackNestedRows() {
 
@@ -16,12 +21,23 @@ export function createUnpackNestedRows() {
     if (d.serverSideFilterAndSort) return
     filters = d.filters
     if (!cache) cache = unpackRows(d)
-    select(this).on('data-dirty.unpack-nested-rows', onDataDirty)
+
+    select(this)
+        .on('data-dirty.unpack-nested-rows', onDataDirty)
+
     d.rows = cache
+    d.dispatcher.on('row-update.unpack-nested-rows', setRowNestLevel)
+
   }
 
   function onDataDirty() {
     cache = null
+  }
+
+  function setRowNestLevel(d, i) {
+    select(this)
+      .select(rowNestedLevelChanged)
+      .each(() => this.dataset.nestLevel = d.row.nestLevel)
   }
 
   function unpackRows(d) {
@@ -42,7 +58,6 @@ export function createUnpackNestedRows() {
     return result
 
     function unpackNestedRowsForLevel(level) {
-
       return function unpack(acc, row, i, a) {
         const children = row.children
 

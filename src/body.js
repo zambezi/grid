@@ -68,11 +68,11 @@ export function createBody() {
         , target = root.select('.zambezi-grid-body')
         , id = root.attr('id')
         , blockData = bodyBlockLayout(bundle)
-        , blocksUpdate = target.selectAll('.body-section')
+        , blocksUpdate = target.selectAll('.zambezi-body-section')
               .data(blockData)
         , blocksEnter = blocksUpdate.enter()
               .append('ul')
-                .classed('body-section', true)
+                .classed('zambezi-body-section', true)
                 .each(setSectionClasses)
         , blocks = blocksUpdate.merge(blocksEnter)
         , rows = bundle.rows
@@ -137,7 +137,7 @@ export function createBody() {
     }
 
     function updateBlockLayout(d, i) {
-      const blockSelector = `#${ id } .body-section.${ d.className }`
+      const blockSelector = `#${ id } .zambezi-body-section.${ d.className }`
           , value = {}
           , rowSelector = blockSelector + ' > .zambezi-grid-row'
           , measuredWidth = d.measuredWidth
