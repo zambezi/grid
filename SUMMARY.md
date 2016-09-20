@@ -6,6 +6,9 @@ Summary
 - Basics
   - [Row and cell events](man/row-and-cell-events.md)
 
+- Extending the grid
+  - [Grid components](man/grid-components.md)
+
 - Advanced
   - [Nested rows](man/nested-rows.md)
   - [Grouped rows](man/grouped-rows.md)
