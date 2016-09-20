@@ -1,13 +1,16 @@
 export function createRunExternalComponents() {
 
+  const components = []
+
   function runExternalComponents(s) {
-    s.each(runExternalComponentsEach)
+    components.forEach(c => s.call(c))
+  }
+
+  runExternalComponents.use = function(component) {
+    components.push(component)
+    return runExternalComponents
   }
 
   return runExternalComponents
-
-  function runExternalComponentsEach(d, i) {
-    console.log('runExternalComponentsEach', d, this)
-  }
 
 }
