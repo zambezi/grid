@@ -1,0 +1,75 @@
+<!doctype html>
+<head><meta charset="utf-8" />
+  <style>
+    .example-component {
+      position: absolute;
+      bottom: 10px;
+      width: 250px;
+      right: 10px;
+      padding: 20px;
+      background-color: blue;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<h2>grid example</h2>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+  var rows = _.range(1, 5000)
+                  .map(
+                    _.compose(
+                      _.partial(_.pick, _, 'name', 'username', 'email')
+                    , faker.Helpers.createCard
+                    )
+                  )
+    , table = grid.createGrid()
+          .use(createSomeComponent())
+          .use(s => s.select('.zambezi-grid-body').style('background-color', color(Math.sin(++c / 10))))
+
+  d3.select('.grid-target')
+      .style('height', '500px')
+      .datum(rows)
+      .call(table)
+
+  // Some component stuff that'd live elsewhere
+
+  var c = 0
+    , color = d3.interpolateHslLong('honeydew', 'cyan')
+
+  function createSomeComponent() {
+    var ran = 0
+
+    function someStatsComponent(s) {
+      s.select(d3Utils.appendIfMissing('pre.example-component'))
+            .text(toStats)
+    }
+
+    return someStatsComponent
+
+    function toStats(d) {
+      return [ 
+        'SCROLL ME :-)'
+      , '-------------'
+      , 'Custom component ran ' + ++ran + ' times'
+      , '* ' + d.length + ' rows'
+      , '* sorted by <' + 
+          (
+            _.findWhere(d.columns, { sortDescending: true })
+          || _.findWhere(d.columns, { sortAscending: true })
+          || { id: '-no column-' }
+          ).id + '> column'
+      , '* first row "' + d.rows[0].name + '"'
+      ].join('\n')
+    }
+  }
+
+</script>
+</body>
