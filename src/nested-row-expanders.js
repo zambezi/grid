@@ -19,7 +19,7 @@ export function createNestedRowExpanders() {
 
   function nestedRowExpanders(d, i) {
 
-    const cell = d3.select(this).classed('nested-expander-cell', true)
+    const cell = select(this).classed('nested-expander-cell', true)
         , column = d.column
         , value = d.value
         , row = d.row
