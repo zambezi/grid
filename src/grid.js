@@ -10,6 +10,7 @@ import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
 import { createMarkRowIndices } from './mark-row-indices'
 import { createMeasureGridArea }  from './measure-grid-area'
+import { createMouseWheel } from './mouse-wheel'
 import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
 import { createRunExternalComponents } from './run-external-components'
@@ -85,6 +86,7 @@ export function createGrid() {
         , call(createHeaders())
         , call(body)
         , each(createLayOutBodyAndOverlays())
+        , call(createMouseWheel())
         , call(processSizeAndClipping)
         , call(createMeasureGridArea())
         , call(createMarkRowIndices())
