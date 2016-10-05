@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.9.0",
+  "version": "0.9.1-udate-text-if-changed-order-fix.1",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",
