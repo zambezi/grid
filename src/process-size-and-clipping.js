@@ -1,4 +1,4 @@
-import { fromDetail, fromTarget } from '@zambezi/d3-utils'
+import { fromDetail } from '@zambezi/d3-utils'
 import { isIE } from './is-ie'
 import { isNumber, clone } from 'underscore'
 import { select } from 'd3-selection'
@@ -35,7 +35,7 @@ export function createProcessSizeAndClipping() {
 
     if (!rowHeight) rowHeight = produceRowHeight()
 
-    root.on('grid-scroll.size-and-clipping', fromTarget(onGridScroll))
+    root.on('grid-scroll.size-and-clipping', fromDetail(onGridScroll))
 
     measureBlocks()
     calculateVerticalClipping()
