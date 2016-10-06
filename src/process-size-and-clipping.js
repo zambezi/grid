@@ -25,6 +25,7 @@ export function createProcessSizeAndClipping() {
 
   function processSizeAndClippingEach(d) {
     let bodyBounds = d.bodyBounds
+      , rowHeight = d.rowHeight
       , rows = d.rows
       , columns = d.columns
       , clippedVertical
@@ -32,8 +33,6 @@ export function createProcessSizeAndClipping() {
       , availableFreeHeight
       , availableFreeWidth
       , root = select(this)
-
-    if (!rowHeight) rowHeight = produceRowHeight()
 
     root.on('grid-scroll.size-and-clipping', fromDetail(onGridScroll))
 
@@ -125,6 +124,10 @@ export function createProcessSizeAndClipping() {
           .forEach(layOutColumnBlockWithOffset(0))
     }
 
+    function measureBlock(block) {
+      block.measuredHeight = block.length * rowHeight
+    }
+
     function calculateActualSizeForFreeBlocks() {
       var actualFreeHeight = bodyBounds.height
               - rows.top.measuredHeight
@@ -156,24 +159,12 @@ export function createProcessSizeAndClipping() {
       d.scroll = clone(scroll)
     }
 
-    function produceRowHeight() {
-      const body = root.select('.zambezi-grid-body')
-          , fakeSection = body.append('ul').classed('body-section transient', true)
-          , fakeRow = fakeSection.append('li').classed('zambezi-grid-row', true)
-          , rowStyle = window.getComputedStyle(fakeRow.node(), null)
-          , rowHeight = parseFloat(rowStyle.height)
-
-      fakeSection.remove()
-      return rowHeight
-    }
-
     function updateBoundsClipping() {
       bodyBounds.clippedVertical = clippedVertical
       bodyBounds.clippedHorizontal = clippedHorizontal
     }
 
     function updateRowAndScrollerSize() {
-      d.rowHeight = rowHeight
       d.scrollerWidth = scrollerWidth
     }
 
@@ -181,10 +172,6 @@ export function createProcessSizeAndClipping() {
       scroll = d
       scroll.changed =  new Date().toString()
     }
-  }
-
-  function measureBlock(block) {
-    block.measuredHeight = block.length * rowHeight
   }
 
   function findDefinedWidths(p, c) {

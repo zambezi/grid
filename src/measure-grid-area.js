@@ -8,6 +8,7 @@ export function createMeasureGridArea() {
   let bounds
     , bodyBounds
     , headersBounds
+    , rowHeight
 
   function measureGridArea(s) {
     s.on('size-dirty.measure-grid-body', onSizeDirty)
@@ -24,6 +25,9 @@ export function createMeasureGridArea() {
     d.bodyBounds = bodyBounds
     d.headersBounds = headersBounds
 
+    if (!rowHeight) rowHeight = produceRowHeight()
+    d.rowHeight = rowHeight
+
     function measure() {
       measureGrid()
       checkBoundsValid()
@@ -38,6 +42,17 @@ export function createMeasureGridArea() {
       , 'width'
       , 'height'
       )
+    }
+
+    function produceRowHeight() {
+      const body = target.select('.zambezi-grid-body')
+        , fakeSection = body.append('ul').classed('body-section transient', true)
+        , fakeRow = fakeSection.append('li').classed('zambezi-grid-row', true)
+        , rowStyle = window.getComputedStyle(fakeRow.node(), null)
+        , rowHeight = parseFloat(rowStyle.height)
+
+      fakeSection.remove()
+      return rowHeight
     }
 
     function syncStirrupSize() {
