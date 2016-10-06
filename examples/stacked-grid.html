@@ -12,7 +12,7 @@
 <script src="../dist/grid.js"></script>
 <script>
   var table = grid.createStackedGrid()
-    , rows = _.range(1, 5000).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard)) 
+    , rows = _.range(1, 337).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
 
   d3.select('.grid-target')
       .style('height', '500px')
