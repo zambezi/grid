@@ -7,7 +7,7 @@ import './stacked-grid.css'
 export function createStackedGrid() {
   const gridPool = []
       , masterGrid = createGrid()
-            .useAfterMeasure(s => s.each(sliceDataForSlaveGrids))
+            .useAfterMeasure(function(s) { s.each(sliceDataForSlaveGrids) })
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
 
   function stackedGrid(s) {
@@ -27,6 +27,7 @@ export function createStackedGrid() {
     const { rowHeight, bodyBounds, scrollerWidth } = d
         , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
         , chunks = d.rows.reduce(toChunks, [])
+      , targetMaster = select(this)
 
     d.rows.free = chunks.shift()
 
@@ -49,14 +50,17 @@ export function createStackedGrid() {
 
       return acc
     }
+
+    function drawGridSlavePage(d, i) {
+      let grid = gridPool[i] || createGrid().serverSideFilterAndSort(true).on('sort-changed',
+          () => {
+            targetMaster.dispatch('data-dirty', { bubbles: true }).dispatch('redraw', { bubbles: true })
+          }
+        )
+
+      select(this).call(grid.columns(masterGrid.columns()))
+
+      gridPool[i] = grid
+    }
   }
-
-  function drawGridSlavePage(d, i) {
-    let grid = gridPool[i] || createGrid().serverSideFilterAndSort(true)
-
-    select(this).call(grid.columns(masterGrid.columns()))
-
-    gridPool[i] = grid
-  }
-
 }
