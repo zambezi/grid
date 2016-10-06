@@ -24,7 +24,9 @@
 
   function draw() {
     const dataCount = _.random(5, 200)
-        , rows = _.range(1, dataCount).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+        , rows = _.range(1, dataCount)
+            .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+            .map((row, i) => Object.assign({}, row, { i }))
     target.datum(rows).call(table)
     count.text(`There are ${dataCount} rows`)
   }
