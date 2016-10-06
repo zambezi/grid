@@ -3,3 +3,7 @@
   overflow-x: auto;
   overflow-y: hidden;
 }
+
+.zambezi-stacked-grid .grid-page {
+  height: 100%;
+}
