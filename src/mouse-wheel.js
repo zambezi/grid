@@ -55,8 +55,3 @@ function discoverWheelEventType() {
   : 'DOMMouseScroll'                                            // default (old Firefox)
   )
 }
-
-
-
-
-
