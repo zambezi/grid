@@ -95,8 +95,7 @@ export function createScrollers() {
           , left = horizontal.property('scrollLeft')
 
       select(this)
-          .datum({ top, left })
-          .dispatch('grid-scroll', { bubbles: true })
+          .dispatch('grid-scroll', { bubbles: true, detail: { top, left } })
           .dispatch('redraw', { bubbles: true })
     }
 
