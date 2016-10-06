@@ -24,8 +24,8 @@ export function createStackedGrid() {
   }
 
   function sliceDataForSlaveGrids(d) {
-    const { rowHeight, bodyBounds } = d
-        , rowsPerPage = Math.floor((bodyBounds.height - 10) / rowHeight)
+    const { rowHeight, bodyBounds, scrollerWidth } = d
+        , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
         , chunks = d.reduce(toChunks, [])
 
     d.rows.free = chunks.shift()

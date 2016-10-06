@@ -1,15 +1,12 @@
 import { fromDetail } from '@zambezi/d3-utils'
-import { isIE } from './is-ie'
 import { isNumber, clone } from 'underscore'
 import { select } from 'd3-selection'
 
-const scrollerWidth = isIE ? 16 : 14
-    , minDefaultColumnWidth = 35
+const minDefaultColumnWidth = 35
     , clippingTolerance = 0.5
 
 export function createProcessSizeAndClipping() {
   let scroll = { top: 0, left: 0 }
-    , rowHeight
 
   function processSizeAndClipping(s) {
     s.each(processSizeAndClippingEach)
@@ -24,10 +21,13 @@ export function createProcessSizeAndClipping() {
   return processSizeAndClipping
 
   function processSizeAndClippingEach(d) {
-    let bodyBounds = d.bodyBounds
-      , rowHeight = d.rowHeight
-      , rows = d.rows
-      , columns = d.columns
+    let {
+          bodyBounds
+        , rowHeight
+        , rows
+        , columns
+        , scrollerWidth
+        } = d
       , clippedVertical
       , clippedHorizontal
       , availableFreeHeight
@@ -46,10 +46,8 @@ export function createProcessSizeAndClipping() {
     updateScroll()
     calculateActualSizeForFreeBlocks()
     updateBoundsClipping()
-    updateRowAndScrollerSize()
 
     function calculateVerticalClipping() {
-      availableFreeHeight = bodyBounds.height
       availableFreeHeight =
           bodyBounds.height
         - rows.top.measuredHeight
@@ -164,9 +162,6 @@ export function createProcessSizeAndClipping() {
       bodyBounds.clippedHorizontal = clippedHorizontal
     }
 
-    function updateRowAndScrollerSize() {
-      d.scrollerWidth = scrollerWidth
-    }
 
     function onGridScroll(d) {
       scroll = d

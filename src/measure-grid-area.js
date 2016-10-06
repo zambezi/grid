@@ -1,4 +1,5 @@
 import { createGridSheet } from './grid-sheet'
+import { isIE } from './is-ie'
 import { pick } from 'underscore'
 import { select } from 'd3-selection'
 
@@ -27,6 +28,7 @@ export function createMeasureGridArea() {
 
     if (!rowHeight) rowHeight = produceRowHeight()
     d.rowHeight = rowHeight
+    d.scrollerWidth = isIE ? 16 : 14
 
     function measure() {
       measureGrid()
