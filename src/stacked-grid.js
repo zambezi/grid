@@ -1,4 +1,5 @@
 import { select } from 'd3-selection'
+import { unwrap } from './unwrap-row'
 import { appendIfMissing } from '@zambezi/d3-utils'
 import { createGrid } from './grid'
 import './stacked-grid.css'
@@ -6,7 +7,6 @@ import './stacked-grid.css'
 export function createStackedGrid() {
   const gridPool = []
       , masterGrid = createGrid()
-            .serverSideFilterAndSort(true)
             .useAfterMeasure(s => s.each(sliceDataForSlaveGrids))
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
 
@@ -26,7 +26,7 @@ export function createStackedGrid() {
   function sliceDataForSlaveGrids(d) {
     const { rowHeight, bodyBounds, scrollerWidth } = d
         , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
-        , chunks = d.reduce(toChunks, [])
+        , chunks = d.rows.reduce(toChunks, [])
 
     d.rows.free = chunks.shift()
 
@@ -44,7 +44,7 @@ export function createStackedGrid() {
           , modIndex = i % rowsPerPage
           , chunk = acc[chunkIndex] || []
 
-      chunk[modIndex] = next
+      chunk[modIndex] = (chunkIndex === 0) ? next : unwrap(next)
       acc[chunkIndex] = chunk
 
       return acc
@@ -54,7 +54,7 @@ export function createStackedGrid() {
   function drawGridSlavePage(d, i) {
     let grid = gridPool[i] || createGrid().serverSideFilterAndSort(true)
 
-    select(this).call(grid)
+    select(this).call(grid.columns(masterGrid.columns()))
 
     gridPool[i] = grid
   }
