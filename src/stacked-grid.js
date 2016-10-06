@@ -17,21 +17,32 @@ export function createStackedGrid() {
   return stackedGrid
 
   function stackedGridEach(d, i) {
-    const target = select(this).classed('zambezi-stacked-grid', true)
-        , masterGridTarget = target.select(appendMaster).call(masterGrid)
+    const target = select(this)
+            .classed('zambezi-stacked-grid', true)
+
+    target.select(appendMaster).call(masterGrid)
   }
 
   function sliceDataForSlaveGrids(d) {
     const { rowHeight, bodyBounds } = d
-        , rowsPerPage = Math.floor(bodyBounds.height / rowHeight)
+        , rowsPerPage = Math.floor((bodyBounds.height - 10) / rowHeight)
         , chunks = d.reduce(toChunks, [])
 
-    debugger
+    d.rows.free = chunks.shift()
+
+    const update = target.selectAll('.grid-page.slave-grid')
+            .data(chunks)
+        , enter = update.enter().append('div').classed('grid-page slave-grid', true)
+
+    update.exit().remove()
+
+    update.merge(enter).each(drawGridSlavePage)
+    gridPool.length = chunks.length
 
     function toChunks(acc, next, i) {
       const chunkIndex = Math.floor(i / rowsPerPage)
-        , modIndex = i % rowsPerPage
-        , chunk = acc[chunkIndex] || []
+          , modIndex = i % rowsPerPage
+          , chunk = acc[chunkIndex] || []
 
       chunk[modIndex] = next
       acc[chunkIndex] = chunk
@@ -40,36 +51,12 @@ export function createStackedGrid() {
     }
   }
 
-  function stackedGridEachAfter(d, i) {
-    const chunks = d.reduce(toChunks, [])
-        , target = select(this).classed('zambezi-stacked-grid', true)
-        , update =  target.selectAll('.grid-page')
-            .data(chunks)
-        , enter = update.enter().append('div').classed('grid-page', true)
-        , exit  = update.exit().remove()
+  function drawGridSlavePage(d, i) {
+    let grid = gridPool[i] || createGrid().serverSideFilterAndSort(true)
 
-    update.merge(enter).each(drawGridPage)
-    gridPool.length = chunks.length
-    console.log('\nChunks: ', chunks)
-  }
+    select(this).call(grid)
 
-  function drawGridPage(d, i) {
-    let grid = gridPool[i]
-
-    if (!grid) {
-      grid = createGrid().serverSideFilterAndSort(true)
-      if (!i) grid.useAfterMeasure(s => s.each((d, i) => {
-        console.log('Component called', d, i)
-
-      }))
-      gridPool[i] = grid
-    }
-
-    select(this)
-        .style('height', '300px')
-        .style('width', '500px')
-        .style('display', 'inline-block')
-        .call(grid)
+    gridPool[i] = grid
   }
 
 }

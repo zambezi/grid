@@ -6,4 +6,6 @@
 
 .zambezi-stacked-grid .grid-page {
   height: 100%;
+  display: inline-block;
+  width: 500px;
 }
