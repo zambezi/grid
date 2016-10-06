@@ -1,13 +1,13 @@
 import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
-import { appendIfMissing } from '@zambezi/d3-utils'
+import { appendIfMissing, each } from '@zambezi/d3-utils'
 import { createGrid } from './grid'
 import './stacked-grid.css'
 
 export function createStackedGrid() {
   const gridPool = []
       , masterGrid = createGrid()
-            .useAfterMeasure(function(s) { s.each(sliceDataForSlaveGrids) })
+            .useAfterMeasure(each(sliceDataForSlaveGrids))
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
 
   function stackedGrid(s) {
@@ -27,13 +27,15 @@ export function createStackedGrid() {
     const { rowHeight, bodyBounds, scrollerWidth } = d
         , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
         , chunks = d.rows.reduce(toChunks, [])
-      , targetMaster = select(this)
+        , targetMaster = select(this)
 
     d.rows.free = chunks.shift()
 
     const update = target.selectAll('.grid-page.slave-grid')
             .data(chunks)
-        , enter = update.enter().append('div').classed('grid-page slave-grid', true)
+        , enter = update.enter()
+            .append('div')
+              .classed('grid-page slave-grid', true)
 
     update.exit().remove()
 
@@ -52,14 +54,19 @@ export function createStackedGrid() {
     }
 
     function drawGridSlavePage(d, i) {
-      let grid = gridPool[i] || createGrid().serverSideFilterAndSort(true).on('sort-changed',
-          () => {
-            targetMaster.dispatch('data-dirty', { bubbles: true }).dispatch('redraw', { bubbles: true })
-          }
-        )
+      const grid = gridPool[i] || createGrid()
 
-      select(this).call(grid.columns(masterGrid.columns()))
-
+      select(this).call(
+        grid.serverSideFilterAndSort(true)
+          .columns(masterGrid.columns())
+          .on('sort-changed.stacked-grid',
+            () => {
+              targetMaster
+                .dispatch('data-dirty', { bubbles: true })
+                .dispatch('redraw', { bubbles: true })
+            }
+          )
+      )
       gridPool[i] = grid
     }
   }
