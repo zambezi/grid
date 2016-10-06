@@ -2,6 +2,8 @@
 <head><meta charset="utf-8" /></head>
 <body>
 <h2>stacked grid example</h2>
+<button id="randomize-data">Randomize data</button>
+<p id="data-count"></p>
 <div class="grid-target"></div>
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
 <script src="../node_modules/underscore/underscore.js"></script>
@@ -11,12 +13,20 @@
 <script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
 <script src="../dist/grid.js"></script>
 <script>
-  var table = grid.createStackedGrid()
-    , rows = _.range(1, 47).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+  const table = grid.createStackedGrid()
+      , target = d3.select('.grid-target').style('height', '500px')
+      , count = d3.select('#data-count')
 
-  d3.select('.grid-target')
-      .style('height', '500px')
-      .datum(rows)
-      .call(table)
+  d3.select('#randomize-data')
+        .on('click', draw)
+
+  draw()
+
+  function draw() {
+    const dataCount = _.random(5, 200)
+        , rows = _.range(1, dataCount).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+    target.datum(rows).call(table)
+    count.text(`There are ${dataCount} rows`)
+  }
 </script>
 </body>
