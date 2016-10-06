@@ -13,7 +13,7 @@
 <script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
 <script src="../dist/grid.js"></script>
 <script>
-  const table = grid.createStackedGrid()
+  const table = grid.createStackedGrid().columns([ {key: 'name', width: 80}, {key: 'email', width: 80} ])
       , target = d3.select('.grid-target').style('height', '500px')
       , count = d3.select('#data-count')
 

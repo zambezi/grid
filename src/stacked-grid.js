@@ -1,6 +1,6 @@
 import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
-import { appendIfMissing, each } from '@zambezi/d3-utils'
+import { appendIfMissing, each, rebind } from '@zambezi/d3-utils'
 import { createGrid } from './grid'
 import './stacked-grid.css'
 
@@ -9,18 +9,34 @@ export function createStackedGrid() {
       , masterGrid = createGrid()
             .useAfterMeasure(each(sliceDataForSlaveGrids))
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
+      , api = rebind().from(masterGrid, 'columns')
+
+  let targetPageWidth = '500px'
 
   function stackedGrid(s) {
     s.each(stackedGridEach)
   }
 
-  return stackedGrid
+  stackedGrid.targetPageWidth = function(value) {
+    if (!arguments.length) return targetPageWidth
+    targetPageWidth = value
+    return stackedGrid
+  }
+
+  return api(stackedGrid)
 
   function stackedGridEach(d, i) {
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
 
-    target.select(appendMaster).call(masterGrid)
+    target.select(appendMaster).style('width', pageWidth).call(masterGrid)
+  }
+
+  function pageWidth() {
+    const columns = masterGrid.columns()
+    if (!columns) return targetPageWidth
+    if (!columns.every( col => !!col.width)) return targetPageWidth
+    return `${columns.reduce((acc, col) => acc + col.width, 0)}px`
   }
 
   function sliceDataForSlaveGrids(d) {
@@ -35,6 +51,7 @@ export function createStackedGrid() {
             .data(chunks)
         , enter = update.enter()
             .append('div')
+      .style('width', '400px')
               .classed('grid-page slave-grid', true)
 
     update.exit().remove()
