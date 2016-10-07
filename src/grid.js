@@ -36,7 +36,7 @@ export function createGrid() {
       , columnDrag = createColumnDrag()
       , resize = createResize()
       , columnSizers = createColumnSizers()
-      , dispatchDraw = createDispatch('draw')
+      , dispatch = createDispatch('draw', 'pre-draw')
       , groupRows = createGroupRows()
       , body = createBody()
       , runExternalComponents = createRunExternalComponents()
@@ -47,7 +47,7 @@ export function createGrid() {
       , shareDispatcher = createShareDispatcher()
       , autodirty = createAutoDirty()
       , redispatcher = redispatch()
-            .from(dispatchDraw, 'draw')
+            .from(dispatch, 'draw', 'pre-draw')
             .from(sortRowHeaders, 'sort-changed')
             .from(
               body
@@ -79,7 +79,7 @@ export function createGrid() {
             .from(sortRowHeaders, 'sortableByDefault')
 
       , grid = compose(
-          call(() => dispatchDraw.call('draw'))
+          call(() => dispatch.call('draw'))
         , call(runExternalComponents)
         , call(createScrollers())
         , call(sortRowHeaders)
@@ -106,6 +106,7 @@ export function createGrid() {
         , each(shareDispatcher.dispatcher(redispatcher))
         , each(ensureData)
         , each(ensureId)
+        , call(() => dispatch.call('pre-draw'))
         )
 
   return api(autodirty(redraw(throttle(throttleToAnimationFrame(skipWhenHidden(grid)), 10))))

@@ -1,20 +1,25 @@
 import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
 import { appendIfMissing, each, rebind } from '@zambezi/d3-utils'
+import { createGridSheet } from './grid-sheet'
+import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
+import { ensureId } from './ensure-id'
 import { createGrid } from './grid'
 import './stacked-grid.css'
 
 export function createStackedGrid() {
   const gridPool = []
+      , updatePageWidth = createUpdatePageWidthStyles()
       , masterGrid = createGrid()
             .useAfterMeasure(each(sliceDataForSlaveGrids))
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
       , api = rebind().from(masterGrid, 'columns')
+      , sheet = createGridSheet()
 
-  let targetPageWidth = '500px'
+  let targetPageWidth = 500
 
   function stackedGrid(s) {
-    s.each(stackedGridEach)
+    s.each(ensureId).each(stackedGridEach)
   }
 
   stackedGrid.targetPageWidth = function(value) {
@@ -28,15 +33,45 @@ export function createStackedGrid() {
   function stackedGridEach(d, i) {
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
+        , masterTarget = target.select(appendMaster)
 
-    target.select(appendMaster).style('width', pageWidth).call(masterGrid)
+    updatePageWidth.id(target.attr('id'))
+
+    masterTarget.call(
+      masterGrid
+          .on('pre-draw.log', () => console.log('ÝO!', masterTarget.node()))
+          .on('pre-draw.validate', () => masterTarget.dispatch('size-dirty'))
+          .on('pre-draw.update', updatePageWidth)
+    )
+  }
+
+  function createUpdatePageWidthStyles() {
+    let id
+
+    function updatePageWidthStyles() {
+      console.log('I am called with id', id)
+      const width = px(pageWidth())
+      console.log('width is', width)
+      sheet(
+        `#${id} .grid-page`
+        , {width}
+      )
+    }
+
+    updatePageWidthStyles.id = function(value) {
+      if (!arguments.length) return id
+      id = value
+      return updatePageWidthStyles
+    }
+
+    return updatePageWidthStyles
   }
 
   function pageWidth() {
     const columns = masterGrid.columns()
     if (!columns) return targetPageWidth
     if (!columns.every( col => !!col.width)) return targetPageWidth
-    return `${columns.reduce((acc, col) => acc + col.width, 0)}px`
+    return columns.reduce((acc, col) => acc + col.width, 0)
   }
 
   function sliceDataForSlaveGrids(d) {
@@ -51,7 +86,6 @@ export function createStackedGrid() {
             .data(chunks)
         , enter = update.enter()
             .append('div')
-      .style('width', '400px')
               .classed('grid-page slave-grid', true)
 
     update.exit().remove()
