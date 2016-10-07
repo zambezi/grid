@@ -24,7 +24,7 @@
   draw()
 
   function draw() {
-    const dataCount = _.random(5, 200)
+    const dataCount = _.random(80, 150)
         , rows = _.range(1, dataCount)
             .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
             .map((row, i) => Object.assign({}, row, { i }))

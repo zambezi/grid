@@ -33,8 +33,8 @@ export function createStackedGrid() {
   function stackedGridEach(d, i) {
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
-            .on('column-resized.log', () => console.log('ÝO!', masterTarget.node()))
-            .on('column-resized.invalidate', () => masterTarget.dispatch('size-dirty'))
+            //.on('column-resized.log', () => console.log('ÝO!', masterTarget.node()))
+            .on('column-resized.invalidate', () => target.selectAll('.grid-page').dispatch('size-dirty').dispatch('redraw'))
             .on('column-resized.update', updatePageWidth)
         , masterTarget = target.select(appendMaster)
 
