@@ -100,7 +100,7 @@ export function createColumnSizers() {
       if (findCandidateFreeWidth() < minFreeColumnWidth) return
 
       column.width = newWidth
-      target.dispatch('redraw')
+      target.dispatch('column-resized', { bubbles: true }).dispatch('redraw')
 
       function findCandidateFreeWidth() {
 

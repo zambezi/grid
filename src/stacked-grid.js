@@ -33,16 +33,13 @@ export function createStackedGrid() {
   function stackedGridEach(d, i) {
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
+            .on('column-resized.log', () => console.log('ÝO!', masterTarget.node()))
+            .on('column-resized.invalidate', () => masterTarget.dispatch('size-dirty'))
+            .on('column-resized.update', updatePageWidth)
         , masterTarget = target.select(appendMaster)
 
-    updatePageWidth.id(target.attr('id'))
-
-    masterTarget.call(
-      masterGrid
-          .on('pre-draw.log', () => console.log('ÝO!', masterTarget.node()))
-          .on('pre-draw.validate', () => masterTarget.dispatch('size-dirty'))
-          .on('pre-draw.update', updatePageWidth)
-    )
+    updatePageWidth.id(target.attr('id'))()
+    masterTarget.call(masterGrid)
   }
 
   function createUpdatePageWidthStyles() {
