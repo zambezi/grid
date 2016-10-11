@@ -10,15 +10,15 @@ export function createUnpackNestedRows() {
 
   let cache = null
     , filters = null
-    , findPinnedRows = true
+    , showPinnedRows = false
 
   function unpackNestedRows(s) {
     s.each(unpackNestedRowsEach)
   }
 
-  unpackNestedRows.findPinnedRows = function(value) {
-    if (!arguments.length) return findPinnedRows
-    findPinnedRows = value
+  unpackNestedRows.showPinnedRows = function(value) {
+    if (!arguments.length) return showPinnedRows
+    showPinnedRows = value
     return unpackNestedRows
   }
 
@@ -77,7 +77,7 @@ export function createUnpackNestedRows() {
           hasNestedRows = true
         }
 
-        if (row.expanded || findPinnedRows) {
+        if (row.expanded || showPinnedRows) {
           children
               .map(wrap)
               .filter(filterChild)
@@ -85,7 +85,7 @@ export function createUnpackNestedRows() {
               .reduce(unpackNestedRowsForLevel(level + 1), acc)
 
           function filterChild(childRow) {
-            if (!row.expanded && findPinnedRows && !childRow.pinned) return false
+            if (!row.expanded && showPinnedRows && !childRow.pinned) return false
             childRow.parentRow = row
             return filters.every(runFilter.bind(null, childRow, i, a))
           }

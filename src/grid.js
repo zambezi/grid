@@ -35,6 +35,7 @@ export function createGrid() {
       , processSizeAndClipping = createProcessSizeAndClipping()
       , columnDrag = createColumnDrag()
       , resize = createResize()
+      , unpackNestedRows = createUnpackNestedRows()
       , columnSizers = createColumnSizers()
       , dispatchDraw = createDispatch('draw')
       , groupRows = createGroupRows()
@@ -75,6 +76,7 @@ export function createGrid() {
             .from(serverSideFilterAndSort, 'serverSideFilterAndSort')
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
+            .from(unpackNestedRows, 'showPinnedRows')
 
       , grid = compose(
           call(() => dispatchDraw.call('draw'))
@@ -90,7 +92,7 @@ export function createGrid() {
         , call(processSizeAndClipping)
         , call(createMeasureGridArea())
         , call(createMarkRowIndices())
-        , call(createUnpackNestedRows())
+        , call(unpackNestedRows)
         , call(createSortRows())
         , call(processRowData)
         , call(runExternalComponentsPre)
