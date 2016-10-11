@@ -49,3 +49,32 @@ The grid supports arbitrarily nested rows.
 Nested columns can have their own `children` columns with deeper nested rows.
 
 NOTE: cells that use the nested rows expanded components don't support truncation.
+
+
+## Nested pinned rows
+
+The grid component supports nested pinned row at the first-level depth.
+This means that pinned rows (ie rows with the `pinned` property) will be shown even if the parent is not expanded.
+Although, if the parent is in turn a child of a collapsed parent, they will not be shown.
+
+`showPinnedRows` is turned off by default on the grid because it comes at a small computational cost, but can be explicitly turned on if needed:
+
+```javascript
+...
+import { createNestedRowExpanders, createGrid } from '@zambezi/grid'
+
+const grid = createGrid()
+          .columns(
+            [
+              ...
+            , {
+                key: 'client-name'
+              , components: [ createNestedRowExpanders() ]
+              , width: 170
+              }
+            ]
+          )
+          .showPinnedRows(true)
+```
+
+You can see an example of this in `examples\pinned-nested-rows.html`
