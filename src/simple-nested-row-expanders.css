@@ -1,0 +1,19 @@
+.zambezi-grid-cell.simple-nested-expander-cell {
+  font-size: 16px;
+  font-family: monospace;
+  white-space: pre;
+  color: #555;
+}
+
+.zambezi-grid-cell.simple-nested-expander-cell.is-collapse:hover,
+.zambezi-grid-cell.simple-nested-expander-cell.is-expand:hover {
+  color: black;
+}
+
+.zambezi-grid-cell.simple-nested-expander-cell.is-expand:after {
+  content: '➖';
+}
+
+.zambezi-grid-cell.simple-nested-expander-cell.is-collapse:after {
+  content: '➕';
+}
