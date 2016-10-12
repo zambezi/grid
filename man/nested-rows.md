@@ -51,13 +51,13 @@ Nested columns can have their own `children` columns with deeper nested rows.
 NOTE: cells that use the nested rows expanded components don't support truncation.
 
 
-## Nested pinned rows
+## Show rows when collapsed
 
-The grid component supports nested pinned row at the first-level depth.
-This means that pinned rows (ie rows with the `pinned` property) will be shown even if the parent is not expanded.
+The grid component supports optionally showing nested row base on a predicate, at the first-level depth.
+This means that conditionally always-shown rows (ie rows that return `true` from the `showRowWhenCollapsed` predicate) will be shown even if the parent is not expanded.
 Although, if the parent is in turn a child of a collapsed parent, they will not be shown.
 
-`showPinnedRows` is turned off by default on the grid because it comes at a small computational cost, but can be explicitly turned on if needed:
+`showRowWhenCollapsed` is `null` by default, so all rows will be hidden when the parent row is collapsed. It is possible to specify it like this:
 
 ```javascript
 ...
@@ -74,7 +74,7 @@ const grid = createGrid()
               }
             ]
           )
-          .showPinnedRows(true)
+          .showRowWhenCollapsed(d => d.pinned) // If row has a truthy `pinned` property, show it anyways
 ```
 
 You can see an example of this in `examples\pinned-nested-rows.html`
