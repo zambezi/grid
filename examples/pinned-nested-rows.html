@@ -29,7 +29,7 @@
           , { key: 'nestLevel', width: 70, sortable: false }
           ]
         )
-        .showPinnedRows(true)
+        .showRowWhenCollapsed(d => d.pinned)
     , rows = [
         { label: 'A' }
       , {

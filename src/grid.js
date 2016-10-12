@@ -76,7 +76,7 @@ export function createGrid() {
             .from(serverSideFilterAndSort, 'serverSideFilterAndSort')
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
-            .from(unpackNestedRows, 'showPinnedRows')
+            .from(unpackNestedRows, 'showRowWhenCollapsed')
 
       , grid = compose(
           call(() => dispatchDraw.call('draw'))
