@@ -2,9 +2,17 @@
 <head><meta charset="utf-8" /></head>
 <body>
 <h2>grid example</h2>
-<button id="start-updates">Start updates</button>
-<button id="stop-updates">Stop updates</button>
+<p>
+  <button id="start-updates">Start updates</button>
+  <button id="stop-updates">Stop updates</button>
+</p>
+<p>
+  <input type="checkbox" id="use-optimization">Use "row changed key" optimization</input>
+</p>
+
+<p>Row changes on last grid redraw: <strong id="counter"></strong> </p>
 <div class="grid-target"></div>
+
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
 <script src="../node_modules/underscore/underscore.js"></script>
 <script src="../node_modules/faker/faker.js"></script>
@@ -18,11 +26,11 @@
               .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
               .map(function(row, i) { row.id = 'row' + i; return row }))
 
+      , counter = d3.select('#counter')
       , table = grid.createGrid()
             .rowKey(d => d.id)
-            .rowChangedKey(d => d.username)
             .on('row-changed', () => ++changes)
-            .on('draw.log', () => (console.log(`${changes} row changes per draw`), changes = 0))
+            .on('draw.log', () => (counter.text(changes), changes = 0))
 
       , target = d3.select('.grid-target')
             .style('height', '500px')
@@ -36,6 +44,12 @@
 
   d3.select('#stop-updates')
     .on('click', stopUpdates)
+
+  d3.select('#use-optimization').on('change', onOptimizationChange)
+
+  function onOptimizationChange() {
+    table.rowChangedKey(this.checked ? d => d.username : null)
+  }
 
   var updates
 
