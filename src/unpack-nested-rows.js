@@ -1,6 +1,7 @@
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
 import { selectionChanged } from '@zambezi/d3-utils'
+import { isFunction } from 'underscore'
 import { wrap } from './wrap-row'
 
 const rowNestedLevelChanged = selectionChanged()
@@ -10,15 +11,15 @@ export function createUnpackNestedRows() {
 
   let cache = null
     , filters = null
-    , showPinnedRows = false
+    , showRowWhenCollapsed = null
 
   function unpackNestedRows(s) {
     s.each(unpackNestedRowsEach)
   }
 
-  unpackNestedRows.showPinnedRows = function(value) {
-    if (!arguments.length) return showPinnedRows
-    showPinnedRows = value
+  unpackNestedRows.showRowWhenCollapsed = function(value) {
+    if (!arguments.length) return showRowWhenCollapsed
+    showRowWhenCollapsed = value
     return unpackNestedRows
   }
 
@@ -77,7 +78,7 @@ export function createUnpackNestedRows() {
           hasNestedRows = true
         }
 
-        if (row.expanded || showPinnedRows) {
+        if (row.expanded || showRowWhenCollapsed) {
           children
               .map(wrap)
               .filter(filterChild)
@@ -85,7 +86,7 @@ export function createUnpackNestedRows() {
               .reduce(unpackNestedRowsForLevel(level + 1), acc)
 
           function filterChild(childRow) {
-            if (!row.expanded && showPinnedRows && !childRow.pinned) return false
+            if (!row.expanded && isFunction(showRowWhenCollapsed) && !showRowWhenCollapsed(childRow)) return false
             childRow.parentRow = row
             return filters.every(runFilter.bind(null, childRow, i, a))
           }

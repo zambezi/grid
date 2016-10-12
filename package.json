@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.11.0-nested-pinned-row.2",
+  "version": "0.12.0-pinned-predicate-work.1",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",
