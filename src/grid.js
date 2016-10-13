@@ -63,6 +63,7 @@ export function createGrid() {
             .create()
 
       , api = rebind()
+            .from(body, 'rowChangedKey', 'rowKey')
             .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
             .from(ensureColumns, 'columns')

@@ -17,6 +17,7 @@ Summary
   - [Nested rows](man/nested-rows.md)
   - [Grouped rows](man/grouped-rows.md)
   - [Server side filter and sorting](man/server-side-filter-and-sort.md)
+  - [Grid performance and row constancy](man/grid-performance-and-row-constancy.md)
 
 ---
 
