@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.12.0-expose-row-changed-key.1",
+  "version": "0.12.0",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",

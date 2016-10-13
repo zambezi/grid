@@ -14,8 +14,7 @@
   var table = grid.createGrid()
         .columns(
           [
-            { key: 'pinned', width: 70 }
-          , {
+            {
               components: [
                 grid.createNestedRowExpanders()
               ]
@@ -25,11 +24,17 @@
             , resizable: false
             , draggable: false
             }
+          , {
+              components: [
+                grid.createSimpleNestedRowExpanders()
+              ]
+            , label: 'X'
+            , width: 40
+            }
           , { key: 'label', sortDescending: true }
           , { key: 'nestLevel', width: 70, sortable: false }
           ]
         )
-        .showRowWhenCollapsed(d => d.pinned)
     , rows = [
         { label: 'A' }
       , {
@@ -37,9 +42,9 @@
         , expanded: true
         , children: [
             { label: 'B0' }
-          , { label: 'B1', pinned: true }
+          , { label: 'B1' }
           , {
-              label: 'B2'     // not expanded, therfore not shown.
+              label: 'B2'     // not expanded, therefore not shown.
             , children: [
                 { label: 'B2a' }
               , { label: 'B2b' }
@@ -70,7 +75,7 @@
                 { label: 'B3a' }
               , { label: 'B3b' }
               , { label: 'B3c' }
-              , { label: 'B3d', pinned: true }
+              , { label: 'B3d' }
               ]
             }
           ]
