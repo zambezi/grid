@@ -28,6 +28,7 @@ export function createCells() {
         , 'row-update'
         )
       , api = rebind().from(dispatcher, 'on')
+      , appendByTemplate = {}
 
   let rowKey
     , rowChangedKey
