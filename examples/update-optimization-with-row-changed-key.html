@@ -1,0 +1,76 @@
+<!doctype html>
+<head><meta charset="utf-8" /></head>
+<body>
+<h2>grid example</h2>
+<p>
+  <button id="start-updates">Start updates</button>
+  <button id="stop-updates">Stop updates</button>
+</p>
+<p>
+  <input type="checkbox" id="use-optimization">Use "row changed key" optimization</input>
+</p>
+
+<p>Row changes on last grid redraw: <strong id="counter"></strong> </p>
+<div class="grid-target"></div>
+
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+  const rows = _.shuffle(
+          _.range(1, 1000)
+              .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+              .map(function(row, i) { row.id = 'row' + i; return row }))
+
+      , counter = d3.select('#counter')
+      , table = grid.createGrid()
+            .rowKey(d => d.id)
+            .on('row-changed', () => ++changes)
+            .on('draw.log', () => (counter.text(changes), changes = 0))
+
+      , target = d3.select('.grid-target')
+            .style('height', '500px')
+            .datum(rows)
+            .call(table)
+
+  let changes = 0
+
+  d3.select('#start-updates')
+    .on('click', startUpdates)
+
+  d3.select('#stop-updates')
+    .on('click', stopUpdates)
+
+  d3.select('#use-optimization').on('change', onOptimizationChange)
+
+  function onOptimizationChange() {
+    table.rowChangedKey(this.checked ? d => d.username : null)
+  }
+
+  var updates
+
+  function stopUpdates() {
+    updates && updates.forEach(clearInterval)
+  }
+
+  function startUpdates() {
+    updates = rows.map(function(n, i) {
+      var id = 'row' + i
+
+      return setInterval(function() {
+        rows.some(function(row) {
+          if (row.id === id) {
+            row.username = Math.random().toString(16)
+            target.call(table)
+            return true
+          }
+        })
+      }, 1000 + Math.floor(Math.random() * 100))
+    })
+  }
+</script>
+</body>

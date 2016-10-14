@@ -28,6 +28,7 @@ export function createCells() {
         , 'row-update'
         )
       , api = rebind().from(dispatcher, 'on')
+      , appendByTemplate = {}
 
   let rowKey
     , rowChangedKey
@@ -78,7 +79,7 @@ export function createCells() {
           )
 
         , rows = list.selectAll('.zambezi-grid-row')
-            .data(d, id)
+            .data(d, dataKey(rowKey))
 
         , rowsExit = rows.exit()
               .remove()
@@ -91,12 +92,12 @@ export function createCells() {
         , rowChanged = rows
             .merge(rowsEnter)
               .each(forward(dispatcher, 'row-update'))
+              .each(updateRow)
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
               )
             )
-              .each(updateRow)
               .each(forward(dispatcher, 'row-changed'))
 
         , cellsUpdate = rowChanged.selectAll('.zambezi-grid-cell')

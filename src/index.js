@@ -1,6 +1,7 @@
 export { createGrid } from './grid'
 export { createStackedGrid } from './stacked-grid'
 export { createNestedRowExpanders } from './nested-row-expanders'
+export { createSimpleNestedRowExpanders } from './simple-nested-row-expanders'
 export { formatRollup, formatNonRollup } from './group-rows'
 export { unwrap } from './unwrap-row'
 export { updateTextIfChanged } from './update-text-if-changed'

@@ -1,0 +1,88 @@
+<!doctype html>
+<head><meta charset="utf-8" /></head>
+<body>
+<h2>grid example</h2>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+  var table = grid.createGrid()
+        .columns(
+          [
+            { key: 'pinned', width: 70 }
+          , {
+              components: [
+                grid.createNestedRowExpanders()
+              ]
+            , key: 'label'
+            , label: 'expanders'
+            , width: 100
+            , resizable: false
+            , draggable: false
+            }
+          , { key: 'label', sortDescending: true }
+          , { key: 'nestLevel', width: 70, sortable: false }
+          ]
+        )
+        .showRowWhenCollapsed(d => d.pinned)
+    , rows = [
+        { label: 'A' }
+      , {
+          label: 'B'
+        , expanded: true
+        , children: [
+            { label: 'B0' }
+          , { label: 'B1', pinned: true }
+          , {
+              label: 'B2'     // not expanded, therfore not shown.
+            , children: [
+                { label: 'B2a' }
+              , { label: 'B2b' }
+              , {
+                  label: 'B2c'
+                , children: [
+                    { label: 'B2c0' }
+                  , {
+                      label: 'B2c1'
+                    , children: [
+                        { label: 'B2c1A' }
+                      , { label: 'B2c1B' }
+                      , { label: 'B2c1C' }
+                      , { label: 'B2c1D' }
+                      ]
+                    }
+                  , { label: 'B2c2' }
+                  , { label: 'B2c3' }
+                  ]
+                }
+              , { label: 'B2d' }
+              ]
+            }
+          , {
+              label: 'B3'
+            , expanded: true
+            , children: [
+                { label: 'B3a' }
+              , { label: 'B3b' }
+              , { label: 'B3c' }
+              , { label: 'B3d', pinned: true }
+              ]
+            }
+          ]
+        }
+      , { label: 'C' }
+      , { label: 'D' }
+      ]
+
+  d3.select('.grid-target')
+      .style('height', '500px')
+      .datum(rows)
+      .call(table)
+
+</script>
+</body>
