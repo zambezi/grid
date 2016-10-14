@@ -1,5 +1,14 @@
 <!doctype html>
-<head><meta charset="utf-8" /></head>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    .zambezi-grid-cell .icons {
+      font-family: courier-new, monospace;
+      background-color: #BBB;
+      color: white;
+    }
+  </style>
+</head>
 <body>
 <h2>grid example</h2>
 <div class="grid-target"></div>
@@ -19,6 +28,15 @@
             , { key: 'email', sortDescending: true }
             , { key: 'phone' }
             , { key: 'username' }
+            , {
+                components: [ translate, grid.updateTextIfChanged ]
+              , label: 'custom'
+              , key: 'username'
+              , template: 
+                  '<span>'
+                + '<strong class="icons"></strong> — <i class="formatted-text"></i>'
+                + '</span>'
+              }
             , { 
                 label: 'address'
               , children: [
@@ -31,6 +49,7 @@
           )
 
     , rows = _.range(1, 2000).map(faker.Helpers.createCard)
+    , icon = d3.scaleOrdinal().range('▀▄█▌▐░▒▓■')
 
   rows[10].locked = 'top'
   rows[11].locked = 'top'
@@ -41,6 +60,12 @@
       .style('height', '500px')
       .datum(rows)
       .call(table)
+
+  function translate(d) {
+    d3.select(this)
+      .select('.icons')
+        .text(d.value.split('').slice(0, 5).map(icon).join(''))
+  }
 
 </script>
 </body>
