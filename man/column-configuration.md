@@ -356,3 +356,43 @@ To be able to cope with large amount of columns the grid, by default, only rende
 As you scroll horizontally, cells that come into the viewport are created and cells that move outside the viewport are destroyed.
 
 In most cases, this improves the performance of the grid by reducing the amount and processing of DOM elements on the browser.
+
+#### Per column cell template
+
+It is possible to define a cell template for specific columns by providing its HTML snipped on the `template` property of the column definition.
+
+```javascript
+grid.columns(
+      [
+        {
+          key: 'date'
+        }
+      , {
+        , key: 'template'
+        , template: '<span>SOME TEMPLATE</span>'
+        }
+      ]
+    )
+```
+
+If you provide a template it's contents won't get overwritten by the formatted text.
+You can provide a per-column component (see below) to update the contents of the created cell.
+Alternatively, you can provide a nested element with the class `formatted-text` in your template.
+The default render will write the formatted text to it.
+
+```javascript
+grid.columns(
+      [
+        {
+          key: 'date'
+        }
+      , {
+        , key: 'info'
+        , format: infoFormatter
+        , template: '<span><i class='icon-light-small-info'></i><span class='formatted-text'></span></span>'
+        }
+      ]
+    )
+```
+
+NOTE: Currently, the grid has a fixed row height.  Templates which would change the height of the row are not yet supported.
