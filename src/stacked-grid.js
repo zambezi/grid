@@ -71,7 +71,10 @@ export function createStackedGrid() {
 
     update.exit().remove()
 
-    update.merge(enter).each(drawGridSlavePage)
+    update.merge(enter)
+      .select(inView)
+        .each(drawGridSlavePage)
+
     gridPool.length = chunks.length
 
     function toChunks(acc, next, i) {
@@ -83,6 +86,11 @@ export function createStackedGrid() {
       acc[chunkIndex] = chunk
 
       return acc
+    }
+
+    function inView(d, i) {
+      return !(i % 3) ? this : null
+      return this
     }
 
     function drawGridSlavePage(d, i) {
