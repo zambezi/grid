@@ -3,7 +3,7 @@ import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGrid } from './grid'
 import { createGridSheet } from './grid-sheet'
 import { ensureId } from './ensure-id'
-import { partial } from 'underscore'
+import { debounce } from 'underscore'
 import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
 
@@ -12,10 +12,12 @@ import './stacked-grid.css'
 export function createStackedGrid() {
   const gridPool = []
       , masterGrid = createGrid()
+            .dragColumnsByDefault(false)
+            .resizeColumnsByDefault(false)
             .useAfterMeasure(each(drawSlaveGrids))
 
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
-      , api = rebind().from(masterGrid, 'columns')
+      , api = rebind().from(masterGrid, 'columns', 'resizeColumnsByDefault', 'dragColumnsByDefault')
       , sheet = createGridSheet()
 
   let targetPageWidth = 500
@@ -43,7 +45,7 @@ export function createStackedGrid() {
             )
             .on('column-resized.recalculate-width', () => pageWidth = calculatePageWidth())
             .on('column-resized.update', () => updatePageWidthStyles(id, pageWidth))
-            .on('scroll.redraw', draw)
+            .on('scroll.redraw', debounce(draw, 50, false))
 
         , id = target.attr('id')
         , masterTarget = target.select(appendMaster)
@@ -107,6 +109,8 @@ export function createStackedGrid() {
 
       select(this).call(
         grid.serverSideFilterAndSort(true)
+          .resizeColumnsByDefault(masterGrid.resizeColumnsByDefault())
+          .dragColumnsByDefault(masterGrid.dragColumnsByDefault())
           .columns(masterGrid.columns())
           .on('sort-changed.stacked-grid',
             () => {
