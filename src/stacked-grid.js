@@ -19,6 +19,7 @@ export function createStackedGrid() {
       , sheet = createGridSheet()
 
   let targetPageWidth = 500
+    , pageWidth = calculatePageWidth()
 
   function stackedGrid(s) {
     s.each(ensureId).each(stackedGridEach)
@@ -34,10 +35,6 @@ export function createStackedGrid() {
 
   function stackedGridEach(d, i) {
 
-    let pageWidth = calculatePageWidth()
-
-    console.log('run, page width', pageWidth)
-
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
             .on(
@@ -46,11 +43,17 @@ export function createStackedGrid() {
             )
             .on('column-resized.recalculate-width', () => pageWidth = calculatePageWidth())
             .on('column-resized.update', () => updatePageWidthStyles(id, pageWidth))
+            .on('scroll.redraw', draw)
+
         , id = target.attr('id')
         , masterTarget = target.select(appendMaster)
 
     updatePageWidthStyles(id, pageWidth)
-    masterTarget.call(masterGrid)
+    draw()
+
+    function draw() {
+      masterTarget.call(masterGrid)
+    }
   }
 
   function drawSlaveGrids(d) {
@@ -64,10 +67,14 @@ export function createStackedGrid() {
 
     const update = target.selectAll('.grid-page.slave-grid')
             .data(chunks)
-
         , enter = update.enter()
             .append('div')
               .classed('grid-page slave-grid', true)
+
+        , scrollLeft = target.property('scrollLeft')
+        , { width } = target.node().getBoundingClientRect()
+        , minLeft = scrollLeft
+        , maxLeft = scrollLeft + width
 
     update.exit().remove()
 
@@ -84,13 +91,15 @@ export function createStackedGrid() {
 
       chunk[modIndex] = (chunkIndex === 0) ? next : unwrap(next)
       acc[chunkIndex] = chunk
-
       return acc
     }
 
     function inView(d, i) {
-      return !(i % 3) ? this : null
-      return this
+      const leftEdge = (i + 1) * pageWidth
+          , rightEdge = leftEdge + pageWidth
+          , skip = (rightEdge < minLeft) || (leftEdge > maxLeft)
+
+      return skip ? null : this 
     }
 
     function drawGridSlavePage(d, i) {
@@ -107,6 +116,7 @@ export function createStackedGrid() {
             }
           )
       )
+
       gridPool[i] = grid
     }
   }
@@ -119,7 +129,6 @@ export function createStackedGrid() {
   }
 
   function updatePageWidthStyles(id, pageWidth) {
-    console.debug('updatePageWidthStyles', id)
     const width = px(pageWidth)
     sheet( `#${id} .grid-page` , { width })
   }
