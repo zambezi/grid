@@ -14,7 +14,6 @@
 <script src="../dist/grid.js"></script>
 <script>
   const table = grid.createStackedGrid()
-          //.columns([ {key: 'name', width: 200}, {key: 'email', width: 200} ])
       , target = d3.select('.grid-target').style('height', '500px')
       , count = d3.select('#data-count')
 
@@ -24,7 +23,7 @@
   draw()
 
   function draw() {
-    const dataCount = (_.random(1000, 3000), 700)
+    const dataCount = _.random(200, 6000)
         , rows = _.range(1, dataCount)
             .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
             .map((row, i) => Object.assign({}, row, { i }))
