@@ -1,17 +1,19 @@
+import { appendIfMissing, each, rebind } from '@zambezi/d3-utils'
+import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
+import { createGrid } from './grid'
+import { createGridSheet } from './grid-sheet'
+import { ensureId } from './ensure-id'
+import { partial } from 'underscore'
 import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
-import { appendIfMissing, each, rebind } from '@zambezi/d3-utils'
-import { createGridSheet } from './grid-sheet'
-import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
-import { ensureId } from './ensure-id'
-import { createGrid } from './grid'
+
 import './stacked-grid.css'
 
 export function createStackedGrid() {
   const gridPool = []
-      , updatePageWidth = createUpdatePageWidthStyles()
       , masterGrid = createGrid()
-            .useAfterMeasure(each(sliceDataForSlaveGrids))
+            .useAfterMeasure(each(drawSlaveGrids))
+
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
       , api = rebind().from(masterGrid, 'columns')
       , sheet = createGridSheet()
@@ -31,47 +33,28 @@ export function createStackedGrid() {
   return api(stackedGrid)
 
   function stackedGridEach(d, i) {
+
+    let pageWidth = calculatePageWidth()
+
+    console.log('run, page width', pageWidth)
+
     const target = select(this)
             .classed('zambezi-stacked-grid', true)
-            //.on('column-resized.log', () => console.log('ÝO!', masterTarget.node()))
-            .on('column-resized.invalidate', () => target.selectAll('.grid-page').dispatch('size-dirty').dispatch('redraw'))
-            .on('column-resized.update', updatePageWidth)
+            .on(
+              'column-resized.invalidate'
+            , () => target.selectAll('.grid-page').dispatch('size-dirty').dispatch('redraw')
+            )
+            .on('column-resized.recalculate-width', () => pageWidth = calculatePageWidth())
+            .on('column-resized.update', () => updatePageWidthStyles(id, pageWidth))
+        , id = target.attr('id')
         , masterTarget = target.select(appendMaster)
 
-    updatePageWidth.id(target.attr('id'))()
+    updatePageWidthStyles(id, pageWidth)
     masterTarget.call(masterGrid)
   }
 
-  function createUpdatePageWidthStyles() {
-    let id
+  function drawSlaveGrids(d) {
 
-    function updatePageWidthStyles() {
-      console.log('I am called with id', id)
-      const width = px(pageWidth())
-      console.log('width is', width)
-      sheet(
-        `#${id} .grid-page`
-        , {width}
-      )
-    }
-
-    updatePageWidthStyles.id = function(value) {
-      if (!arguments.length) return id
-      id = value
-      return updatePageWidthStyles
-    }
-
-    return updatePageWidthStyles
-  }
-
-  function pageWidth() {
-    const columns = masterGrid.columns()
-    if (!columns) return targetPageWidth
-    if (!columns.every( col => !!col.width)) return targetPageWidth
-    return columns.reduce((acc, col) => acc + col.width, 0)
-  }
-
-  function sliceDataForSlaveGrids(d) {
     const { rowHeight, bodyBounds, scrollerWidth } = d
         , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
         , chunks = d.rows.reduce(toChunks, [])
@@ -81,6 +64,7 @@ export function createStackedGrid() {
 
     const update = target.selectAll('.grid-page.slave-grid')
             .data(chunks)
+
         , enter = update.enter()
             .append('div')
               .classed('grid-page slave-grid', true)
@@ -117,5 +101,18 @@ export function createStackedGrid() {
       )
       gridPool[i] = grid
     }
+  }
+
+  function calculatePageWidth() {
+    const columns = masterGrid.columns()
+    if (!columns) return targetPageWidth
+    if (!columns.every( col => !!col.width)) return targetPageWidth
+    return columns.reduce((acc, col) => acc + col.width, 0)
+  }
+
+  function updatePageWidthStyles(id, pageWidth) {
+    console.debug('updatePageWidthStyles', id)
+    const width = px(pageWidth)
+    sheet( `#${id} .grid-page` , { width })
   }
 }
