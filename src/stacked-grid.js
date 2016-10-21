@@ -78,18 +78,22 @@ export function createStackedGrid() {
         , left = scrollLeft
         , right = scrollLeft + width
 
-    update.exit().remove()
+    update.exit()
+      .dispatch('destroy')
+      .remove()
 
     const merge = update.merge(enter)
 
     merge
       .select(inView)
-        //.classed('is-visible', true)
         .each(drawGridSlavePage)
 
     merge
       .select(not(inView))
         .classed('is-visible', false)
+        .dispatch('destroy')
+      .select('.zambezi-grid-stirrup')
+        .remove()
 
     gridPool.length = chunks.length
 
