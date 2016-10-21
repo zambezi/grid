@@ -44,13 +44,13 @@ export function createStackedGrid() {
             , () => target.selectAll('.grid-page').dispatch('size-dirty').dispatch('redraw')
             )
             .on('column-resized.recalculate-width', () => pageWidth = calculatePageWidth())
-            .on('column-resized.update', () => updatePageWidthStyles(id, pageWidth))
+            .on('column-resized.update', () => updatePageWidthStyles(id))
             .on('scroll.redraw', debounce(draw, 50, false))
 
         , id = target.attr('id')
         , masterTarget = target.select(appendMaster)
 
-    updatePageWidthStyles(id, pageWidth)
+    updatePageWidthStyles(id)
     draw()
 
     function draw() {
@@ -75,14 +75,21 @@ export function createStackedGrid() {
 
         , scrollLeft = target.property('scrollLeft')
         , { width } = target.node().getBoundingClientRect()
-        , minLeft = scrollLeft
-        , maxLeft = scrollLeft + width
+        , left = scrollLeft
+        , right = scrollLeft + width
 
     update.exit().remove()
 
-    update.merge(enter)
+    const merge = update.merge(enter)
+
+    merge
       .select(inView)
+        //.classed('is-visible', true)
         .each(drawGridSlavePage)
+
+    merge
+      .select(not(inView))
+        .classed('is-visible', false)
 
     gridPool.length = chunks.length
 
@@ -96,16 +103,22 @@ export function createStackedGrid() {
       return acc
     }
 
+    function not(f) {
+      return function ()  {
+        return !!f.apply(this, arguments) ? null : this
+      }
+    }
+
     function inView(d, i) {
       const leftEdge = (i + 1) * pageWidth
           , rightEdge = leftEdge + pageWidth
-          , skip = (rightEdge < minLeft) || (leftEdge > maxLeft)
+          , skip = (rightEdge < left) || (leftEdge > right)
 
-      return skip ? null : this 
+      return skip ? null : this
     }
 
     function drawGridSlavePage(d, i) {
-      const grid = gridPool[i] || createGrid()
+      const grid = gridPool[i] || createGrid().on('draw.make-visible', makeVisible)
 
       select(this).call(
         grid.serverSideFilterAndSort(true)
@@ -132,8 +145,12 @@ export function createStackedGrid() {
     return columns.reduce((acc, col) => acc + col.width, 0)
   }
 
-  function updatePageWidthStyles(id, pageWidth) {
+  function updatePageWidthStyles(id) {
     const width = px(pageWidth)
     sheet( `#${id} .grid-page` , { width })
   }
+}
+
+function makeVisible() {
+  select(this).classed('is-visible', true)
 }
