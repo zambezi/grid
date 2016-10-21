@@ -92,8 +92,7 @@ export function createStackedGrid() {
       .select(not(inView))
         .classed('is-visible', false)
         .dispatch('destroy')
-      .select('.zambezi-grid-stirrup')
-        .remove()
+        .html('')
 
     gridPool.length = chunks.length
 
