@@ -17,7 +17,7 @@ export function createStackedGrid() {
             .useAfterMeasure(each(drawSlaveGrids))
 
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
-      , api = rebind().from(masterGrid, 'columns', 'resizeColumnsByDefault', 'dragColumnsByDefault')
+      , api = rebind().from(masterGrid, 'columns', 'resizeColumnsByDefault', 'dragColumnsByDefault', 'groupings')
       , sheet = createGridSheet()
 
   let targetPageWidth = 500
