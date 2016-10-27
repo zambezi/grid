@@ -40,7 +40,7 @@
     "rollup-watch": "^2.5.0"
   },
   "dependencies": {
-    "@zambezi/d3-utils": "^3.4.0-unsubscribe-on-destroy.1",
+    "@zambezi/d3-utils": "3.4.0",
     "@zambezi/fun": "^2.0.1",
     "d3-array": "^1.0.1",
     "d3-dispatch": "^1.0.1",
