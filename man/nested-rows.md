@@ -52,6 +52,11 @@ Nested columns can have their own `children` columns with deeper nested rows.
 
 NOTE: cells that use the nested rows expanded components don't support truncation.
 
+### Targeting and styling nested rows
+
+Rows with children will be marked with the  `is-parent-row` class.
+If the row is expanded, it will have the `is-expanded` row as well.
+
 ### Simple row expanders
 
 If you don't need tree-like expanders that are deeply nested, you can use `simpleNestedRowExpanders` to render a basic expand/collapse control.
