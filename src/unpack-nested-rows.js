@@ -4,8 +4,9 @@ import { selectionChanged } from '@zambezi/d3-utils'
 import { isFunction } from 'underscore'
 import { wrap } from './wrap-row'
 
-const rowNestedLevelChanged = selectionChanged()
-          .key(property('row.nestLevel'))
+const nestRowChanged = selectionChanged()
+          .key(nestRowKey)
+          .debug(true)
 
 export function createUnpackNestedRows() {
 
@@ -34,7 +35,7 @@ export function createUnpackNestedRows() {
         .on('data-dirty.unpack-nested-rows', onDataDirty)
 
     d.rows = cache
-    d.dispatcher.on('row-update.unpack-nested-rows', setRowNestLevel)
+    d.dispatcher.on('row-update.unpack-nested-rows', setRowNestClasses)
 
   }
 
@@ -42,10 +43,12 @@ export function createUnpackNestedRows() {
     cache = null
   }
 
-  function setRowNestLevel(d, i) {
+  function setRowNestClasses(d, i) {
     select(this)
-      .select(rowNestedLevelChanged)
+      .select(nestRowChanged)
       .each(() => this.dataset.nestLevel = d.row.nestLevel)
+      .classed('is-parent-row', isParentRow)
+      .classed('is-expanded', isExpanded)
   }
 
   function unpackRows(d) {
@@ -106,4 +109,16 @@ export function createUnpackNestedRows() {
       }
     }
   }
+}
+
+function nestRowKey(d) {
+  return `${isParentRow(d) ? '✓' : '✗'}-${isExpanded(d) ? '✓' : '✗'}-${d.row.nestLevel}`
+}
+
+function isParentRow({row}) {
+  return !!row.children && row.children.length
+}
+
+function isExpanded({row}) {
+  return !!row.expanded
 }
