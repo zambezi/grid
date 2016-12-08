@@ -257,13 +257,13 @@ export function createColumnDrag() {
         , clearHighlightTransition
         )
       }
-    }
-
-    function clearHighlightTransition(d, i) {
-      sheet(
-        cellSelector(d.column)
-      , { animationName: '', webkitAnimationName: '' }
-      )
+      function clearHighlightTransition(d, i) {
+        if (this !== s.node()) return
+        sheet(
+          cellSelector(d.column)
+          , { animationName: '', webkitAnimationName: '' }
+        )
+      }
     }
   }
 

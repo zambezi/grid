@@ -8,3 +8,11 @@
   height: 100%;
   display: inline-block;
 }
+
+.zambezi-stacked-grid .slave-grid {
+  visibility: hidden;
+}
+
+.zambezi-stacked-grid .slave-grid.is-visible {
+  visibility: visible;
+}

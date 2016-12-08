@@ -12,6 +12,7 @@
     "clean": "rimraf dist",
     "watch": "rollup -c -w",
     "test": "mocha",
+    "start": "npm run watch",
     "pretest": "npm run clean && npm run build",
     "prepublish": "npm test"
   },
@@ -33,12 +34,13 @@
     "mocha": "2.5.3",
     "normalize.css": "4.2.0",
     "rimraf": "2.5.3",
-    "rollup": "0.26.3",
+    "rollup": "0.34.10",
     "rollup-plugin-babel": "2.3.9",
-    "rollup-plugin-postcss": "0.1.1"
+    "rollup-plugin-postcss": "0.1.1",
+    "rollup-watch": "^2.5.0"
   },
   "dependencies": {
-    "@zambezi/d3-utils": "^3.3.0",
+    "@zambezi/d3-utils": "3.4.0",
     "@zambezi/fun": "^2.0.1",
     "d3-array": "^1.0.1",
     "d3-dispatch": "^1.0.1",
