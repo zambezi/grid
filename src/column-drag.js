@@ -111,6 +111,7 @@ export function createColumnDrag() {
                   'drop.column-drag'
                 , compose(
                       highlightMovedColumnCells
+                    , () => list.dispatch('settings-changed', { bubbles: true })
                     , () => list.dispatch('redraw', { bubbles: true })
                     , dropColumnInDestination
                     , removeColumnFromOrigin

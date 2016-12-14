@@ -58,6 +58,7 @@ export function createSortRowHeaders() {
 
       target
           .dispatch('data-dirty')
+          .dispatch('settings-changed')
           .dispatch('redraw')
 
       function clearColumnSort(d, i) {
