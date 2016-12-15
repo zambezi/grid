@@ -12,14 +12,16 @@
 <script src="../dist/grid.js"></script>
 <script>
   var table = grid.createGrid()
+          .on(
+            'settings-changed'
+          , () => console.log('settings changed')
+          )
     , rows = _.range(1, 5000).map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard)) 
 
   d3.select('.grid-target')
       .style('height', '500px')
       .datum(rows)
       .call(table)
-      .on('settings-changed', () => console.log('settings changed'))
-
 
 </script>
 </body>
