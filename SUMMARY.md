@@ -7,6 +7,7 @@ Summary
   - [Quick start](man/quick-start.md)
   - [Column configuration](man/column-configuration.md)
   - [Row and cell events](man/row-and-cell-events.md)
+  - [Core grid events](man/core-grid-events.md)
 
 - Extending the grid
   - [Grid components](man/grid-components.md)
