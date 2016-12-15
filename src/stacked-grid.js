@@ -1,13 +1,23 @@
-import { appendIfMissing, each, rebind } from '@zambezi/d3-utils'
+import { appendIfMissing, each, rebind, forward, redispatch } from '@zambezi/d3-utils'
 import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGrid } from './grid'
 import { createGridSheet } from './grid-sheet'
 import { ensureId } from './ensure-id'
 import { debounce } from 'underscore'
-import { select } from 'd3-selection'
+import { select, dispatch } from 'd3-selection'
 import { unwrap } from './unwrap-row'
 
 import './stacked-grid.css'
+
+const redispatchEvents = [
+        'row-enter'
+      , 'row-update'
+      , 'row-changed'
+      , 'row-exit'
+      , 'cell-enter'
+      , 'cell-update'
+      , 'cell-exit'
+      ]
 
 export function createStackedGrid() {
   const gridPool = []
@@ -17,7 +27,15 @@ export function createStackedGrid() {
             .useAfterMeasure(each(drawSlaveGrids))
 
       , appendMaster = appendIfMissing('div.grid-page.master-grid')
-      , api = rebind().from(masterGrid, 'columns', 'resizeColumnsByDefault', 'dragColumnsByDefault', 'groupings')
+      , manualSlaveRedispatcher = dispatch.apply(null, redispatchEvents)
+      , redispatcher = redispatch()
+            .from(manualSlaveRedispatcher, ...redispatchEvents)
+            .from(masterGrid, ...redispatchEvents)
+            .create()
+
+      , api = rebind()
+            .from(redispatcher, 'on')
+            .from(masterGrid, 'columns', 'resizeColumnsByDefault', 'dragColumnsByDefault', 'groupings')
       , sheet = createGridSheet()
 
   let targetPageWidth = 500
@@ -94,7 +112,7 @@ export function createStackedGrid() {
         .dispatch('destroy')
         .html('')
 
-    gridPool.length = chunks.length
+    gridPool.splice(chunks.length).forEach(destroySlaveGrid)
 
     function toChunks(acc, next, i) {
       const chunkIndex = Math.floor(i / rowsPerPage)
@@ -121,7 +139,7 @@ export function createStackedGrid() {
     }
 
     function drawGridSlavePage(d, i) {
-      const grid = gridPool[i] || createGrid().on('draw.make-visible', makeVisible)
+      const grid = gridPool[i] || buildSlaveGrid()
 
       select(this).call(
         grid.serverSideFilterAndSort(true)
@@ -139,6 +157,20 @@ export function createStackedGrid() {
 
       gridPool[i] = grid
     }
+  }
+
+  function destroySlaveGrid(grid) {
+    grid.on('draw.make-visible', null)
+    redispatchEvents
+      .forEach(type => grid.on(`${type}.slave`, null))
+  }
+
+  function buildSlaveGrid() {
+    const grid = createGrid().on('draw.make-visible', makeVisible)
+    redispatchEvents
+      .forEach(type => grid.on(`${type}.slave`, forward(manualSlaveRedispatcher, type)))
+
+    return grid
   }
 
   function calculatePageWidth() {
