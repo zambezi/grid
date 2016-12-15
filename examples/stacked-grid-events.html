@@ -1,0 +1,36 @@
+<!doctype html>
+<head><meta charset="utf-8" /></head>
+<body>
+<h2>stacked grid example</h2>
+<button id="randomize-data">Randomize data</button>
+<p id="data-count"></p>
+<div class="grid-target"></div>
+<link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
+<script src="../node_modules/underscore/underscore.js"></script>
+<script src="../node_modules/faker/faker.js"></script>
+<script src="../node_modules/@zambezi/fun/dist/fun.js"></script>
+<script src="../node_modules/d3/build/d3.js"></script>
+<script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
+<script src="../dist/grid.js"></script>
+<script>
+  const table = grid.createStackedGrid()
+          .on('row-update', function(d) { console.info('row update', `update ${d.row.name}`, this) })
+
+      , target = d3.select('.grid-target').style('height', '500px')
+      , count = d3.select('#data-count')
+
+  d3.select('#randomize-data')
+        .on('click', draw)
+
+  draw()
+
+  function draw() {
+    const dataCount = _.random(200, 6000)
+        , rows = _.range(1, dataCount)
+            .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
+            .map((row, i) => Object.assign({}, row, { i }))
+    target.datum(rows).call(table)
+    count.text(`There are ${dataCount} rows`)
+  }
+</script>
+</body>
