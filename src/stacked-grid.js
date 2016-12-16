@@ -2,9 +2,10 @@ import { appendIfMissing, each, rebind, forward, redispatch } from '@zambezi/d3-
 import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGrid } from './grid'
 import { createGridSheet } from './grid-sheet'
-import { ensureId } from './ensure-id'
 import { debounce } from 'underscore'
-import { select, dispatch } from 'd3-selection'
+import { dispatch } from 'd3-dispatch'
+import { ensureId } from './ensure-id'
+import { select } from 'd3-selection'
 import { unwrap } from './unwrap-row'
 
 import './stacked-grid.css'
