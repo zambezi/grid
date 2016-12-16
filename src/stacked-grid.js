@@ -17,6 +17,7 @@ const redispatchEvents = [
       , 'cell-enter'
       , 'cell-update'
       , 'cell-exit'
+      , 'settings-changed'
       ]
 
 export function createStackedGrid() {

@@ -15,6 +15,7 @@
 <script>
   const table = grid.createStackedGrid()
           .on('row-update', function(d) { console.info('row update', `update ${d.row.name}`, this) })
+          .on('settings-changed', function(d) { console.warn('settings changed', this) })
 
       , target = d3.select('.grid-target').style('height', '500px')
       , count = d3.select('#data-count')
