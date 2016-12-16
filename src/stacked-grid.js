@@ -76,6 +76,7 @@ export function createStackedGrid() {
     function draw() {
       masterTarget.call(masterGrid)
     }
+
   }
 
   function drawSlaveGrids(d) {
@@ -84,17 +85,18 @@ export function createStackedGrid() {
         , rowsPerPage = Math.floor((bodyBounds.height - scrollerWidth) / rowHeight)
         , chunks = d.rows.reduce(toChunks, [])
         , targetMaster = select(this)
+        , host = select(this.parentElement)
 
     d.rows.free = chunks.shift()
 
-    const update = target.selectAll('.grid-page.slave-grid')
+    const update = host.selectAll('.grid-page.slave-grid')
             .data(chunks)
         , enter = update.enter()
             .append('div')
               .classed('grid-page slave-grid', true)
 
-        , scrollLeft = target.property('scrollLeft')
-        , { width } = target.node().getBoundingClientRect()
+        , scrollLeft = host.property('scrollLeft')
+        , { width } = host.node().getBoundingClientRect()
         , left = scrollLeft
         , right = scrollLeft + width
 
