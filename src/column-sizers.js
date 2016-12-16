@@ -53,6 +53,10 @@ export function createColumnSizers() {
                               // up again soon.
               .remove()       // ... remove if they haven't.
         , sizers = sizersUpdate.merge(sizersEnter)
+        , dispatchSettingsChanged = debounce(
+            () => target.dispatch('settings-changed', { bubbles: true })
+          , 300
+          )
 
     sizers.on('mousedown.column-sizers', onSizerMousedown)
     sizers.filter('.is-recycled')
@@ -100,7 +104,11 @@ export function createColumnSizers() {
       if (findCandidateFreeWidth() < minFreeColumnWidth) return
 
       column.width = newWidth
-      target.dispatch('column-resized', { bubbles: true }).dispatch('redraw')
+      target
+          .dispatch('column-resized', { bubbles: true })
+          .dispatch('redraw')
+
+      dispatchSettingsChanged()
 
       function findCandidateFreeWidth() {
 

@@ -37,7 +37,7 @@ export function createGrid() {
       , resize = createResize()
       , unpackNestedRows = createUnpackNestedRows()
       , columnSizers = createColumnSizers()
-      , dispatchDraw = createDispatch('draw')
+      , coreEvents = createDispatch('draw', 'settings-changed')
       , groupRows = createGroupRows()
       , body = createBody()
       , runExternalComponents = createRunExternalComponents()
@@ -48,7 +48,7 @@ export function createGrid() {
       , shareDispatcher = createShareDispatcher()
       , autodirty = createAutoDirty()
       , redispatcher = redispatch()
-            .from(dispatchDraw, 'draw')
+            .from(coreEvents, 'draw', 'settings-changed')
             .from(sortRowHeaders, 'sort-changed')
             .from(
               body
@@ -82,7 +82,11 @@ export function createGrid() {
             .from(unpackNestedRows, 'showRowWhenCollapsed')
 
       , grid = compose(
-          each(doDispatchDraw)
+          call(s => coreEvents.call('draw', s.node()))
+        , call(s => s.on(
+            'settings-changed'
+          , () => coreEvents.call('settings-changed', s.node()))
+          )
         , call(runExternalComponents)
         , call(createScrollers())
         , call(sortRowHeaders)
@@ -112,8 +116,4 @@ export function createGrid() {
         )
 
   return api(autodirty(redraw(throttle(throttleToAnimationFrame(skipWhenHidden(grid)), 10))))
-
-  function doDispatchDraw() {
-    dispatchDraw.call('draw', this)
-  }
 }
