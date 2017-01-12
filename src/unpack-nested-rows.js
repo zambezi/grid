@@ -45,7 +45,7 @@ export function createUnpackNestedRows() {
   function setRowNestLevel(d, i) {
     select(this)
       .select(rowNestedLevelChanged)
-      .each(() => this.dataset.nestLevel = d.row.nestLevel)
+      .attr('data-nest-level', d.row.nestLevel)
   }
 
   function unpackRows(d) {

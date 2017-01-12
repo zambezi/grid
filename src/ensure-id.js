@@ -7,6 +7,6 @@ export function ensureId(d, i) {
 
   target.attr(
     'id'
-  , this.dataset.componentId || uniqueId('gen-grid-')
+  , target.attr('data-component-id') || uniqueId('gen-grid-')
   )
 }

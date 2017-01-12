@@ -93,6 +93,7 @@ export function createCells() {
             .merge(rowsEnter)
               .each(forward(dispatcher, 'row-update'))
               .each(updateRow)
+              .attr('data-grid-row-index', d => d.index)
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
@@ -156,7 +157,6 @@ export function createCells() {
     const index = d.index
         , selector = `#${ gridId } [data-grid-row-index="${index}"]`
 
-    this.dataset.gridRowIndex = index
     sheet(selector, { top: top(d) })
   }
 }
