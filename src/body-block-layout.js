@@ -30,7 +30,11 @@ export function createBodyBlockLayout() {
         , layout = [
 
           // class    rows  cols  l     r      w     t     b       h    sV  sH
-          [ 'body-a', rowT, colL ,     ,      ,clw  ,     ,       ,rth     ,   ]
+          [ 'body-e', rowF, colF ,clw  ,      ,3000 ,rth  ,       ,rowF.length * rowHeight    ,1  ,1  ]
+
+
+
+        , [ 'body-a', rowT, colL ,     ,      ,clw  ,     ,       ,rth     ,   ]
         , [ 'body-b', rowT, colF ,clw  ,freeR ,     ,     ,       ,rth ,   ,1  ]
         , [ 'body-c', rowT, colR ,     ,      ,crw  ,     ,       ,rth ,   ,   ]
 
@@ -38,7 +42,8 @@ export function createBodyBlockLayout() {
         , [ 'body-d', rowF, colL ,     ,      ,clw  ,rth  ,freeB  ,    ,1  ,   ]
 
         // , [ 'body-e', rowF, colF ,clw  ,freeR ,     ,rth  ,freeB  ,    ,1  ,1  ]
-        , [ 'body-e', rowF, colF ,clw  ,      ,3000 ,rth  ,       ,rowF.length * rowHeight    ,1  ,1  ]
+
+
 
         , [ 'body-f', rowF, colR ,     ,      ,crw  ,rth  ,freeB  ,    ,1  ,   ]
 

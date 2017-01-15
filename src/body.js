@@ -99,13 +99,31 @@ export function createBody() {
     }
 
     function updateScrollTransform() {
+      const formatLeft = px(-bundle.scroll.left) 
+          , formatTop = px(-bundle.scroll.top)
+
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-e
+        `
+      ,  { transform: `translate(${formatLeft}, ${formatTop})` }
+
+      )
+
       sheet(
         `
         #${id} .zambezi-body-section.body-d,
-        #${id} .zambezi-body-section.body-e,
         #${id} .zambezi-body-section.body-f
         `
-      ,  { transform: `translate(${-bundle.scroll.left}px, ${-bundle.scroll.top}px)` }
+      ,  { transform: `translateY(${formatTop})` }
+      )
+
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-b,
+        #${id} .zambezi-body-section.body-h
+        `
+      ,  { transform: `translateX(${formatLeft})` }
       )
     }
 
