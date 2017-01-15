@@ -83,7 +83,8 @@ export function createBody() {
 
     updateRowHeightStyles()
     updateBlocksAndCells()
-    updateScroll()
+    // updateScroll()
+    updateScrollTransform()
 
     bundle.columns.forEach(updateColumnLayout)
 
@@ -97,6 +98,17 @@ export function createBody() {
           .call(cells.sheet(sheet).gridId(id))
     }
 
+    function updateScrollTransform() {
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-d,
+        #${id} .zambezi-body-section.body-e,
+        #${id} .zambezi-body-section.body-f
+        `
+      ,  { transform: `translate(${-bundle.scroll.left}px, ${-bundle.scroll.top}px)` }
+      )
+    }
+
     function dispatchLinesChange(min, max) {
       dispatch.call('visible-lines-change', this, min, max)
     }
@@ -107,7 +119,6 @@ export function createBody() {
           .classed('is-scrolled-down', isScrolledTop)
           .classed('is-scrolled-up', isScrolledBottom)
           .select(verticalScrollChanged.key(verticalScroll))
-          .each(updateVerticalScroll)
 
       blocks.classed('is-scrolled-left', isScrolledLeft)
           .classed('is-scrolled-right' , isScrolledRight)
