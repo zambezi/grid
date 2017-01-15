@@ -52,7 +52,6 @@ export function createBody() {
             .from(redispatcher, 'on')
 
   let sizeValidationRound = 0
-
   let lastOnChangeArgs
 
   function body(s) {
@@ -104,7 +103,7 @@ export function createBody() {
 
       sheet(
         `
-        #${id} .zambezi-body-section.body-e
+        #${id} .zambezi-body-section.body-e > .zambezi-grid-row
         `
       ,  { transform: `translate(${formatLeft}, ${formatTop})` }
 
@@ -112,16 +111,16 @@ export function createBody() {
 
       sheet(
         `
-        #${id} .zambezi-body-section.body-d,
-        #${id} .zambezi-body-section.body-f
+        #${id} .zambezi-body-section.body-d > .zambezi-grid-row,
+        #${id} .zambezi-body-section.body-f > .zambezi-grid-row
         `
       ,  { transform: `translateY(${formatTop})` }
       )
 
       sheet(
         `
-        #${id} .zambezi-body-section.body-b,
-        #${id} .zambezi-body-section.body-h
+        #${id} .zambezi-body-section.body-b > .zambezi-grid-row,
+        #${id} .zambezi-body-section.body-h > .zambezi-grid-row
         `
       ,  { transform: `translateX(${formatLeft})` }
       )
