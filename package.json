@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.14.0",
+  "version": "0.15.0-scroll-optimization-test-integration.1",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",
