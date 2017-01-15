@@ -22,7 +22,7 @@
 <script src="../dist/grid.js"></script>
 <script>
   const rows = _.shuffle(
-          _.range(1, 1000)
+          _.range(1, 3000)
               .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
               .map(function(row, i) { row.id = 'row' + i; return row }))
 

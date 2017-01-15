@@ -34,15 +34,22 @@ export function createBodyBlockLayout() {
         , [ 'body-b', rowT, colF ,clw  ,freeR ,     ,     ,       ,rth ,   ,1  ]
         , [ 'body-c', rowT, colR ,     ,      ,crw  ,     ,       ,rth ,   ,   ]
 
+
         , [ 'body-d', rowF, colL ,     ,      ,clw  ,rth  ,freeB  ,    ,1  ,   ]
-        , [ 'body-e', rowF, colF ,clw  ,freeR ,     ,rth  ,freeB  ,    ,1  ,1  ]
+
+        // , [ 'body-e', rowF, colF ,clw  ,freeR ,     ,rth  ,freeB  ,    ,1  ,1  ]
+        , [ 'body-e', rowF, colF ,clw  ,      ,3000 ,rth  ,       ,rowF.length * rowHeight    ,1  ,1  ]
+
         , [ 'body-f', rowF, colR ,     ,      ,crw  ,rth  ,freeB  ,    ,1  ,   ]
+
 
         , [ 'body-g', rowB, colL ,     ,      ,clw  ,     ,       ,rbh ,   ,   ]
         , [ 'body-h', rowB, colF ,clw  ,freeR ,     ,     ,       ,rbh ,   ,1  ]
         , [ 'body-i', rowB, colR ,     ,      ,crw  ,     ,       ,rbh ,   ,   ]
 
         ].map(buildBlockData)
+
+    console.log('widths:', colF.map(c => c.width))
 
     layout.minVisibleFreeRow = minVisibleFreeRow
     layout.maxVisibleFreeRow = maxVisibleFreeRow

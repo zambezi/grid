@@ -6,6 +6,7 @@ import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
 
+
 const verticalScrollChanged = selectionChanged()
     , horizontalScrollChanged = selectionChanged()
     , clippingChanged = selectionChanged()
@@ -49,7 +50,7 @@ export function createScrollers() {
 
     updateClipping()
     updateContentRules()
-    updateScroll()
+    // /updateScroll()
 
     function updateClipping() {
       root.select(clippingChanged)
@@ -60,8 +61,7 @@ export function createScrollers() {
     function updateScroll() {
       vertical
           .select(verticalScrollChanged)
-          .datum(scrollTop)
-          .property('scrollTop', parseFloat)
+          .property('scrollTop', bundle.scroll.top)
 
       horizontal.select(horizontalScrollChanged)
           .datum(scrollLeft)
