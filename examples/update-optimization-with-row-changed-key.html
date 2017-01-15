@@ -5,12 +5,14 @@
 <p>
   <button id="start-updates">Start updates</button>
   <button id="stop-updates">Stop updates</button>
+  <button id="randomize-data">Randomize data length</button>
 </p>
 <p>
-  <input type="checkbox" id="use-optimization">Use "row changed key" optimization</input>
+  <input type="checkbox" checked="true" id="use-optimization">Use "row changed key" optimization</input>
 </p>
 
-<p>Row changes on last grid redraw: <strong id="counter"></strong> </p>
+<p>Row changes on last grid redraw: <strong id="counter"></strong> (on 9 grid sections)</p>
+<p>Data length <strong id="length"></strong></p>
 <div class="grid-target"></div>
 
 <link rel="stylesheet" type="text/css" href="../node_modules/normalize.css/normalize.css">
@@ -21,21 +23,41 @@
 <script src="../node_modules/@zambezi/d3-utils/dist/d3-utils.js"></script>
 <script src="../dist/grid.js"></script>
 <script>
-  const rows = _.shuffle(
-          _.range(1, 3000)
-              .map(_.compose(_.partial(_.pick, _, 'name', 'username', 'email'), faker.Helpers.createCard))
-              .map(function(row, i) { row.id = 'row' + i; return row }))
-
-      , counter = d3.select('#counter')
+  const counter = d3.select('#counter')
       , table = grid.createGrid()
             .rowKey(d => d.id)
+            .rowChangedKey(d => d.username)
             .on('row-changed', () => ++changes)
             .on('draw.log', () => (counter.text(changes), changes = 0))
+            .columns(
+              [
+                { key: 'name', locked: 'left' }
+              , { key: 'id', locked: 'right' }
+              , { key: 'username' }
+              , { key: 'email' }
+              , { 
+                  key: 'address', format: a => `${a.streetA}, ${a.streetB}` 
+                , sort: (a, b) => d3.ascending(a.streetA, b.streetA)
+                }
+              ]
+            )
 
       , target = d3.select('.grid-target')
             .style('height', '500px')
-            .datum(rows)
-            .call(table)
+
+  let rows
+
+  draw()
+
+  function draw() {
+    rows = _.shuffle(
+            _.range(1, _.random(10, 50))
+                .map(faker.Helpers.createCard))
+                .map(function(row, i) { row.id = 'row' + i; return row })
+
+    target.datum(rows).call(table)
+    d3.select('#length').text(rows.length)
+  }
 
   let changes = 0
 
@@ -44,6 +66,9 @@
 
   d3.select('#stop-updates')
     .on('click', stopUpdates)
+
+  d3.select('#randomize-data')
+    .on('click', draw)
 
   d3.select('#use-optimization').on('change', onOptimizationChange)
 
