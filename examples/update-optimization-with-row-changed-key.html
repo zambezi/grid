@@ -51,7 +51,7 @@
 
   function draw() {
     rows = _.shuffle(
-            _.range(1, _.random(10, 50))
+            _.range(1, _.random(10, 500))
                 .map(faker.Helpers.createCard))
                 .map(function(row, i) { row.id = 'row' + i; return row })
 
