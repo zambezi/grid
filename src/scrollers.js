@@ -1,7 +1,9 @@
 import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGridSheet } from './grid-sheet'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
+import { debounce } from 'underscore'
 import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
@@ -17,6 +19,8 @@ const verticalScrollChanged = selectionChanged()
 export function createScrollers() {
 
   const sheet = createGridSheet()
+      , internalDispatcher = createDispatch('consolidate')
+      , trackLastUpdate = debounce(() => internalDispatcher.call('consolidate'), 10)
 
   let sizeValidationRound = 0
     , isSelfScroll = false
@@ -45,6 +49,7 @@ export function createScrollers() {
 
     verticalScrollChanged.key(verticalScrollChangedKey)
     horizontalScrollChanged.key(horizontalScrollChangedKey)
+    internalDispatcher.on(`consolidate.${i}`, updateScroll)
 
     clippingChanged.key(clippingChangedKey)
 
@@ -53,7 +58,7 @@ export function createScrollers() {
 
     updateClipping()
     updateContentRules()
-    if (!isScrollValid) updateScroll()
+    trackLastUpdate()
 
     function updateClipping() {
       root.select(clippingChanged)
@@ -62,6 +67,7 @@ export function createScrollers() {
     }
 
     function updateScroll() {
+      if (isScrollValid) return
       vertical
           .select(verticalScrollChanged)
           .property('scrollTop', bundle.scroll.top)
