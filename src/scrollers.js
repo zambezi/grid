@@ -19,10 +19,13 @@ export function createScrollers() {
   const sheet = createGridSheet()
 
   let sizeValidationRound = 0
+    , isSelfScroll = false
+    , isScrollValid
 
   function scrollers(s) {
     s.each(scrollersEach)
         .on('size-dirty.scroller-invalidation', () => sizeValidationRound++)
+        .on('grid-scroll', onGridScroll)
   }
 
   return scrollers
@@ -50,7 +53,7 @@ export function createScrollers() {
 
     updateClipping()
     updateContentRules()
-    // /updateScroll()
+    if (!isScrollValid) updateScroll()
 
     function updateClipping() {
       root.select(clippingChanged)
@@ -66,6 +69,8 @@ export function createScrollers() {
       horizontal.select(horizontalScrollChanged)
           .datum(scrollLeft)
           .property('scrollLeft', parseFloat)
+
+      isScrollValid = true
     }
 
     function updateContentRules() {
@@ -94,9 +99,11 @@ export function createScrollers() {
       const top = vertical.property('scrollTop')
           , left = horizontal.property('scrollLeft')
 
+      isSelfScroll = true
       select(this)
           .dispatch('grid-scroll', { bubbles: true, detail: { top, left } })
           .dispatch('redraw', { bubbles: true })
+      isSelfScroll = false
     }
 
     function verticalScrollChangedKey() {
@@ -110,5 +117,10 @@ export function createScrollers() {
     function clippingChangedKey() {
       return `${ bundle.bodyBounds.clippedHorizontal }: ${ bundle.bodyBounds.clippedVertical } ${ sizeValidationRound}`
     }
+  }
+
+  function onGridScroll({scroll}) {
+    if (isSelfScroll) return
+    isScrollValid = false
   }
 }
