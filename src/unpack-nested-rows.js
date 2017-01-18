@@ -1,7 +1,8 @@
+import { dataset } from './dataset'
+import { isFunction } from 'underscore'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
 import { selectionChanged } from '@zambezi/d3-utils'
-import { isFunction } from 'underscore'
 import { wrap } from './wrap-row'
 
 const rowNestedLevelChanged = selectionChanged()
@@ -45,7 +46,7 @@ export function createUnpackNestedRows() {
   function setRowNestLevel(d, i) {
     select(this)
       .select(rowNestedLevelChanged)
-      .each(() => this.dataset.nestLevel = d.row.nestLevel)
+      .call(dataset, 'nestLevel', d.row.nestLevel)
   }
 
   function unpackRows(d) {

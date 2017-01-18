@@ -82,11 +82,14 @@ export function createGrid() {
             .from(unpackNestedRows, 'showRowWhenCollapsed')
 
       , grid = compose(
-          call(s => coreEvents.call('draw', s.node()))
+
+          call(d => window.timeGrid && console.timeEnd('grid'))
+        , call(() => coreEvents.call('draw'))
         , call(s => s.on(
             'settings-changed'
           , () => coreEvents.call('settings-changed', s.node()))
           )
+        , call(s => s.on('settings-changed', () => coreEvents.call('settings-changed')))
         , call(runExternalComponents)
         , call(createScrollers())
         , call(sortRowHeaders)
@@ -113,6 +116,7 @@ export function createGrid() {
         , each(shareDispatcher.dispatcher(redispatcher))
         , each(ensureData)
         , each(ensureId)
+        , call(d => window.timeGrid && console.time('grid'))
         )
 
   return api(autodirty(redraw(throttle(throttleToAnimationFrame(skipWhenHidden(grid)), 10))))

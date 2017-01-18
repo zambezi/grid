@@ -26,7 +26,7 @@
             [
               { key: 'name', locked: 'left', width: 200 }
             , { key: 'email', sortDescending: true }
-            , { key: 'phone' }
+            , { key: 'phone', locked: 'right' }
             , { key: 'username' }
             , {
                 components: [ translate, grid.updateTextIfChanged ]
@@ -48,13 +48,13 @@
             ]
           )
 
-    , rows = _.range(1, 2000).map(faker.Helpers.createCard)
+    , rows = _.range(1, 100).map(faker.Helpers.createCard)
     , icon = d3.scaleOrdinal().range('▀▄█▌▐░▒▓■')
 
   rows[10].locked = 'top'
   rows[11].locked = 'top'
-  rows[101].locked = 'bottom'
-  rows[102].locked = 'bottom'
+  rows[61].locked = 'bottom'
+  rows[62].locked = 'bottom'
 
   d3.select('.grid-target')
       .style('height', '500px')
