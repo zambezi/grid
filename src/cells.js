@@ -1,4 +1,5 @@
 import { appendFromTemplate, selectionChanged, rebind, forward } from '@zambezi/d3-utils'
+import { dataset } from './dataset'
 import { dispatch as createDispatch } from 'd3-dispatch'
 import { property, batch } from '@zambezi/fun'
 import { select } from 'd3-selection'
@@ -14,7 +15,6 @@ const appendDefaultCell = appendFromTemplate(
     , id = property('id')
     , isFirst = property('isFirst')
     , isLast = property('isLast')
-    , rowIndexMatch = /(\bgrid-row-index-\d+\b|$)/
 
 export function createCells() {
 
@@ -93,6 +93,7 @@ export function createCells() {
             .merge(rowsEnter)
               .each(forward(dispatcher, 'row-update'))
               .each(updateRow)
+              .call(dataset, 'gridRowIndex', d => d.index)
             .select(
               changed.key(
                 orderAndKey(rowChangedKey, visibleCellsHash)
@@ -156,7 +157,6 @@ export function createCells() {
     const index = d.index
         , selector = `#${ gridId } [data-grid-row-index="${index}"]`
 
-    this.dataset.gridRowIndex = index
     sheet(selector, { top: top(d) })
   }
 }
@@ -197,3 +197,4 @@ function dataKey(rowKey) {
 function firstAndLast(d) {
   return d.isFirst + '★' + d.isLast
 }
+
