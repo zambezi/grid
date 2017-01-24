@@ -11,7 +11,7 @@ const appendDefaultCell = appendFromTemplate(
     , appendRow = appendFromTemplate('<li class="zambezi-grid-row"></li>')
     , changed = selectionChanged()
     , firstLastChanged = selectionChanged().key(firstAndLast)
-    , indexChanged = selectionChanged().key(d => d.index).debug(true)
+    , indexChanged = selectionChanged().key(d => d.index)
     , id = property('id')
     , isFirst = property('isFirst')
     , isLast = property('isLast')
