@@ -1,10 +1,13 @@
 import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createGridSheet } from './grid-sheet'
+import { dispatch as createDispatch } from 'd3-dispatch'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
+import { debounce } from 'underscore'
 import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
+
 
 const verticalScrollChanged = selectionChanged()
     , horizontalScrollChanged = selectionChanged()
@@ -16,12 +19,17 @@ const verticalScrollChanged = selectionChanged()
 export function createScrollers() {
 
   const sheet = createGridSheet()
+      , internalDispatcher = createDispatch('consolidate')
+      , trackLastUpdate = debounce(() => internalDispatcher.call('consolidate'), 10)
 
   let sizeValidationRound = 0
+    , isSelfScroll = false
+    , isScrollValid
 
   function scrollers(s) {
     s.each(scrollersEach)
         .on('size-dirty.scroller-invalidation', () => sizeValidationRound++)
+        .on('grid-scroll', onGridScroll)
   }
 
   return scrollers
@@ -41,6 +49,7 @@ export function createScrollers() {
 
     verticalScrollChanged.key(verticalScrollChangedKey)
     horizontalScrollChanged.key(horizontalScrollChangedKey)
+    internalDispatcher.on(`consolidate.${i}`, updateScroll)
 
     clippingChanged.key(clippingChangedKey)
 
@@ -49,7 +58,7 @@ export function createScrollers() {
 
     updateClipping()
     updateContentRules()
-    updateScroll()
+    trackLastUpdate()
 
     function updateClipping() {
       root.select(clippingChanged)
@@ -58,14 +67,16 @@ export function createScrollers() {
     }
 
     function updateScroll() {
+      if (isScrollValid) return
       vertical
           .select(verticalScrollChanged)
-          .datum(scrollTop)
-          .property('scrollTop', parseFloat)
+          .property('scrollTop', bundle.scroll.top)
 
       horizontal.select(horizontalScrollChanged)
           .datum(scrollLeft)
           .property('scrollLeft', parseFloat)
+
+      isScrollValid = true
     }
 
     function updateContentRules() {
@@ -94,9 +105,11 @@ export function createScrollers() {
       const top = vertical.property('scrollTop')
           , left = horizontal.property('scrollLeft')
 
+      isSelfScroll = true
       select(this)
           .dispatch('grid-scroll', { bubbles: true, detail: { top, left } })
           .dispatch('redraw', { bubbles: true })
+      isSelfScroll = false
     }
 
     function verticalScrollChangedKey() {
@@ -110,5 +123,10 @@ export function createScrollers() {
     function clippingChangedKey() {
       return `${ bundle.bodyBounds.clippedHorizontal }: ${ bundle.bodyBounds.clippedVertical } ${ sizeValidationRound}`
     }
+  }
+
+  function onGridScroll({scroll}) {
+    if (isSelfScroll) return
+    isScrollValid = false
   }
 }

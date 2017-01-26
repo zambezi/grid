@@ -52,7 +52,6 @@ export function createBody() {
             .from(redispatcher, 'on')
 
   let sizeValidationRound = 0
-
   let lastOnChangeArgs
 
   function body(s) {
@@ -83,7 +82,7 @@ export function createBody() {
 
     updateRowHeightStyles()
     updateBlocksAndCells()
-    updateScroll()
+    updateScrollTransform()
 
     bundle.columns.forEach(updateColumnLayout)
 
@@ -97,24 +96,37 @@ export function createBody() {
           .call(cells.sheet(sheet).gridId(id))
     }
 
-    function dispatchLinesChange(min, max) {
-      dispatch.call('visible-lines-change', this, min, max)
+    function updateScrollTransform() {
+      const formatLeft = px(-bundle.scroll.left) 
+          , formatTop = px(-bundle.scroll.top)
+
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-e > .zambezi-grid-row
+        `
+      ,  { transform: `translate(${formatLeft}, ${formatTop})` }
+
+      )
+
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-d > .zambezi-grid-row,
+        #${id} .zambezi-body-section.body-f > .zambezi-grid-row
+        `
+      ,  { transform: `translateY(${formatTop})` }
+      )
+
+      sheet(
+        `
+        #${id} .zambezi-body-section.body-b > .zambezi-grid-row,
+        #${id} .zambezi-body-section.body-h > .zambezi-grid-row
+        `
+      ,  { transform: `translateX(${formatLeft})` }
+      )
     }
 
-    function updateScroll() {
-      blocks.classed('is-vertical-short', isVerticalShort)
-          .classed('is-horizontal-short', isHorizontalShort)
-          .classed('is-scrolled-down', isScrolledTop)
-          .classed('is-scrolled-up', isScrolledBottom)
-          .select(verticalScrollChanged.key(verticalScroll))
-          .each(updateVerticalScroll)
-
-      blocks.classed('is-scrolled-left', isScrolledLeft)
-          .classed('is-scrolled-right' , isScrolledRight)
-          .select(
-            horizontalScrollChanged.key(horizontalScroll)
-          )
-          .each(updateHorizontalScroll)
+    function dispatchLinesChange(min, max) {
+      dispatch.call('visible-lines-change', this, min, max)
     }
 
     function updateRowHeightStyles() {
