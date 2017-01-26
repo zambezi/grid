@@ -82,7 +82,6 @@ export function createBody() {
 
     updateRowHeightStyles()
     updateBlocksAndCells()
-    // updateScroll()
     updateScrollTransform()
 
     bundle.columns.forEach(updateColumnLayout)
@@ -128,21 +127,6 @@ export function createBody() {
 
     function dispatchLinesChange(min, max) {
       dispatch.call('visible-lines-change', this, min, max)
-    }
-
-    function updateScroll() {
-      blocks.classed('is-vertical-short', isVerticalShort)
-          .classed('is-horizontal-short', isHorizontalShort)
-          .classed('is-scrolled-down', isScrolledTop)
-          .classed('is-scrolled-up', isScrolledBottom)
-          .select(verticalScrollChanged.key(verticalScroll))
-
-      blocks.classed('is-scrolled-left', isScrolledLeft)
-          .classed('is-scrolled-right' , isScrolledRight)
-          .select(
-            horizontalScrollChanged.key(horizontalScroll)
-          )
-          .each(updateHorizontalScroll)
     }
 
     function updateRowHeightStyles() {
