@@ -7,6 +7,15 @@
       background-color: #BBB;
       color: white;
     }
+
+    .zambezi-grid-cell.fancy-cell {
+      background-color: #A0F;
+    }
+
+    .zambezi-grid-cell.fancy-plus {
+      color: #AFF;
+    }
+
   </style>
 </head>
 <body>
@@ -27,7 +36,7 @@
               { key: 'name', locked: 'left', width: 200 }
             , { key: 'email', sortDescending: true }
             , { key: 'phone', locked: 'right' }
-            , { key: 'username' }
+            , { key: 'username', className: 'fancy-plus fancy-cell' }
             , {
                 components: [ translate, grid.updateTextIfChanged ]
               , label: 'custom'
