@@ -145,6 +145,22 @@ function spreadFormatter(d) {
 }
 ```
 
+#### Custom column classes
+
+Should you wish to add bespoke styling to all cells in a particular column you can specify extra classes to be added to each cell.
+
+```javascript
+const columns = [
+  ...
+, {
+  , key: "id"
+  , className: "my-custom-class-1 my-custom-class-2"
+  }
+]
+```
+
+NOTE: this will be applied to cells only when they are created -- and will not dynamically change after cell creation.
+
 #### Column width
 
 The grid will generate default column width by dividing the available space between the number of columns.
