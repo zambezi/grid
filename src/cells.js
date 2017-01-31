@@ -162,7 +162,9 @@ export function createCells() {
 }
 
 function columnClass(d, i) {
-  select(this).classed('c-' + d.column.id , true)
+  select(this)
+    .classed('c-' + d.column.id , true)
+    .classed(d.column.className, !!d.column.className)
 }
 
 function useClass(rowClass) {
