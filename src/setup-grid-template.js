@@ -1,5 +1,6 @@
-import { defaultTemplate } from './basic-grid-template'
 import { appendIfMissing } from '@zambezi/d3-utils'
+import { defaultTemplate } from './basic-grid-template'
+import { isIE } from './is-ie'
 import { select } from 'd3-selection'
 
 export function createSetupGridTemplate() {
@@ -25,6 +26,7 @@ export function createSetupGridTemplate() {
 
     if (stirrup.empty()) {
       target.classed('zambezi-grid', true)
+            .classed('is-ie', isIE)
           .select(appendStirrup)
             .html(template)
     }
