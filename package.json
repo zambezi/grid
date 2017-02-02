@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.17.0-is-ie-flag.1",
+  "version": "0.17.0",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",
