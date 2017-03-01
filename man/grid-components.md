@@ -27,6 +27,17 @@ NOTE: when designing grid components, be aware that these components will be run
 Your components must be designed so that they can be called many times and not run expensive or repetitive computations unnecessarily.
 Utility functions like [d3-utils' `selectionChanged`](https://github.com/zambezi/d3-utils/blob/master/man/selection-changed.md) should be used to create components with good performance under repetitive calls.
 
+### Manipulation of the components stack
+
+When you use `use` or `usePre`, you're just pushing components into an array of components.
+If you need to manipulate that array wholesale, you can inspect, modify or reassign the whole component list by using the `externalComponents` or `externalComponentsPre` getter / setters on the grid.
+
+```
+grid.externalComponents() // => the current components
+
+grid.externalComponents([componentA, componentB]) // => overriding the current components
+```
+
 
 #### Grid component events
 
