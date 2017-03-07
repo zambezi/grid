@@ -185,6 +185,8 @@ export function createColumnDrag() {
     }
 
     function highlightMovedColumnCells() {
+      if (!columnDragged) return
+
       const rules = (columnDragged.children || [columnDragged])
                 .reduce(makeRule, {clear: {}, highlight: {}})
 
