@@ -19,10 +19,7 @@ export function createColumnDrag() {
 
   const sheet = createGridSheet()
       , draggableChanged = selectionChanged()
-      , dropCriteria = [
-          notDroppingNestedInNested
-        , customCriteria
-        ]
+      , dropCriteria = [ notDroppingNestedInNested , customCriteria ]
 
   let dragColumnsByDefault = true
     , columnDragged
@@ -60,13 +57,13 @@ export function createColumnDrag() {
               .classed('zambezi-grid-overlay', true)
         , headers = root.select('.zambezi-grid-headers')
         , leafHeaders = headers.selectAll('.zambezi-grid-header')
-              .on('dragstart', onDragStart)
-              .on('dragend', onDragEnd)
+              .on('dragstart.column-drag', onDragStart)
+              .on('dragend.column-drag', onDragEnd)
             .select(draggableChanged.key(changed))
               .call(setDraggableProperties)
         , groupHeaders = headers.selectAll('.zambezi-grid-double-header')
-              .on('dragstart', onDragStart)
-              .on('dragend', onDragEnd)
+              .on('dragstart.column-drag', onDragStart)
+              .on('dragend.column-drag', onDragEnd)
             .select(draggableChanged)
               .call(setDraggableProperties)
 
@@ -105,6 +102,8 @@ export function createColumnDrag() {
 
           , targetsEnter = targets.enter()
               .select(append)
+
+          , merged = targets.merge(targetsEnter)
                 .on('dragover.column-drag', onDragOver)
                 .on('dragleave.column-drag', clearDropStyles)
                 .on(
@@ -118,7 +117,11 @@ export function createColumnDrag() {
                     , cancelDropNavigation
                   )
                 )
-          , targetsExit = targets.exit().remove()
+          , targetsExit = targets.exit()
+                .on('dragover.column-drag', null)
+                .on('dragleave.column-drag', null)
+                .on('drop.column-drag', null)
+                .remove()
 
       targets.merge(targetsEnter).each(clearDropStyles).style('left', left)
     }
@@ -228,11 +231,11 @@ export function createColumnDrag() {
     }
 
     function dropColumnInDestination() {
+
       const targetList = targetParent ? targetParent.children : bundle.columns
           , newIndex  = findTargetDropIndex()
 
       targetList.splice(newIndex, 0, columnDragged)
-
       columnDragged.locked = targetLocked
 
       function findTargetDropIndex() {
@@ -275,7 +278,6 @@ export function createColumnDrag() {
     return true
   }
 }
-
 
 function notDroppingNestedInNested(column, left, right, newParent, locked) {
   if (newParent && column.children) return false
