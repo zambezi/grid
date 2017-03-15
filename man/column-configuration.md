@@ -186,7 +186,7 @@ If the column widths exceed the available width for the grid then horizontal scr
 Columns can be nested.
 You can create a `children` property on a column specification and add columns to it to declare column groups:
 
-````javascript
+```javascript
 const columns = [
 , { key: "id"}
   {
