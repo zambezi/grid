@@ -187,6 +187,7 @@ Columns can be nested.
 You can create a `children` property on a column specification and add columns to it to declare column groups:
 
 ```javascript
+
 const columns = [
 , { key: "id"}
   {
@@ -197,6 +198,7 @@ const columns = [
     ]
   }
 ]
+
 ```
 
 The width from nested columns is calculated by adding the width of the children columns (these width can be created by default by the grid or specified trough the `width` property).
