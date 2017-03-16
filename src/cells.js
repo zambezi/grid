@@ -166,12 +166,6 @@ function columnClass(d, i) {
     .classed(d.column.className, !!d.column.className)
 }
 
-function useClass(rowClass) {
-  return function oldClass(c) {
-    return (c ? '' : ' ') +  rowClass
-  }
-}
-
 function top(d) {
   return d.top + 'px'
 }
@@ -198,4 +192,5 @@ function dataKey(rowKey) {
 function firstAndLast(d) {
   return d.isFirst + '★' + d.isLast
 }
+
 

@@ -14,14 +14,6 @@ import { rebind, redispatch } from '@zambezi/d3-utils'
 import './body.css'
 
 const sides = [ 'left', 'right', 'width', 'top', 'bottom', 'height' ]
-    , isScrolledLeft = property('isScrolledLeft')
-    , isScrolledRight = property('isScrolledRight')
-    , isScrolledTop = property('isScrolledTop')
-    , isScrolledBottom = property('isScrolledBottom')
-    , isVerticalShort = property('isVerticalShort')
-    , isHorizontalShort = property('isHorizontalShort')
-    , formatSingleDigitPrecision = format('.1f')
-    , formatInteger = format('.0f')
 
 export function createBody() {
 
@@ -74,8 +66,6 @@ export function createBody() {
         , blocks = blocksUpdate.merge(blocksEnter)
         , rows = bundle.rows
         , bodyBounds = bundle.bodyBounds
-        , verticalScroll = scrollChanged(bundle.scroll.top, sizeValidationRound)
-        , horizontalScroll = scrollChanged(bundle.scroll.left, sizeValidationRound)
         , updateLinesChange = onChange(dispatchLinesChange)
 
     updateRowHeightStyles()
@@ -153,14 +143,6 @@ export function createBody() {
           , measuredWidth = d.measuredWidth
           , measuredHeight = d.measuredHeight
           , minWidth = px(Math.max(d.actualWidth || 0, measuredWidth))
-          , forceSizeTarget = select(
-              (!isUndefined(d.scrollTop) || !isUndefined(d.scrollLeft))
-            && this
-            )
-            .call(
-              ensureSize.targetHeight(measuredHeight)
-                  .targetWidth(measuredWidth)
-            )
 
       sheet(rowSelector, { minWidth: minWidth })
       sides.forEach(setSide)
@@ -198,16 +180,6 @@ export function createBody() {
         lastOnChangeArgs = arguments
         func.apply(this, arguments)
       }
-    }
-
-    function updateVerticalScroll(d, i) {
-      if (isUndefined(d.scrollTop)) return
-      select(this).property('scrollTop', d.scrollTop)
-    }
-
-    function updateHorizontalScroll(d, i) {
-      if (isUndefined(d.scrollLeft)) return
-      select(this).property('scrollLeft', d.scrollLeft)
     }
 
     function setSectionClasses(d, i) {
