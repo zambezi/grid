@@ -5,10 +5,10 @@ import { select } from 'd3-selection'
 import { selectionChanged } from '@zambezi/d3-utils'
 import { wrap } from './wrap-row'
 
-const rowNestedLevelChanged = selectionChanged()
-          .key(property('row.nestLevel'))
 
 export function createUnpackNestedRows() {
+  const rowNestedLevelChanged = selectionChanged()
+            .key(property('row.nestLevel'))
 
   let cache = null
     , filters = null

@@ -8,12 +8,12 @@ import { selectionChanged, emptyIfFormat } from '@zambezi/d3-utils'
 import './group-rows.css'
 
 const isRollupRow = property('row.isRollup')
-    , isRollupChanged = selectionChanged()
-          .key(isRollupRow)
 
 export function createGroupRows() {
 
   const layout = createGroupRowsLayout()
+      , isRollupChanged = selectionChanged()
+            .key(isRollupRow)
 
   let cache = null
 

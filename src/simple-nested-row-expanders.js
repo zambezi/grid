@@ -4,10 +4,10 @@ import { selectionChanged } from '@zambezi/d3-utils'
 import { unwrap } from './unwrap-row'
 
 export function createSimpleNestedRowExpanders() {
-  const changed = selectionChanged()
 
   function simpleNestedRowExpanders(d) {
-    const row = d.row
+    const changed = selectionChanged()
+        , row = d.row
         , hasNested = !!(row.children && row.children.length)
         , isExpand = hasNested && row.expanded
         , isCollapse = hasNested && !isExpand

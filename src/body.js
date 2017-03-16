@@ -9,13 +9,11 @@ import { functor } from '@zambezi/fun'
 import { isUndefined, isEqual } from 'underscore'
 import { property } from '@zambezi/fun'
 import { select } from 'd3-selection'
-import { selectionChanged, rebind, redispatch } from '@zambezi/d3-utils'
+import { rebind, redispatch } from '@zambezi/d3-utils'
 
 import './body.css'
 
 const sides = [ 'left', 'right', 'width', 'top', 'bottom', 'height' ]
-    , verticalScrollChanged = selectionChanged()
-    , horizontalScrollChanged = selectionChanged()
     , isScrolledLeft = property('isScrolledLeft')
     , isScrolledRight = property('isScrolledRight')
     , isScrolledTop = property('isScrolledTop')

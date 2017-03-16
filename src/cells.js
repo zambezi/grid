@@ -9,16 +9,15 @@ const appendDefaultCell = appendFromTemplate(
       + '</span>'
       )
     , appendRow = appendFromTemplate('<li class="zambezi-grid-row"></li>')
-    , changed = selectionChanged()
-    , firstLastChanged = selectionChanged().key(firstAndLast)
-    , indexChanged = selectionChanged().key(d => d.index)
     , id = property('id')
     , isFirst = property('isFirst')
     , isLast = property('isLast')
 
 export function createCells() {
-
-  const dispatcher = createDispatch(
+  const changed = selectionChanged()
+      , firstLastChanged = selectionChanged().key(firstAndLast)
+      , indexChanged = selectionChanged().key(d => d.index)
+      , dispatcher = createDispatch(
           'cell-enter'
         , 'cell-exit'
         , 'cell-update'

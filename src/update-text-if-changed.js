@@ -12,4 +12,6 @@ export function updateTextIfChanged(d, i) {
       .select(changed.key(text))
       .select('.formatted-text')
         .text(text)
+
+  changed.key(null)
 }
