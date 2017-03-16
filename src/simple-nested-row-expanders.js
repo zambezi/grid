@@ -5,9 +5,10 @@ import { unwrap } from './unwrap-row'
 
 export function createSimpleNestedRowExpanders() {
 
+  const changed = selectionChanged()
+
   function simpleNestedRowExpanders(d) {
-    const changed = selectionChanged()
-        , row = d.row
+    const row = d.row
         , hasNested = !!(row.children && row.children.length)
         , isExpand = hasNested && row.expanded
         , isCollapse = hasNested && !isExpand
