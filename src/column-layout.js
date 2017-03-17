@@ -3,8 +3,8 @@ import { property, replaceArrayContents } from '@zambezi/fun'
 import { wrap } from 'underscore'
 import { updateTextIfChanged } from './update-text-if-changed'
 
-const valueByKey = {},
-  defaultFormat = wrap(String, emptyIfUndefinedFormat)
+const valueByKey = {}
+const defaultFormat = wrap(String, emptyIfUndefinedFormat)
 
 let columnIdCount = 0xA
 
@@ -15,11 +15,11 @@ export function columnLayout (columns) {
 }
 
 function validateAndSegregateColumns (columns) {
-  const columnsLeft = [],
-    columnsRight = [],
-    columnsFree = [],
-    columnIdsFound = {},
-    predefinedColumnId = columns.reduce(byId, {})
+  const columnsLeft = []
+  const columnsRight = []
+  const columnsFree = []
+  const columnIdsFound = {}
+  const predefinedColumnId = columns.reduce(byId, {})
 
   columns.forEach(validateAndSegregateColumn)
   orderColumnsByBlock()
@@ -28,8 +28,8 @@ function validateAndSegregateColumns (columns) {
   return columns
 
   function validateAndSegregateColumn (column) {
-    const locked = column.locked,
-      children = column.children
+    const locked = column.locked
+    const children = column.children
 
     if (columnHasEmptyChildren(column)) return
     clearTransientChildProperties(column)
@@ -44,8 +44,8 @@ function validateAndSegregateColumns (columns) {
     }
 
     ;(
-      locked == 'left' ? columnsLeft
-    : locked == 'right' ? columnsRight
+      locked === 'left' ? columnsLeft
+    : locked === 'right' ? columnsRight
     : columnsFree
     ).push(column)
 
@@ -66,12 +66,12 @@ function validateAndSegregateColumns (columns) {
     }
 
     function newId (column) {
-      var label = column.label,
-        k = (
-            column.key
-          || (label && label.toLowerCase()) || '').replace(/\W+/g, '-'),
+      const label = column.label
+      const k = (
+              column.key || (label && label.toLowerCase()) || ''
+            ).replace(/\W+/g, '-')
 
-        columnKeyCount = k && predefinedColumnId[k]
+      const columnKeyCount = k && predefinedColumnId[k]
 
       if (!k) return 'gen-' + (columnIdCount++).toString(16).toUpperCase()
       if (columnKeyCount) return k + '-' + ++predefinedColumnId[k]
@@ -105,9 +105,7 @@ function validateAndSegregateColumns (columns) {
 
   function byId (acc, column) {
     if (!column) return acc
-    const id = column.id,
-      children = column.children
-
+    const { id, children } = column
     if (id) acc[id] = 1
     if (children) children.reduce(byId, acc)
     return acc
