@@ -1,41 +1,37 @@
 import { basicPrecisionPxFormatter as px } from './basic-precision-px-formatter'
 import { createBodyBlockLayout } from './body-block-layout'
 import { createCells } from './cells'
-import { createEnsureSize } from './ensure-size'
 import { createGridSheet } from './grid-sheet'
 import { dispatch as createDispatch } from 'd3-dispatch'
-import { format } from 'd3-format'
-import { functor } from '@zambezi/fun'
 import { isUndefined, isEqual } from 'underscore'
-import { property } from '@zambezi/fun'
-import { select } from 'd3-selection'
 import { rebind, redispatch } from '@zambezi/d3-utils'
+import { select } from 'd3-selection'
 
 import './body.css'
 
 const sides = [ 'left', 'right', 'width', 'top', 'bottom', 'height' ]
 
 export function createBody () {
-  const cells = createCells(),
-    sheet = createGridSheet(),
-    bodyBlockLayout = createBodyBlockLayout(),
-    dispatch = createDispatch('visible-lines-change'),
-    redispatcher = redispatch()
+  const cells = createCells()
+  const sheet = createGridSheet()
+  const bodyBlockLayout = createBodyBlockLayout()
+  const dispatch = createDispatch('visible-lines-change')
+
+  const redispatcher = redispatch()
             .from(dispatch, 'visible-lines-change')
             .from(
-              cells
-            , 'cell-enter'
-            , 'cell-exit'
-            , 'cell-update'
-            , 'row-changed'
-            , 'row-enter'
-            , 'row-exit'
-            , 'row-update'
+              cells,
+              'cell-enter',
+              'cell-exit',
+              'cell-update',
+              'row-changed',
+              'row-enter',
+              'row-exit',
+              'row-update'
             )
-            .create(),
+            .create()
 
-    ensureSize = createEnsureSize(),
-    api = rebind()
+  const api = rebind()
             .from(cells, 'rowChangedKey', 'rowKey')
             .from(bodyBlockLayout, 'virtualizeRows', 'virtualizeColumns')
             .from(redispatcher, 'on')
@@ -51,21 +47,20 @@ export function createBody () {
   return api(body)
 
   function bodyEach (d, i) {
-    const bundle = d,
-      root = select(this),
-      target = root.select('.zambezi-grid-body'),
-      id = root.attr('id'),
-      blockData = bodyBlockLayout(bundle),
-      blocksUpdate = target.selectAll('.zambezi-body-section')
-              .data(blockData),
-      blocksEnter = blocksUpdate.enter()
-              .append('ul')
-                .classed('zambezi-body-section', true)
-                .each(setSectionClasses),
-      blocks = blocksUpdate.merge(blocksEnter),
-      rows = bundle.rows,
-      bodyBounds = bundle.bodyBounds,
-      updateLinesChange = onChange(dispatchLinesChange)
+    const bundle = d
+    const root = select(this)
+    const target = root.select('.zambezi-grid-body')
+    const id = root.attr('id')
+    const blockData = bodyBlockLayout(bundle)
+    const blocksUpdate = target.selectAll('.zambezi-body-section')
+                  .data(blockData)
+    const blocksEnter = blocksUpdate.enter()
+                  .append('ul')
+                    .classed('zambezi-body-section', true)
+                    .each(setSectionClasses)
+
+    const blocks = blocksUpdate.merge(blocksEnter)
+    const updateLinesChange = onChange(dispatchLinesChange)
 
     updateRowHeightStyles()
     updateBlocksAndCells()
@@ -74,8 +69,8 @@ export function createBody () {
     bundle.columns.forEach(updateColumnLayout)
 
     updateLinesChange(
-      blockData.minVisibleFreeRow
-    , blockData.maxVisibleFreeRow
+      blockData.minVisibleFreeRow,
+      blockData.maxVisibleFreeRow
     )
 
     function updateBlocksAndCells () {
@@ -84,14 +79,14 @@ export function createBody () {
     }
 
     function updateScrollTransform () {
-      const formatLeft = px(-bundle.scroll.left),
-        formatTop = px(-bundle.scroll.top)
+      const formatLeft = px(-bundle.scroll.left)
+      const formatTop = px(-bundle.scroll.top)
 
       sheet(
         `
         #${id} .zambezi-body-section.body-e > .zambezi-grid-row
-        `
-      , { transform: `translate(${formatLeft}, ${formatTop})` }
+        `,
+        { transform: `translate(${formatLeft}, ${formatTop})` }
 
       )
 
@@ -136,12 +131,11 @@ export function createBody () {
     }
 
     function updateBlockLayout (d, i) {
-      const blockSelector = `#${id} .zambezi-body-section.${d.className}`,
-        value = {},
-        rowSelector = blockSelector + ' > .zambezi-grid-row',
-        measuredWidth = d.measuredWidth,
-        measuredHeight = d.measuredHeight,
-        minWidth = px(Math.max(d.actualWidth || 0, measuredWidth))
+      const blockSelector = `#${id} .zambezi-body-section.${d.className}`
+      const value = {}
+      const rowSelector = blockSelector + ' > .zambezi-grid-row'
+      const measuredWidth = d.measuredWidth
+      const minWidth = px(Math.max(d.actualWidth || 0, measuredWidth))
 
       sheet(rowSelector, { minWidth: minWidth })
       sides.forEach(setSide)
@@ -151,26 +145,6 @@ export function createBody () {
         if (isUndefined(d[side])) return
         value[side] = px(d[side])
       }
-    }
-
-    function scrollChanged (scroll, validationId) {
-      return functor(
-        `
-        ${bodyBounds.width}
-        ▓
-        ${bodyBounds.height}
-        ▒
-        ${rows.top.length}
-        ▓
-        ${rows.free.length}
-        ▓
-        ${rows.bottom.length}
-        ▓
-        ${scroll}
-        ∵
-        ${validationId}
-        `
-      )
     }
 
     function onChange (func) {

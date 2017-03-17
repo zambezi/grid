@@ -172,15 +172,9 @@ export function createColumnDrag () {
 
       event.preventDefault()
 
-      function isOk (d, i) {
-        return d.call(
-          null
-        , columnDragged
-        , targetColumnLeft
-        , targetColumnRight
-        , targetParent
-        , targetLocked
-        )
+      function isOk (d) {
+        return d(columnDragged, targetColumnLeft, targetColumnRight,
+            targetParent, targetLocked)
       }
     }
 
