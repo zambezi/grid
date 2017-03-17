@@ -1,27 +1,27 @@
 import { range } from 'd3-array'
 
 export function columnDragTargetLayout (d) {
-  const colsL = d.columns.left.leafColumns.filter(notHidden),
-    colsR = d.columns.right.leafColumns.filter(notHidden),
-    colsF = d.columns.free.leafColumns.filter(notHidden),
-    leafColumns = d.columns.leafColumns.filter(notHidden),
-    rightBound = d.bodyBounds.width - (d.clippedVertical ? d.scrollerWidth : 0),
-    freeL = d.columns.left.measuredWidth,
-    freeR = rightBound - d.columns.right.measuredWidth,
-    isShort = ~~d.columns.free.measuredWidth < ~~d.columns.free.actualWidth,
+  const colsL = d.columns.left.leafColumns.filter(notHidden)
+  const colsR = d.columns.right.leafColumns.filter(notHidden)
+  const colsF = d.columns.free.leafColumns.filter(notHidden)
+  const leafColumns = d.columns.leafColumns.filter(notHidden)
+  const rightBound = d.bodyBounds.width - (d.clippedVertical ? d.scrollerWidth : 0)
+  const freeL = d.columns.left.measuredWidth
+  const freeR = rightBound - d.columns.right.measuredWidth
+  const isShort = ~~d.columns.free.measuredWidth < ~~d.columns.free.actualWidth
 
-    positionsLeft = colsL.length
-          ? range(colsL.length + 1)
-                .map(buildPositionsWithOffset(0, 'L'))
-          : [],
+  const positionsLeft = colsL.length
+              ? range(colsL.length + 1)
+                    .map(buildPositionsWithOffset(0, 'L'))
+              : []
 
-    positionsFree = colsF.length
+  const positionsFree = colsF.length
           ? range(colsL.length, colsL.length + colsF.length + 1)
               .map(buildPositionsWithOffset(freeL - d.scroll.left, 'F', 1))
               .filter(cullVisible)
-          : [],
+          : []
 
-    positionsRight = colsR.length
+  const positionsRight = colsR.length
           ? range(leafColumns.length - colsR.length, leafColumns.length + 1)
                 .map(buildPositionsWithOffset(freeR, 'R', 2))
           : []
@@ -33,62 +33,62 @@ export function columnDragTargetLayout (d) {
 
   function buildPositionsWithOffset (leftOffset, prefix, index) {
     return function buildPosition (i, j, a) {
-      var isFree = index == 1,
-        isLockedRight = index == 2,
-        isFirstInBlock = j == 0,
-        isLastInBlock = j + 1 == a.length,
-        columnLeft = leafColumns[i - 1],
-        columnRight = leafColumns[i],
-        lastFreeWhenShort = isFree && isShort && isLastInBlock,
-        x = (
-                isLastInBlock ?
-                columnLeft.absoluteOffset + columnLeft.width
+      const isFree = index === 1
+      const isLockedRight = index === 2
+      const isFirstInBlock = j === 0
+      const isLastInBlock = j + 1 === a.length
+      const columnLeft = leafColumns[i - 1]
+      const columnRight = leafColumns[i]
+      const lastFreeWhenShort = isFree && isShort && isLastInBlock
+      const left = (
+                isLastInBlock
+              ? columnLeft.absoluteOffset + columnLeft.width
               : columnRight.absoluteOffset
-              ) + leftOffset - 10,
-        id = [ prefix
+              ) + leftOffset - 10
+      const id = [ prefix
             , (columnLeft && columnLeft.id)
             , (columnRight && columnRight.id)
-          ].filter(Boolean).join('-'),
+          ].filter(Boolean).join('-')
 
-        parentForLeft =
+      const parentForLeft =
             (isLockedRight && isShort && isFirstInBlock) ? null
-          : parentFor(columnLeft),
+          : parentFor(columnLeft)
 
-        parentForRight =
+      const parentForRight =
             lastFreeWhenShort ? null
-          : parentFor(columnRight),
+          : parentFor(columnRight)
 
-        parentForCenter =
-            parentForLeft == parentForRight ? parentForLeft
-          : null,
+      const parentForCenter =
+            parentForLeft === parentForRight ? parentForLeft
+          : null
 
-        lockedForLeft =
-            lockedFor(columnRight) == 'left' ? 'left'
+      const lockedForLeft =
+            lockedFor(columnRight) === 'left' ? 'left'
           : (isLockedRight && isShort && isFirstInBlock) ? null
-          : lockedFor(columnLeft),
+          : lockedFor(columnLeft)
 
-        lockedForRight =
-            lockedFor(columnLeft) == 'right' ? 'right'
+      const lockedForRight =
+            lockedFor(columnLeft) === 'right' ? 'right'
           : lastFreeWhenShort ? null
-          : lockedFor(columnRight),
+          : lockedFor(columnRight)
 
-        lockedForCenter =
-            lockedForLeft == lockedForRight ? lockedForLeft
+      const lockedForCenter =
+            lockedForLeft === lockedForRight ? lockedForLeft
           : isLastInBlock ? lockedForLeft
           : isFirstInBlock ? lockedForRight
           : null
 
       return {
-        left: x,
-        id: id,
-        columnLeft: columnLeft,
-        columnRight: columnRight,
-        parentForCenter: parentForCenter,
-        parentForLeft: parentForLeft,
-        parentForRight: parentForRight,
-        lockedForLeft: lockedForLeft,
-        lockedForRight: lockedForRight,
-        lockedForCenter: lockedForCenter
+        left,
+        id,
+        columnLeft,
+        columnRight,
+        parentForCenter,
+        parentForLeft,
+        parentForRight,
+        lockedForLeft,
+        lockedForRight,
+        lockedForCenter
       }
     }
   }
