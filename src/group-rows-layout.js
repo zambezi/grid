@@ -3,8 +3,8 @@ import _ from 'underscore'
 const separator = '∵'
 
 export function createGroupRowsLayout () {
-  let groupings = [],
-    nestedRowsMap
+  let groupings = []
+  let nestedRowsMap
 
   function groupRowsLayout (d) {
     if (!groupings.length) return d
@@ -12,12 +12,13 @@ export function createGroupRowsLayout () {
 
     function group (depth, rows, previousKey) {
       if (depth >= groupings.length) return rows
-      const grouping = groupings[depth],
-        key = grouping.key,
-        rollupKey = previousKey || '',
-        rollup = _.partial(grouping.rollup, _, grouping),
-        parentRowByKey = {},
-        groupedRows = []
+
+      const grouping = groupings[depth]
+      const key = grouping.key
+      const rollupKey = previousKey || ''
+      const rollup = _.partial(grouping.rollup, _, grouping)
+      const parentRowByKey = {}
+      const groupedRows = []
 
       if (!nestedRowsMap) nestedRowsMap = {}
 
@@ -39,29 +40,26 @@ export function createGroupRowsLayout () {
       }
 
       function categorize (row) {
-        const k = key(row),
-          childrenRows = [],
-          rowKey = rollupKey + (rollupKey ? separator : '') + k
+        const k = key(row)
+        const rowKey = rollupKey + (rollupKey ? separator : '') + k
 
         let parentRow = parentRowByKey[k]
 
         if (!parentRow) {
           groupedRows.push(
-            parentRowByKey[k]
-          = nestedRowsMap[rowKey]
-          = parentRow
-          = Object.assign(
-                nestedRowsMap[rowKey] || {}
-              , {
-                children: [ ],
-                isRollup: true,
-                rollupRowKey: rowKey,
-                expanded:
-                       nestedRowsMap
-                    && nestedRowsMap[rowKey]
-                    && nestedRowsMap[rowKey].expanded
-              }
-            )
+            parentRowByKey[k] =
+              nestedRowsMap[rowKey] =
+              parentRow =
+                Object.assign(
+                  nestedRowsMap[rowKey] || {},
+                  {
+                    children: [ ],
+                    isRollup: true,
+                    rollupRowKey: rowKey,
+                    expanded: nestedRowsMap && nestedRowsMap[rowKey] &&
+                        nestedRowsMap[rowKey].expanded
+                  }
+                )
           )
         }
 

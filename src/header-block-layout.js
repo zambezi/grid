@@ -1,9 +1,9 @@
 export function headerBlockLayout (d) {
-  const colL = d.columns.left,
-    colF = d.columns.free,
-    colR = d.columns.right,
-    scrollerWidth = d.scrollerWidth,
-    clippedVertical = d.bodyBounds.clippedVertical
+  const colL = d.columns.left
+  const colF = d.columns.free
+  const colR = d.columns.right
+  const scrollerWidth = d.scrollerWidth
+  const clippedVertical = d.bodyBounds.clippedVertical
 
   return [
     {

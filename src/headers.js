@@ -10,27 +10,26 @@ const append = appendFromTemplate(
         `<li class="zambezi-grid-header">
           <span class="cell-text"></span>
         </li>`
-      ),
-  appendDouble = appendFromTemplate(
+      )
+const appendDouble = appendFromTemplate(
         `<li class="zambezi-grid-double-header">
           <div class="double-header-highlight-area"></div>
           <span class="cell-text"></span>
           <ul class="zambezi-grid-nested-headers"></ul>
         </li>`
-      ),
-  width = pixels('width'),
-  offset = pixels('offset'),
-  left = pixels('left'),
-  right = pixels('right'),
-  scrollLeft = property('scrollLeft'),
-  isScrolledLeft = property('cols.isScrolledLeft'),
-  isScrolledRight = property('cols.isScrolledRight'),
-  isHorizontalShort = property('cols.isHorizontalShort')
+      )
+const width = pixels('width')
+const offset = pixels('offset')
+const left = pixels('left')
+const right = pixels('right')
+const scrollLeft = property('scrollLeft')
+const isScrolledLeft = property('cols.isScrolledLeft')
+const isScrolledRight = property('cols.isScrolledRight')
+const isHorizontalShort = property('cols.isHorizontalShort')
 
 export function createHeaders () {
-  const columnCellsChanged = selectionChanged()
-            .key(columnChangeKey),
-    scrollChanged = selectionChanged()
+  const columnCellsChanged = selectionChanged().key(columnChangeKey)
+  const scrollChanged = selectionChanged()
 
   function headers (s) {
     s.each(headersEach)
@@ -39,24 +38,24 @@ export function createHeaders () {
   return headers
 
   function headersEach (d, i) {
-    const layout = d,
-      headers = select(this)
-              .select('.zambezi-grid-headers'),
-      blocks = headers.selectAll('.zambezi-grid-header-block')
-            .data(headerBlockLayout(d)),
-      blocksEnter = blocks.enter()
+    const layout = d
+    const headers = select(this)
+              .select('.zambezi-grid-headers')
+    const blocks = headers.selectAll('.zambezi-grid-header-block')
+            .data(headerBlockLayout(d))
+    const blocksEnter = blocks.enter()
             .append('ul')
-              .classed('zambezi-grid-header-block', true),
-      blocksAll = blocks.merge(blocksEnter),
-      cells = blocksAll
+              .classed('zambezi-grid-header-block', true)
+    const blocksAll = blocks.merge(blocksEnter)
+    const cells = blocksAll
               .classed('is-horizontal-short', isHorizontalShort)
             .selectAll('.zambezi-grid-top-level-header')
-            .data(cellData, cellId),
-      cellsEnter = cells.enter()
+            .data(cellData, cellId)
+    const cellsEnter = cells.enter()
             .select(appendHeader)
-              .classed('zambezi-grid-top-level-header', true),
-      cellsExit = cells.exit().remove()
+              .classed('zambezi-grid-top-level-header', true)
 
+    cells.exit().remove()
     scrollChanged.key(functor(layout.scroll.left))
 
     cells.merge(cellsEnter)
@@ -94,10 +93,10 @@ export function createHeaders () {
     const headers = s.select('.zambezi-grid-nested-headers')
               .style('width', width)
             .selectAll('.zambezi-grid-header')
-            .data(children),
-      headersEnter = headers.enter().select(append),
-      headersExit = headers.exit().remove()
+            .data(children)
+    const headersEnter = headers.enter().select(append)
 
+    headers.exit().remove()
     headers.merge(headersEnter)
         .call(updateCells)
   }
@@ -119,8 +118,8 @@ function columnChangeKey (column) {
     column.sortDescending || '·'
   ]
   .concat(
-    column.children ?
-    ('(' + column.children.map(columnChangeKey).join(',') + ')')
+    column.children
+    ? ('(' + column.children.map(columnChangeKey).join(',') + ')')
     : []
   )
   .join('|')
