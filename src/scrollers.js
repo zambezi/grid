@@ -8,21 +8,20 @@ import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 
 import './scrollers.css'
 
-const scrollTop = property('scroll.top'),
-  scrollLeft = property('scroll.left'),
-  appendScrollerContent = appendIfMissing('div.scroller-content')
+const scrollLeft = property('scroll.left')
+const appendScrollerContent = appendIfMissing('div.scroller-content')
 
 export function createScrollers () {
-  const verticalScrollChanged = selectionChanged(),
-    horizontalScrollChanged = selectionChanged(),
-    clippingChanged = selectionChanged(),
-    sheet = createGridSheet(),
-    internalDispatcher = createDispatch('consolidate'),
-    trackLastUpdate = debounce(() => internalDispatcher.call('consolidate'), 10)
+  const verticalScrollChanged = selectionChanged()
+  const horizontalScrollChanged = selectionChanged()
+  const clippingChanged = selectionChanged()
+  const sheet = createGridSheet()
+  const internalDispatcher = createDispatch('consolidate')
+  const trackLastUpdate = debounce(() => internalDispatcher.call('consolidate'), 10)
 
-  let sizeValidationRound = 0,
-    isSelfScroll = false,
-    isScrollValid
+  let sizeValidationRound = 0
+  let isSelfScroll = false
+  let isScrollValid
 
   function scrollers (s) {
     s.each(scrollersEach)
@@ -33,16 +32,16 @@ export function createScrollers () {
   return scrollers
 
   function scrollersEach (bundle, i) {
-    const root = select(this),
-      rows = bundle.rows,
-      bodyBounds = bundle.bodyBounds,
-      id = root.attr('id'),
-      target = root.select('.zambezi-grid-body'),
+    const root = select(this)
+    const rows = bundle.rows
+    const bodyBounds = bundle.bodyBounds
+    const id = root.attr('id')
+    const target = root.select('.zambezi-grid-body')
 
-      vertical = target.select(appendIfMissing('div.v-scroller'))
-              .on('scroll.scrollers', onScroll),
+    const vertical = target.select(appendIfMissing('div.v-scroller'))
+              .on('scroll.scrollers', onScroll)
 
-      horizontal = target.select(appendIfMissing('div.h-scroller'))
+    const horizontal = target.select(appendIfMissing('div.h-scroller'))
               .on('scroll.scrollers', onScroll)
 
     verticalScrollChanged.key(verticalScrollChangedKey)
@@ -78,20 +77,21 @@ export function createScrollers () {
     }
 
     function updateContentRules () {
-      const top = px(rows.top.measuredHeight),
-        bottom = px(rows.bottom.measuredHeight + (bodyBounds.clippedHorizontal ? bundle.scrollerWidth : 0)),
-        height = px(rows.free.measuredHeight),
-        selectorVScroller = `#${id} .v-scroller`,
-        selectorVContent = selectorVScroller + ' .scroller-content',
+      const top = px(rows.top.measuredHeight)
+      const bottom = px(rows.bottom.measuredHeight +
+          (bodyBounds.clippedHorizontal ? bundle.scrollerWidth : 0))
 
-        left = px(bundle.columns.left.measuredWidth),
-        right = px(bundle.columns.right.measuredWidth
-                + (bodyBounds.clippedVertical ? bundle.scrollerWidth : 0)
-                ),
+      const height = px(rows.free.measuredHeight)
+      const selectorVScroller = `#${id} .v-scroller`
+      const selectorVContent = selectorVScroller + ' .scroller-content'
 
-        width = px(bundle.columns.free.measuredWidth),
-        selectorHScroller = `#${id} .h-scroller`,
-        selectorHContent = selectorHScroller + ' .scroller-content'
+      const left = px(bundle.columns.left.measuredWidth)
+      const right = px(bundle.columns.right.measuredWidth +
+            (bodyBounds.clippedVertical ? bundle.scrollerWidth : 0))
+
+      const width = px(bundle.columns.free.measuredWidth)
+      const selectorHScroller = `#${id} .h-scroller`
+      const selectorHContent = selectorHScroller + ' .scroller-content'
 
       sheet(selectorVScroller, { top, bottom })
       sheet(selectorVContent, { height })
@@ -100,8 +100,8 @@ export function createScrollers () {
     }
 
     function onScroll () {
-      const top = vertical.property('scrollTop'),
-        left = horizontal.property('scrollLeft')
+      const top = vertical.property('scrollTop')
+      const left = horizontal.property('scrollLeft')
 
       isSelfScroll = true
       select(this)

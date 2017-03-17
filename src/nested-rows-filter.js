@@ -1,7 +1,7 @@
 export function nestedRowsFilter (filter) {
   return function nestedRowFilter (initialRow, i, a) {
     return (
-      downwardsRowMatch(initialRow, i, a) || 
+      downwardsRowMatch(initialRow, i, a) ||
       upwardsRowMatch(initialRow.parentRow, i, a)
     )
   }

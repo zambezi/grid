@@ -3,10 +3,10 @@ import { select } from 'd3-selection'
 import { wrap } from './wrap-row'
 
 export function createProcessRowData () {
-  let cache,
-    filters = [],
-    nestFriendlyFilters,
-    skipRowLocking = false
+  let cache
+  let filters = []
+  let nestFriendlyFilters
+  let skipRowLocking = false
 
   function processRowData (s) {
     s.each(processRowDataEach)
@@ -34,12 +34,11 @@ export function createProcessRowData () {
   }
 
   function processRows (d, skipFilters) {
-    const rows = d.rows || d,
-      rowGroups = group(rows, skipFilters, skipRowLocking, filter),
-      rowsTop = rowGroups.top,
-      rowsFree = rowGroups.free,
-      rowsBottom = rowGroups.bottom,
-      rowsOut = rowGroups.out
+    const rows = d.rows || d
+    const rowGroups = group(rows, skipFilters, skipRowLocking, filter)
+    const rowsTop = rowGroups.top
+    const rowsFree = rowGroups.free
+    const rowsBottom = rowGroups.bottom
 
     rowsTop.name = 'top'
     rowsFree.name = 'free'
@@ -68,10 +67,10 @@ export function createProcessRowData () {
   }
 
   function group (rows, skipFilters, skipLock, filter) {
-    const top = [],
-      bottom = [],
-      free = [],
-      out = []
+    const top = []
+    const bottom = []
+    const free = []
+    const out = []
 
     let freeIndexShift = 0
 
@@ -87,12 +86,12 @@ export function createProcessRowData () {
     function segregate (originalRow, i) {
       if (!originalRow) return
 
-      let row = wrap(originalRow),
-        locked = row.locked
+      let row = wrap(originalRow)
+      let locked = row.locked
 
       if (!skipFilters && !filter(row)) pluck(row, out)
-      else if (!skipLock && locked == 'top') pluck(row, top)
-      else if (!skipLock && locked == 'bottom') pluck(row, bottom)
+      else if (!skipLock && locked === 'top') pluck(row, top)
+      else if (!skipLock && locked === 'bottom') pluck(row, bottom)
       else free[i + freeIndexShift] = row
 
       function pluck (row, target) {
