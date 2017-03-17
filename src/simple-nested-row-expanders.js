@@ -1,16 +1,17 @@
-import './simple-nested-row-expanders.css'
-import { select } from 'd3-selection'
+import { select, event } from 'd3-selection'
 import { selectionChanged } from '@zambezi/d3-utils'
 import { unwrap } from './unwrap-row'
+
+import './simple-nested-row-expanders.css'
 
 export function createSimpleNestedRowExpanders () {
   const changed = selectionChanged()
 
   function simpleNestedRowExpanders (d) {
-    const row = d.row,
-      hasNested = !!(row.children && row.children.length),
-      isExpand = hasNested && row.expanded,
-      isCollapse = hasNested && !isExpand
+    const row = d.row
+    const hasNested = !!(row.children && row.children.length)
+    const isExpand = hasNested && row.expanded
+    const isCollapse = hasNested && !isExpand
 
     select(this)
       .select(changed.key(d => `${hasNested}|${isExpand}|${isCollapse}`))

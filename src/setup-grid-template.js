@@ -20,8 +20,8 @@ export function createSetupGridTemplate () {
   return setupTemplate
 
   function setupTemplateEach (d, i) {
-    const target = select(this),
-      stirrup = target.select('.zambezi-grid-stirrup')
+    const target = select(this)
+    const stirrup = target.select('.zambezi-grid-stirrup')
 
     if (stirrup.empty()) {
       target.classed('zambezi-grid', true)

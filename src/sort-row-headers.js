@@ -5,12 +5,12 @@ import { selectionChanged, rebind } from '@zambezi/d3-utils'
 
 import './sort-row-headers.css'
 
-const sortAscending = property('sortAscending'),
-  sortDescending = property('sortDescending')
+const sortAscending = property('sortAscending')
+const sortDescending = property('sortDescending')
 
 export function createSortRowHeaders () {
-  const changed = selectionChanged().key(sortDirection),
-    dispatch = createDispatch('sort-changed')
+  const changed = selectionChanged().key(sortDirection)
+  const dispatch = createDispatch('sort-changed')
 
   let sortableByDefault = true
 
@@ -27,9 +27,8 @@ export function createSortRowHeaders () {
   return rebind().from(dispatch, 'on')(sortRowHeaders)
 
   function sortRowHeadersEach (d, i) {
-    const layout = d,
-      target = select(this),
-      dispatcher = d.dispatcher
+    const layout = d
+    const target = select(this)
 
     target.selectAll('.zambezi-grid-headers .zambezi-grid-header')
       .each(updateSortHandlers)
@@ -46,8 +45,8 @@ export function createSortRowHeaders () {
     }
 
     function onHeaderClick (d, i) {
-      const wasAscending = d.sortAscending,
-        wasDescending = d.sortDescending
+      const wasAscending = d.sortAscending
+      const wasDescending = d.sortDescending
 
       layout.columns.forEach(clearColumnSort)
 

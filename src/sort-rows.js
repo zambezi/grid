@@ -26,10 +26,10 @@ export function createSortRows () {
 }
 
 function resortRows (d) {
-  const rows = d.rows,
-    columns = d.columns,
-    sort = findSort(columns),
-    sortLevelId = uniqueId('andChildrenSort_')
+  const rows = d.rows
+  const columns = d.columns
+  const sort = findSort(columns)
+  const sortLevelId = uniqueId('andChildrenSort_')
 
   if (!sort) return rows
 
@@ -53,15 +53,12 @@ function resortRows (d) {
 
     if (!children) return
     if (!row.expanded) return
-    if (children._sortedLevelId == sortLevelId) return
+    if (children._sortedLevelId === sortLevelId) return
 
     children._sortedLevelId = sortLevelId
 
-    if (children.length === 1) {
-      sortChildren(children[0])
-    } else {
-      deepSort(children)
-    }
+    if (children.length === 1) sortChildren(children[0])
+    else deepSort(children)
   }
 
   function addPosition (row, index) {
@@ -101,18 +98,17 @@ function findSort (columns) {
 }
 
 function sortFor (column, ascending) {
-  const key = column.key,
-    sort = column.sort
+  const { key, sort } = column
 
-  if (!key && !sort) { console.error(
-    'Cannot sort on columns with no key or sort function'
-  ) }
+  if (!key && !sort) {
+    console.error('Cannot sort on columns with no key or sort function')
+  }
 
   return compose(
-    partial((a, b) => a * b, ascending ? 1 : -1)
-  , compareWith(
-      sort || compareWith(ascendingComparator, definedOrEmpty)
-    , column.value
+    partial((a, b) => a * b, ascending ? 1 : -1),
+    compareWith(
+      sort || compareWith(ascendingComparator, definedOrEmpty),
+      column.value
     )
   )
 }

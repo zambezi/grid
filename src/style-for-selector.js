@@ -1,7 +1,7 @@
 export function styleForSelector (selector, sheet) {
   let style
-  const rules = sheet.cssRules,
-    ruleExists = Array.prototype.some.call(rules, findRule)
+  const rules = sheet.cssRules
+  const ruleExists = Array.prototype.some.call(rules, findRule)
 
   if (ruleExists) return style
   insertRule()
