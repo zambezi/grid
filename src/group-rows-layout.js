@@ -35,7 +35,7 @@ export function createGroupRowsLayout () {
         row.children = group(
           depth + 1
         , row.children
-        , row.isRollup && row.rollupRowKey || ''
+        , row.isRollup ? row.rollupRowKey : ''
         )
       }
 

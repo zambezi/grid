@@ -175,4 +175,3 @@ function dataKey (rowKey) {
 function firstAndLast (d) {
   return d.isFirst + '★' + d.isLast
 }
-

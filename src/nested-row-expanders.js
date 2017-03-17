@@ -10,8 +10,7 @@ const upRight = 'is-up-right'
 const verticalRight = 'is-vertical-right'
 const horizontal = 'is-horizontal'
 const vertical = 'is-vertical'
-const classes = [ collapse, expand, upRight, verticalRight, horizontal,
-          vertical ]
+const classes = [ collapse, expand, upRight, verticalRight, horizontal, vertical ]
 
 export function createNestedRowExpanders () {
   const changed = selectionChanged()

@@ -3,15 +3,6 @@ import { createColumnSizerLayout } from './column-sizer-layout'
 import { debounce } from 'underscore'
 import { select, mouse } from 'd3-selection'
 
-import { timer } from 'd3-timer'
-import { easeLinear } from 'd3-ease'
-import { transition } from 'd3-transition'
-
-// Mention for linkage
-timer
-easeLinear
-transition
-
 import './column-sizers.css'
 
 const appendSizer = appendFromTemplate('<li class="zambezi-grid-resizer"></li>')
@@ -50,18 +41,13 @@ export function createColumnSizers () {
     const sizersUpdate = list.selectAll('.zambezi-grid-resizer').data(positions)
     const sizersEnter = sizersUpdate.enter().select(appendSizer)
     const sizers = sizersUpdate.merge(sizersEnter)
-    const dispatchSettingsChanged = debounce(
-            () => target.dispatch('settings-changed', { bubbles: true })
-          , 300
-          )
+    const dispatchSettingsChanged = debounce(() =>
+        target.dispatch('settings-changed', { bubbles: true }), 300)
 
     sizersUpdate.exit()
             .classed('is-recycled', true)
             .on('mousedown.column-sizers', null)
-          .transition()
-            .duration(3000) // keep them for a few seconds, might be picked
-                            // up again soon.
-            .remove()       // ... remove if they haven't.
+            .remove()
 
     sizers.on('mousedown.column-sizers', onSizerMousedown)
     sizers.filter('.is-recycled')

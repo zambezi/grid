@@ -45,10 +45,8 @@ export function columnDragTargetLayout (d) {
               ? columnLeft.absoluteOffset + columnLeft.width
               : columnRight.absoluteOffset
               ) + leftOffset - 10
-      const id = [ prefix
-            , (columnLeft && columnLeft.id)
-            , (columnRight && columnRight.id)
-          ].filter(Boolean).join('-')
+      const id = [ prefix, (columnLeft && columnLeft.id), (columnRight &&
+        columnRight.id)].filter(Boolean).join('-')
 
       const parentForLeft =
             (isLockedRight && isShort && isFirstInBlock) ? null

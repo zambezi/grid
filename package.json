@@ -11,7 +11,7 @@
     "build": "mkdirp dist && rollup -c",
     "clean": "rimraf dist",
     "watch": "rollup -c -w",
-    "test": "mocha",
+    "test": "standard && mocha",
     "start": "npm run watch",
     "pretest": "npm run clean && npm run build",
     "prepublish": "npm test"
