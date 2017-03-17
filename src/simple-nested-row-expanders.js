@@ -1,17 +1,17 @@
-import './simple-nested-row-expanders.css'
-import { select } from 'd3-selection'
+import { select, event } from 'd3-selection'
 import { selectionChanged } from '@zambezi/d3-utils'
 import { unwrap } from './unwrap-row'
 
-export function createSimpleNestedRowExpanders() {
+import './simple-nested-row-expanders.css'
 
+export function createSimpleNestedRowExpanders () {
   const changed = selectionChanged()
 
-  function simpleNestedRowExpanders(d) {
+  function simpleNestedRowExpanders (d) {
     const row = d.row
-        , hasNested = !!(row.children && row.children.length)
-        , isExpand = hasNested && row.expanded
-        , isCollapse = hasNested && !isExpand
+    const hasNested = !!(row.children && row.children.length)
+    const isExpand = hasNested && row.expanded
+    const isCollapse = hasNested && !isExpand
 
     select(this)
       .select(changed.key(d => `${hasNested}|${isExpand}|${isCollapse}`))
@@ -19,21 +19,21 @@ export function createSimpleNestedRowExpanders() {
         .classed('is-expand', isExpand)
         .classed('is-collapse', isCollapse)
         .on('click.simple-expander-toggle',
-          isExpand   ? collapse
+          isExpand ? collapse
         : isCollapse ? expand
         : null
         )
         .on('click.simple-expander-redraw', hasNested ? redraw : null)
 
-    function expand(d) {
+    function expand (d) {
       unwrap(d.row).expanded = true
     }
 
-    function collapse(d) {
+    function collapse (d) {
       unwrap(d.row).expanded = false
     }
 
-    function redraw() {
+    function redraw () {
       event.stopImmediatePropagation()
 
       select(this)

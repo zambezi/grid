@@ -1,4 +1,4 @@
-export function unwrap(wrappedRow) {
+export function unwrap (wrappedRow) {
   if (!wrappedRow.wrappedByGrid) return wrappedRow
   return Object.getPrototypeOf(wrappedRow)
 }

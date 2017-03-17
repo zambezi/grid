@@ -1,12 +1,12 @@
 import { rebind } from '@zambezi/d3-utils'
 
-export function createShareDispatcher() {
+export function createShareDispatcher () {
   let dispatcher = null
-  function shareDispatcher(d, i) {
+  function shareDispatcher (d, i) {
     d.dispatcher = dispatcher
   }
 
-  shareDispatcher.dispatcher = function(value) {
+  shareDispatcher.dispatcher = function (value) {
     if (!arguments.length) return dispatcher
     dispatcher = rebind().from(value, 'on')({})
     return shareDispatcher

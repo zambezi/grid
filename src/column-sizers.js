@@ -1,62 +1,53 @@
 import { appendFromTemplate, selectionChanged, rebind } from '@zambezi/d3-utils'
 import { createColumnSizerLayout } from './column-sizer-layout'
 import { debounce } from 'underscore'
-import { easeLinear } from 'd3-ease'
 import { select, mouse } from 'd3-selection'
-import { timer } from 'd3-timer'
-import { transition } from 'd3-transition'
 
 import './column-sizers.css'
 
 const appendSizer = appendFromTemplate('<li class="zambezi-grid-resizer"></li>')
 
-export function createColumnSizers() {
-
+export function createColumnSizers () {
   const minColumnWidth = 20
-      , minFreeColumnWidth = 30
-      , changed = selectionChanged().key(leftAndNested)
-      , columnSizerLayout = createColumnSizerLayout()
-      , api = rebind().from(columnSizerLayout, 'resizeColumnsByDefault')
+  const minFreeColumnWidth = 30
+  const changed = selectionChanged().key(leftAndNested)
+  const columnSizerLayout = createColumnSizerLayout()
+  const api = rebind().from(columnSizerLayout, 'resizeColumnsByDefault')
 
   let resizingSizer
-    , resizingPosition
+  let resizingPosition
 
-  function columnSizers(s) {
+  function columnSizers (s) {
     s.each(columnSizersEach)
   }
 
   return api(columnSizers)
 
-  function columnSizersEach(d, i) {
+  function columnSizersEach (d, i) {
     const target = select(this)
-        , bundle = d
-        , componentId = target.attr('id')
-        , columns = bundle.columns
-        , include = {}
-        , resizingId = resizingPosition && resizingPosition.id
-        , positions = columnSizerLayout
+    const bundle = d
+    const columns = bundle.columns
+    const include = {}
+    const resizingId = resizingPosition && resizingPosition.id
+    const positions = columnSizerLayout
               .include(
                 resizingId && (include[resizingId] = true, include)
               )(bundle)
-        , list = target
+    const list = target
               .select('.zambezi-grid-resizers')
               .classed('zambezi-grid-overlay', true)
-        , listNode = list.node()
+    const listNode = list.node()
 
-        , sizersUpdate = list.selectAll('.zambezi-grid-resizer').data(positions)
-        , sizersEnter = sizersUpdate.enter().select(appendSizer)
-        , sizersExit = sizersUpdate.exit()
-              .classed('is-recycled', true)
-              .on('mousedown.column-sizers', null)
-            .transition()
-              .duration(3000) // keep them for a few seconds, might be picked
-                              // up again soon.
-              .remove()       // ... remove if they haven't.
-        , sizers = sizersUpdate.merge(sizersEnter)
-        , dispatchSettingsChanged = debounce(
-            () => target.dispatch('settings-changed', { bubbles: true })
-          , 300
-          )
+    const sizersUpdate = list.selectAll('.zambezi-grid-resizer').data(positions)
+    const sizersEnter = sizersUpdate.enter().select(appendSizer)
+    const sizers = sizersUpdate.merge(sizersEnter)
+    const dispatchSettingsChanged = debounce(() =>
+        target.dispatch('settings-changed', { bubbles: true }), 300)
+
+    sizersUpdate.exit()
+            .classed('is-recycled', true)
+            .on('mousedown.column-sizers', null)
+            .remove()
 
     sizers.on('mousedown.column-sizers', onSizerMousedown)
     sizers.filter('.is-recycled')
@@ -67,14 +58,13 @@ export function createColumnSizers() {
         .classed('is-nested', isNested)
         .style('left', d => d.left + 'px')
 
-
-    function onSizerMousedown(d, i) {
+    function onSizerMousedown (d, i) {
       resizingSizer = select(this)
           .classed('is-dragging', true)
 
       resizingPosition = d
 
-      if (d.locked == 'right') {
+      if (d.locked === 'right') {
         resizingPosition.originalWidth = d.column.width
         resizingPosition.startDragX = mouseX()
       }
@@ -84,21 +74,18 @@ export function createColumnSizers() {
       select(window).on('mouseup.column-sizers', stopDragging)
     }
 
-    function mouseX() {
+    function mouseX () {
       return mouse(listNode)[0]
     }
 
-    function onMouseDrag() {
+    function onMouseDrag () {
       const x = mouseX()
-          , column = resizingPosition.column
-          , width = resizingPosition.locked == 'right'
-            ? (resizingPosition.startDragX - x)
-                + resizingPosition.originalWidth
+      const column = resizingPosition.column
+      const width = resizingPosition.locked === 'right'
+            ? (resizingPosition.startDragX - x) + resizingPosition.originalWidth
             : x - column.absoluteOffset - resizingPosition.offset
 
-          , newWidth = Math.max(width , minColumnWidth)
-          , candidateFreeWidth = findCandidateFreeWidth()
-
+      const newWidth = Math.max(width, minColumnWidth)
       column.manuallyResized = true
 
       if (findCandidateFreeWidth() < minFreeColumnWidth) return
@@ -107,20 +94,17 @@ export function createColumnSizers() {
       target.dispatch('redraw')
       dispatchSettingsChanged()
 
-      function findCandidateFreeWidth() {
-
+      function findCandidateFreeWidth () {
         const locked = resizingPosition.locked
 
         let freeWidth = bundle.bodyBounds.width - (
-              locked == 'right' ? (
-                columns.left.measuredWidth
-              + columns.right.reduce(addMinusSelected, 0)
-              + newWidth
+              locked === 'right' ? (
+                columns.left.measuredWidth +
+                    columns.right.reduce(addMinusSelected, 0) + newWidth
               )
-            : locked == 'left' ? (
-                columns.right.measuredWidth
-              + columns.left.reduce(addMinusSelected, 0)
-              + newWidth
+            : locked === 'left' ? (
+                columns.right.measuredWidth +
+                    columns.left.reduce(addMinusSelected, 0) + newWidth
               )
             : columns.right.measuredWidth + columns.left.measuredWidth
             )
@@ -129,12 +113,12 @@ export function createColumnSizers() {
         return freeWidth
       }
 
-      function addMinusSelected(p, c) {
+      function addMinusSelected (p, c) {
         return p + (c.id !== resizingPosition.id ? c.width : 0)
       }
     }
 
-    function stopDragging() {
+    function stopDragging () {
       list.classed('is-dragging', false)
       select(window).on('mousemove.column-sizers', null)
           .on('mouseup.column-sizers', null)
@@ -146,17 +130,16 @@ export function createColumnSizers() {
   }
 }
 
-
-function isNested(d, i) {
+function isNested (d, i) {
   const column = d.column
 
   if (!column.isChild) return false
 
-  return d.locked == 'right' ?
-      column.childIndex > 0
+  return d.locked === 'right'
+    ? column.childIndex > 0
     : column.childIndex < column.childTotal - 1
 }
 
-function leftAndNested(d) {
+function leftAndNested (d) {
   return d.left + (isNested(d) ? '✓' : '✗')
 }

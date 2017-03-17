@@ -4,39 +4,38 @@ import { select } from 'd3-selection'
 
 import './lay-out-body-and-overlays.css'
 
-export function createLayOutBodyAndOverlays() {
-
+export function createLayOutBodyAndOverlays () {
   const sheet = createGridSheet()
 
-  function layOutBodyAndOverlays(d, i) {
+  function layOutBodyAndOverlays (d, i) {
     const target = select(this)
-        , id = target.attr('id')
-        , bodyBounds = d.bodyBounds
-        , headersBounds = d.headersBounds
+    const id = target.attr('id')
+    const bodyBounds = d.bodyBounds
+    const headersBounds = d.headersBounds
 
     sheet(
-      `#${ id } .zambezi-grid-body`
-    , {
-        width: px(bodyBounds.width)
-      , height: px(bodyBounds.height)
+      `#${id} .zambezi-grid-body`,
+      {
+        width: px(bodyBounds.width),
+        height: px(bodyBounds.height)
       }
     )
 
     sheet(
-      `#${ id } .zambezi-grid-body-overlay`
-    , { top: px(bodyBounds.offsetTop) }
+      `#${id} .zambezi-grid-body-overlay`,
+      { top: px(bodyBounds.offsetTop) }
     )
 
     if (!headersBounds) return
 
     sheet(
-      `#${ id } .zambezi-grid-headers-overlay`
-    , { top: px(headersBounds.offsetTop) }
+      `#${id} .zambezi-grid-headers-overlay`,
+      { top: px(headersBounds.offsetTop) }
     )
 
     sheet(
-      `#${ id } .zambezi-grid-overlay`
-    , { top: px(headersBounds.offsetTop) }
+      `#${id} .zambezi-grid-overlay`,
+      { top: px(headersBounds.offsetTop) }
     )
   }
 

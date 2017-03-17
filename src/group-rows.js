@@ -1,48 +1,42 @@
 import { createGroupRowsLayout } from './group-rows-layout'
 import { partial } from 'underscore'
 import { property, negate } from '@zambezi/fun'
-import { rebind } from '@zambezi/d3-utils'
 import { select } from 'd3-selection'
-import { selectionChanged, emptyIfFormat } from '@zambezi/d3-utils'
+import { selectionChanged, emptyIfFormat, rebind } from '@zambezi/d3-utils'
 
 import './group-rows.css'
 
 const isRollupRow = property('row.isRollup')
 
-export function createGroupRows() {
-
+export function createGroupRows () {
   const layout = createGroupRowsLayout()
-      , isRollupChanged = selectionChanged()
-            .key(isRollupRow)
+  const isRollupChanged = selectionChanged().key(isRollupRow)
 
   let cache = null
 
-  function groupRows(s) {
+  function groupRows (s) {
     s.each(groupRowsEach)
   }
 
   return rebind().from(layout, 'groupings')(groupRows)
 
-  function groupRowsEach(d, i) {
-    const target = select(this)
-              .on('data-dirty.group-rows', () => cache = null)
-
+  function groupRowsEach (d, i) {
+    select(this).on('data-dirty.group-rows', () => (cache = null))
     d.dispatcher.on('row-update.group-rows', onRowUpdate)
-
     if (!cache) cache = layout(d.rows || d)
     d.rows = cache
   }
 
-  function onRowUpdate(d, i) {
+  function onRowUpdate (d, i) {
     select(this).select(isRollupChanged)
         .classed('is-rollup-row', isRollupRow)
   }
 }
 
-export function formatRollup(formatter) {
+export function formatRollup (formatter) {
   return partial(emptyIfFormat, negate(property('isRollup')), formatter)
 }
 
-export function formatNonRollup(formatter) {
+export function formatNonRollup (formatter) {
   return partial(emptyIfFormat, property('isRollup'), formatter)
 }

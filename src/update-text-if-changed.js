@@ -4,9 +4,9 @@ import { selectionChanged } from '@zambezi/d3-utils'
 
 const changed = selectionChanged()
 
-export function updateTextIfChanged(d, i) {
+export function updateTextIfChanged (d, i) {
   const format = d.column.format || String
-      , text = functor(format(d.value))
+  const text = functor(format(d.value))
 
   select(this)
       .select(changed.key(text))
