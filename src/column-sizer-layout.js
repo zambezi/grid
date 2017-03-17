@@ -4,34 +4,32 @@ import { property } from '@zambezi/fun'
 const id = property('id')
 
 export function createColumnSizerLayout () {
-  let include,
-    resizeColumnsByDefault = true
+  let include
+  let resizeColumnsByDefault = true
 
   function columnSizerLayout (d) {
-    const colsL = d.columns.left,
-      colsR = d.columns.right,
-      bodyBounds = d.bodyBounds,
-      scrollerWidth = d.scrollerWidth,
-      freeLeft = colsL.measuredWidth,
-      freeRight = bodyBounds.width
-              - colsR.measuredWidth
-              - (bodyBounds.clippedVertical ? scrollerWidth : 0),
+    const colsL = d.columns.left
+    const colsR = d.columns.right
+    const bodyBounds = d.bodyBounds
+    const scrollerWidth = d.scrollerWidth
+    const freeLeft = colsL.measuredWidth
+    const freeRight = bodyBounds.width - colsR.measuredWidth -
+          (bodyBounds.clippedVertical ? scrollerWidth : 0)
 
-      leftPositions = colsL.leafColumns.filter(resizable)
-              .map(layoutWithOffset(0)),
+    const leftPositions = colsL.leafColumns.filter(resizable)
+              .map(layoutWithOffset(0))
 
-      freePositions = d.columns.free.leafColumns
+    const freePositions = d.columns.free.leafColumns
               .filter(resizable)
               .map(
                 layoutWithOffset(freeLeft - d.scroll.left)
-              ).filter(visibleOnly),
-      rightPositions = colsR.leafColumns
+              ).filter(visibleOnly)
+    const rightPositions = colsR.leafColumns
               .filter(resizable)
               .map(
                 layoutWithOffset(
-                  bodyBounds.width
-                - colsR.measuredWidth
-                - (bodyBounds.clippedVertical ? scrollerWidth : 0)
+                  bodyBounds.width - colsR.measuredWidth -
+                      (bodyBounds.clippedVertical ? scrollerWidth : 0)
                 , true
                 )
               )
@@ -70,11 +68,7 @@ export function createColumnSizerLayout () {
 
 function layoutWithOffset (offset, lockRight) {
   return function sizerLayout (d, i) {
-    const left = offset
-          + d.absoluteOffset
-          - 4
-          + (!lockRight ? d.width : 0)
-
+    const left = offset + d.absoluteOffset - 4 + (!lockRight ? d.width : 0)
     return {
       left,
       column: d,
