@@ -10,50 +10,49 @@ import './column-sizers.css'
 
 const appendSizer = appendFromTemplate('<li class="zambezi-grid-resizer"></li>')
 
-export function createColumnSizers() {
+export function createColumnSizers () {
+  const minColumnWidth = 20,
+    minFreeColumnWidth = 30,
+    changed = selectionChanged().key(leftAndNested),
+    columnSizerLayout = createColumnSizerLayout(),
+    api = rebind().from(columnSizerLayout, 'resizeColumnsByDefault')
 
-  const minColumnWidth = 20
-      , minFreeColumnWidth = 30
-      , changed = selectionChanged().key(leftAndNested)
-      , columnSizerLayout = createColumnSizerLayout()
-      , api = rebind().from(columnSizerLayout, 'resizeColumnsByDefault')
+  let resizingSizer,
+    resizingPosition
 
-  let resizingSizer
-    , resizingPosition
-
-  function columnSizers(s) {
+  function columnSizers (s) {
     s.each(columnSizersEach)
   }
 
   return api(columnSizers)
 
-  function columnSizersEach(d, i) {
-    const target = select(this)
-        , bundle = d
-        , componentId = target.attr('id')
-        , columns = bundle.columns
-        , include = {}
-        , resizingId = resizingPosition && resizingPosition.id
-        , positions = columnSizerLayout
+  function columnSizersEach (d, i) {
+    const target = select(this),
+      bundle = d,
+      componentId = target.attr('id'),
+      columns = bundle.columns,
+      include = {},
+      resizingId = resizingPosition && resizingPosition.id,
+      positions = columnSizerLayout
               .include(
                 resizingId && (include[resizingId] = true, include)
-              )(bundle)
-        , list = target
+              )(bundle),
+      list = target
               .select('.zambezi-grid-resizers')
-              .classed('zambezi-grid-overlay', true)
-        , listNode = list.node()
+              .classed('zambezi-grid-overlay', true),
+      listNode = list.node(),
 
-        , sizersUpdate = list.selectAll('.zambezi-grid-resizer').data(positions)
-        , sizersEnter = sizersUpdate.enter().select(appendSizer)
-        , sizersExit = sizersUpdate.exit()
+      sizersUpdate = list.selectAll('.zambezi-grid-resizer').data(positions),
+      sizersEnter = sizersUpdate.enter().select(appendSizer),
+      sizersExit = sizersUpdate.exit()
               .classed('is-recycled', true)
               .on('mousedown.column-sizers', null)
             .transition()
               .duration(3000) // keep them for a few seconds, might be picked
                               // up again soon.
-              .remove()       // ... remove if they haven't.
-        , sizers = sizersUpdate.merge(sizersEnter)
-        , dispatchSettingsChanged = debounce(
+              .remove(),       // ... remove if they haven't.
+      sizers = sizersUpdate.merge(sizersEnter),
+      dispatchSettingsChanged = debounce(
             () => target.dispatch('settings-changed', { bubbles: true })
           , 300
           )
@@ -67,8 +66,7 @@ export function createColumnSizers() {
         .classed('is-nested', isNested)
         .style('left', d => d.left + 'px')
 
-
-    function onSizerMousedown(d, i) {
+    function onSizerMousedown (d, i) {
       resizingSizer = select(this)
           .classed('is-dragging', true)
 
@@ -84,20 +82,20 @@ export function createColumnSizers() {
       select(window).on('mouseup.column-sizers', stopDragging)
     }
 
-    function mouseX() {
+    function mouseX () {
       return mouse(listNode)[0]
     }
 
-    function onMouseDrag() {
-      const x = mouseX()
-          , column = resizingPosition.column
-          , width = resizingPosition.locked == 'right'
+    function onMouseDrag () {
+      const x = mouseX(),
+        column = resizingPosition.column,
+        width = resizingPosition.locked == 'right'
             ? (resizingPosition.startDragX - x)
                 + resizingPosition.originalWidth
-            : x - column.absoluteOffset - resizingPosition.offset
+            : x - column.absoluteOffset - resizingPosition.offset,
 
-          , newWidth = Math.max(width , minColumnWidth)
-          , candidateFreeWidth = findCandidateFreeWidth()
+        newWidth = Math.max(width, minColumnWidth),
+        candidateFreeWidth = findCandidateFreeWidth()
 
       column.manuallyResized = true
 
@@ -107,8 +105,7 @@ export function createColumnSizers() {
       target.dispatch('redraw')
       dispatchSettingsChanged()
 
-      function findCandidateFreeWidth() {
-
+      function findCandidateFreeWidth () {
         const locked = resizingPosition.locked
 
         let freeWidth = bundle.bodyBounds.width - (
@@ -129,12 +126,12 @@ export function createColumnSizers() {
         return freeWidth
       }
 
-      function addMinusSelected(p, c) {
+      function addMinusSelected (p, c) {
         return p + (c.id !== resizingPosition.id ? c.width : 0)
       }
     }
 
-    function stopDragging() {
+    function stopDragging () {
       list.classed('is-dragging', false)
       select(window).on('mousemove.column-sizers', null)
           .on('mouseup.column-sizers', null)
@@ -146,8 +143,7 @@ export function createColumnSizers() {
   }
 }
 
-
-function isNested(d, i) {
+function isNested (d, i) {
   const column = d.column
 
   if (!column.isChild) return false
@@ -157,6 +153,6 @@ function isNested(d, i) {
     : column.childIndex < column.childTotal - 1
 }
 
-function leftAndNested(d) {
+function leftAndNested (d) {
   return d.left + (isNested(d) ? '✓' : '✗')
 }

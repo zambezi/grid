@@ -9,21 +9,20 @@ import './group-rows.css'
 
 const isRollupRow = property('row.isRollup')
 
-export function createGroupRows() {
-
-  const layout = createGroupRowsLayout()
-      , isRollupChanged = selectionChanged()
+export function createGroupRows () {
+  const layout = createGroupRowsLayout(),
+    isRollupChanged = selectionChanged()
             .key(isRollupRow)
 
   let cache = null
 
-  function groupRows(s) {
+  function groupRows (s) {
     s.each(groupRowsEach)
   }
 
   return rebind().from(layout, 'groupings')(groupRows)
 
-  function groupRowsEach(d, i) {
+  function groupRowsEach (d, i) {
     const target = select(this)
               .on('data-dirty.group-rows', () => cache = null)
 
@@ -33,16 +32,16 @@ export function createGroupRows() {
     d.rows = cache
   }
 
-  function onRowUpdate(d, i) {
+  function onRowUpdate (d, i) {
     select(this).select(isRollupChanged)
         .classed('is-rollup-row', isRollupRow)
   }
 }
 
-export function formatRollup(formatter) {
+export function formatRollup (formatter) {
   return partial(emptyIfFormat, negate(property('isRollup')), formatter)
 }
 
-export function formatNonRollup(formatter) {
+export function formatNonRollup (formatter) {
   return partial(emptyIfFormat, property('isRollup'), formatter)
 }

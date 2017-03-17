@@ -7,25 +7,24 @@ import './ensure-size.css'
 
 const appendAnchor = appendIfMissing('div.zambezi-scroll-anchor')
 
-export function createEnsureSize() {
+export function createEnsureSize () {
+  const topChanged = selectionChanged(),
+    leftChanged = selectionChanged()
 
-  const topChanged = selectionChanged()
-      , leftChanged = selectionChanged()
+  let targetHeight,
+    targetWidth
 
-  let targetHeight
-    , targetWidth
-
-  function ensureSize(s) {
+  function ensureSize (s) {
     s.each(ensureSizeEach)
   }
 
-  ensureSize.targetHeight = function(value) {
+  ensureSize.targetHeight = function (value) {
     if (!arguments.length) return targetHeight
     targetHeight = value
     return ensureSize
   }
 
-  ensureSize.targetWidth = function(value) {
+  ensureSize.targetWidth = function (value) {
     if (!arguments.length) return targetWidth
     targetWidth = value
     return ensureSize
@@ -33,11 +32,11 @@ export function createEnsureSize() {
 
   return ensureSize
 
-  function ensureSizeEach(d, i) {
+  function ensureSizeEach (d, i) {
     const anchor = select(this)
-              .select(appendAnchor)
-        , top = px(targetHeight, - 10)
-        , left = px(targetWidth, - 10)
+              .select(appendAnchor),
+      top = px(targetHeight, -10),
+      left = px(targetWidth, -10)
 
     topChanged.key(functor(top || '×'))
     leftChanged.key(functor(left || '×'))
@@ -49,7 +48,7 @@ export function createEnsureSize() {
         .style('left', left)
   }
 
-  function px(value, offset) {
+  function px (value, offset) {
     if (isUndefined(value)) return null
     return value + offset + 'px'
   }

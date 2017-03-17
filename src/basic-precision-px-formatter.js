@@ -1,10 +1,10 @@
 import { format } from 'd3-format'
 import { isUndefined } from 'underscore'
 
-const formatSingleDigitPrecision = format('.1f')
-    , formatInteger = format('.0f')
+const formatSingleDigitPrecision = format('.1f'),
+  formatInteger = format('.0f')
 
-export function basicPrecisionPxFormatter(d) {
+export function basicPrecisionPxFormatter (d) {
   if (isUndefined(d)) return null
 
   const res = d % 1

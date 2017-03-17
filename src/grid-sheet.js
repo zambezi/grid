@@ -5,21 +5,19 @@ import { styleForSelector } from './style-for-selector'
 const styleBySelector = {}
 let sheet
 
-export function createGridSheet() {
-
-  function gridSheet(selector, value) {
+export function createGridSheet () {
+  function gridSheet (selector, value) {
     gridSheet.setStyle(selector, value)
   }
 
-  gridSheet.setStyle = function(selector, values) {
-
+  gridSheet.setStyle = function (selector, values) {
     confirmSheetAndId()
 
     const style = styleFor(selector)
 
     Object.keys(values).forEach(setStyle)
 
-    function setStyle(key) {
+    function setStyle (key) {
       const value = values[key]
       if (style[key] === value) return
       style[key] = value
@@ -27,20 +25,19 @@ export function createGridSheet() {
   }
 
   return gridSheet
-
 }
 
-function confirmSheetAndId() {
+function confirmSheetAndId () {
   sheet || (sheet = createSheet())
 }
 
-function createSheet() {
+function createSheet () {
   return select('head')
             .select(appendIfMissing('style.zambezi-grid-styles'))
               .property('sheet')
 }
 
-function styleFor(fullSelector) {
+function styleFor (fullSelector) {
   let style = styleBySelector[fullSelector]
   if (style) return style
   style = styleForSelector(fullSelector, sheet)

@@ -2,21 +2,20 @@ import { createGridSheet } from './grid-sheet'
 import { pick } from 'underscore'
 import { select } from 'd3-selection'
 
-export function createMeasureGridArea() {
-
+export function createMeasureGridArea () {
   const sheet = createGridSheet()
-  let bounds
-    , bodyBounds
-    , headersBounds
+  let bounds,
+    bodyBounds,
+    headersBounds
 
-  function measureGridArea(s) {
+  function measureGridArea (s) {
     s.on('size-dirty.measure-grid-body', onSizeDirty)
       .each(measureGridAreaEach)
   }
 
   return measureGridArea
 
-  function measureGridAreaEach(d, i) {
+  function measureGridAreaEach (d, i) {
     const target = select(this)
     if (!bounds) measure()
 
@@ -24,7 +23,7 @@ export function createMeasureGridArea() {
     d.bodyBounds = bodyBounds
     d.headersBounds = headersBounds
 
-    function measure() {
+    function measure () {
       measureGrid()
       checkBoundsValid()
       syncStirrupSize()
@@ -32,7 +31,7 @@ export function createMeasureGridArea() {
       measureHeaders()
     }
 
-    function measureGrid() {
+    function measureGrid () {
       bounds = pick(
         target.node().getBoundingClientRect()
       , 'width'
@@ -40,32 +39,32 @@ export function createMeasureGridArea() {
       )
     }
 
-    function syncStirrupSize() {
+    function syncStirrupSize () {
       sheet(
         `#${target.attr('id')} > .zambezi-grid-stirrup`
       , {
-          width: bounds.width + 'px'
-        , height: bounds.height + 'px'
-        }
+        width: bounds.width + 'px',
+        height: bounds.height + 'px'
+      }
       )
     }
 
-    function measureBody() {
-      const body = target.select('.zambezi-grid-body')
-          , offsetTop = body.node().offsetTop
+    function measureBody () {
+      const body = target.select('.zambezi-grid-body'),
+        offsetTop = body.node().offsetTop
 
       bodyBounds = {
-        height: bounds.height - offsetTop
-      , width: bounds.width
-      , offsetTop: offsetTop
+        height: bounds.height - offsetTop,
+        width: bounds.width,
+        offsetTop: offsetTop
       }
     }
 
-    function measureHeaders() {
+    function measureHeaders () {
       const headers = target.select('.zambezi-grid-headers')
-      let headersNode
-        , offsetTop
-        , bounds
+      let headersNode,
+        offsetTop,
+        bounds
 
       if (headers.empty()) return
 
@@ -74,23 +73,22 @@ export function createMeasureGridArea() {
       bounds = headersNode.getBoundingClientRect()
 
       headersBounds = {
-        width: bounds.width
-      , height: bounds.height
-      , offsetTop: offsetTop
+        width: bounds.width,
+        height: bounds.height,
+        offsetTop: offsetTop
       }
     }
 
-    function checkBoundsValid()  {
+    function checkBoundsValid () {
       if (bounds.width == 0 || bounds.height == 0) {
         console.error('Illegal size for grid', bounds, target.node())
       }
     }
   }
 
-  function onSizeDirty() {
+  function onSizeDirty () {
     bounds = null
     bodyBounds = null
     headersBounds = null
   }
-
 }

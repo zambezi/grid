@@ -9,7 +9,7 @@ import { createGroupRows } from './group-rows'
 import { createHeaders } from './headers'
 import { createLayOutBodyAndOverlays } from './lay-out-body-and-overlays'
 import { createMarkRowIndices } from './mark-row-indices'
-import { createMeasureGridArea }  from './measure-grid-area'
+import { createMeasureGridArea } from './measure-grid-area'
 import { createMouseWheel } from './mouse-wheel'
 import { createProcessRowData } from './process-row-data'
 import { createProcessSizeAndClipping } from './process-size-and-clipping'
@@ -27,26 +27,25 @@ import { rebind, redispatch, call, skipWhenHidden, each, redraw, createResize, c
 
 import './grid.css'
 
-export function createGrid() {
-
-  const setupTemplate = createSetupGridTemplate()
-      , ensureColumns = createEnsureColumns()
-      , processRowData = createProcessRowData()
-      , processSizeAndClipping = createProcessSizeAndClipping()
-      , columnDrag = createColumnDrag()
-      , resize = createResize()
-      , unpackNestedRows = createUnpackNestedRows()
-      , columnSizers = createColumnSizers()
-      , coreEvents = createDispatch('draw', 'settings-changed')
-      , groupRows = createGroupRows()
-      , body = createBody()
-      , runExternalComponents = createRunExternalComponents()
-      , runExternalComponentsPre = createRunExternalComponents()
-      , sortRowHeaders = createSortRowHeaders()
-      , serverSideFilterAndSort = createExportServerSideFilterAndSort()
-      , shareDispatcher = createShareDispatcher()
-      , autodirty = createAutoDirty()
-      , redispatcher = redispatch()
+export function createGrid () {
+  const setupTemplate = createSetupGridTemplate(),
+    ensureColumns = createEnsureColumns(),
+    processRowData = createProcessRowData(),
+    processSizeAndClipping = createProcessSizeAndClipping(),
+    columnDrag = createColumnDrag(),
+    resize = createResize(),
+    unpackNestedRows = createUnpackNestedRows(),
+    columnSizers = createColumnSizers(),
+    coreEvents = createDispatch('draw', 'settings-changed'),
+    groupRows = createGroupRows(),
+    body = createBody(),
+    runExternalComponents = createRunExternalComponents(),
+    runExternalComponentsPre = createRunExternalComponents(),
+    sortRowHeaders = createSortRowHeaders(),
+    serverSideFilterAndSort = createExportServerSideFilterAndSort(),
+    shareDispatcher = createShareDispatcher(),
+    autodirty = createAutoDirty(),
+    redispatcher = redispatch()
             .from(coreEvents, 'draw', 'settings-changed')
             .from(sortRowHeaders, 'sort-changed')
             .from(
@@ -60,9 +59,9 @@ export function createGrid() {
             , 'row-exit'
             , 'row-update'
             )
-            .create()
+            .create(),
 
-      , api = rebind()
+    api = rebind()
             .from(body, 'rowChangedKey', 'rowKey')
             .from(columnDrag, 'dragColumnsByDefault', 'acceptColumnDrop')
             .from(columnSizers, 'resizeColumnsByDefault')
@@ -77,9 +76,9 @@ export function createGrid() {
             .from(serverSideFilterAndSort, 'serverSideFilterAndSort')
             .from(setupTemplate, 'template')
             .from(sortRowHeaders, 'sortableByDefault')
-            .from(unpackNestedRows, 'showRowWhenCollapsed')
+            .from(unpackNestedRows, 'showRowWhenCollapsed'),
 
-      , grid = compose(
+    grid = compose(
           call(d => window.timeGrid && console.timeEnd('grid'))
         , call(() => coreEvents.call('draw'))
         , call(s => s.on('settings-changed', () => coreEvents.call('settings-changed')))

@@ -5,20 +5,20 @@ import { selectionChanged, rebind } from '@zambezi/d3-utils'
 
 import './sort-row-headers.css'
 
-const sortAscending = property('sortAscending')
-    , sortDescending = property('sortDescending')
+const sortAscending = property('sortAscending'),
+  sortDescending = property('sortDescending')
 
-export function createSortRowHeaders() {
-  const changed = selectionChanged().key(sortDirection)
-      , dispatch = createDispatch('sort-changed')
+export function createSortRowHeaders () {
+  const changed = selectionChanged().key(sortDirection),
+    dispatch = createDispatch('sort-changed')
 
   let sortableByDefault = true
 
-  function sortRowHeaders(s) {
+  function sortRowHeaders (s) {
     s.each(sortRowHeadersEach)
   }
 
-  sortRowHeaders.sortableByDefault = function(value) {
+  sortRowHeaders.sortableByDefault = function (value) {
     if (!arguments.length) return sortableByDefault
     sortableByDefault = value
     return sortRowHeaders
@@ -26,10 +26,10 @@ export function createSortRowHeaders() {
 
   return rebind().from(dispatch, 'on')(sortRowHeaders)
 
-  function sortRowHeadersEach(d, i) {
-    const layout = d
-        , target = select(this)
-        , dispatcher = d.dispatcher
+  function sortRowHeadersEach (d, i) {
+    const layout = d,
+      target = select(this),
+      dispatcher = d.dispatcher
 
     target.selectAll('.zambezi-grid-headers .zambezi-grid-header')
       .each(updateSortHandlers)
@@ -38,21 +38,21 @@ export function createSortRowHeaders() {
         .classed('is-sort-ascending', sortAscending)
         .classed('is-sort-descending', sortDescending)
 
-    function updateSortHandlers(d, i) {
+    function updateSortHandlers (d, i) {
       select(this).on(
         'click.zambezi-grid-headers'
       , sortable(d) ? onHeaderClick : null
       )
     }
 
-    function onHeaderClick(d, i) {
-      const wasAscending = d.sortAscending
-          , wasDescending = d.sortDescending
+    function onHeaderClick (d, i) {
+      const wasAscending = d.sortAscending,
+        wasDescending = d.sortDescending
 
       layout.columns.forEach(clearColumnSort)
 
       if (wasDescending) d.sortAscending = true
-      else if (!wasAscending)  d.sortDescending = true
+      else if (!wasAscending) d.sortDescending = true
 
       dispatch.call('sort-changed', this, d)
 
@@ -61,7 +61,7 @@ export function createSortRowHeaders() {
           .dispatch('settings-changed')
           .dispatch('redraw')
 
-      function clearColumnSort(d, i) {
+      function clearColumnSort (d, i) {
         d.sortAscending = false
         d.sortDescending = false
         if (d.children) d.children.forEach(clearColumnSort)
@@ -69,18 +69,16 @@ export function createSortRowHeaders() {
     }
   }
 
-  function sortDirection(d) {
-    return  !sortable(d)      ? '-'
-          : d.sortAscending   ? 'A'
-          : d.sortDescending  ? 'D'
+  function sortDirection (d) {
+    return !sortable(d) ? '-'
+          : d.sortAscending ? 'A'
+          : d.sortDescending ? 'D'
           : '×'
   }
 
-  function sortable(d, i) {
+  function sortable (d, i) {
     if ('sortable' in d) return d.sortable
     return sortableByDefault
   }
-
 }
-
 

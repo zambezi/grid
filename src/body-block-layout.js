@@ -1,73 +1,75 @@
-export function createBodyBlockLayout() {
+export function createBodyBlockLayout () {
+  let virtualizeRows = true,
+    virtualizeColumns = true,
+    rowKey
 
-  let virtualizeRows = true
-    , virtualizeColumns = true
-    , rowKey
-
-  function bodyBlockLayout(d) {
-    const scrollerWidth = d.scrollerWidth
-        , bounds = d.bodyBounds
-        , rowHeight = d.rowHeight
-        , rowT = d.rows.top
-        , rowF = d.rows.free
-        , rowB = d.rows.bottom
-        , colL = d.columns.left
-        , colF = d.columns.free
-        , colR = d.columns.right
-        , onlyFreeColumns = !colL.length && !colR.length
-        , clw = colL.measuredWidth
-        , crw = colR.measuredWidth
-        , rth = rowT.measuredHeight
-        , rbh = rowB.measuredHeight
-        , freeR = bounds.clippedVertical ? crw + scrollerWidth : crw
-        , freeB = bounds.clippedHorizontal ? rbh + scrollerWidth : rbh
-        , scrollTop = d.scroll.top
-        , scrollLeft = d.scroll.left
-        , minVisibleFreeRow = Math.floor(scrollTop / rowHeight)
-        , maxVisibleFreeRow = Math.floor(
+  function bodyBlockLayout (d) {
+    const scrollerWidth = d.scrollerWidth,
+      bounds = d.bodyBounds,
+      rowHeight = d.rowHeight,
+      rowT = d.rows.top,
+      rowF = d.rows.free,
+      rowB = d.rows.bottom,
+      colL = d.columns.left,
+      colF = d.columns.free,
+      colR = d.columns.right,
+      onlyFreeColumns = !colL.length && !colR.length,
+      clw = colL.measuredWidth,
+      crw = colR.measuredWidth,
+      rth = rowT.measuredHeight,
+      rbh = rowB.measuredHeight,
+      freeR = bounds.clippedVertical ? crw + scrollerWidth : crw,
+      freeB = bounds.clippedHorizontal ? rbh + scrollerWidth : rbh,
+      scrollTop = d.scroll.top,
+      scrollLeft = d.scroll.left,
+      minVisibleFreeRow = Math.floor(scrollTop / rowHeight),
+      maxVisibleFreeRow = Math.floor(
             (scrollTop + rowF.actualHeight) / rowHeight
-          )
-        , layout = [
+          ),
+      layout = [
+
+          /* eslint-disable */
 
           // class    rows  cols  l     r      w     t     b       h    sV  sH
-          [ 'body-a', rowT, colL ,     ,      ,clw  ,     ,       ,rth     ,   ]
-        , [ 'body-b', rowT, colF ,clw  ,freeR ,     ,     ,       ,rth ,   ,1  ]
-        , [ 'body-c', rowT, colR ,     ,      ,crw  ,     ,       ,rth ,   ,   ]
+          [ 'body-a', rowT, colL ,     ,      ,clw  ,     ,       ,rth     ,   ],
+          [ 'body-b', rowT, colF ,clw  ,freeR ,     ,     ,       ,rth ,   ,1  ],
+          [ 'body-c', rowT, colR ,     ,      ,crw  ,     ,       ,rth ,   ,   ],
 
-        , [ 'body-d', rowF, colL ,     ,      ,clw  ,rth  ,freeB  ,    ,1  ,   ]
-        , [ 'body-e', rowF, colF ,clw  ,freeR ,     ,rth  ,freeB  ,    ,1  ,1  ]
-        , [ 'body-f', rowF, colR ,     ,      ,crw  ,rth  ,freeB  ,    ,1  ,   ]
+          [ 'body-d', rowF, colL ,     ,      ,clw  ,rth  ,freeB  ,    ,1  ,   ],
+          [ 'body-e', rowF, colF ,clw  ,freeR ,     ,rth  ,freeB  ,    ,1  ,1  ],
+          [ 'body-f', rowF, colR ,     ,      ,crw  ,rth  ,freeB  ,    ,1  ,   ],
 
-        , [ 'body-g', rowB, colL ,     ,      ,clw  ,     ,       ,rbh ,   ,   ]
-        , [ 'body-h', rowB, colF ,clw  ,freeR ,     ,     ,       ,rbh ,   ,1  ]
-        , [ 'body-i', rowB, colR ,     ,      ,crw  ,     ,       ,rbh ,   ,   ]
+          [ 'body-g', rowB, colL ,     ,      ,clw  ,     ,       ,rbh ,   ,   ],
+          [ 'body-h', rowB, colF ,clw  ,freeR ,     ,     ,       ,rbh ,   ,1  ],
+          [ 'body-i', rowB, colR ,     ,      ,crw  ,     ,       ,rbh ,   ,   ]
 
-        ].map(buildBlockData)
+          /* eslint-enable */
+
+      ].map(buildBlockData)
 
     layout.minVisibleFreeRow = minVisibleFreeRow
     layout.maxVisibleFreeRow = maxVisibleFreeRow
 
     return layout
 
-    function buildBlockData(config, i) {
+    function buildBlockData (config, i) {
       return buildBlockRows.apply(null, [i].concat(config))
     }
 
-    function buildBlockRows(
+    function buildBlockRows (
         index, className
       , rows, columns
       , l, r, w, t, b, h, sV, sH) {
-
-      const actualHeight = rows.actualHeight
-          , lastRowIndex = rows.length - 1
-          , cullDataRows = sV && virtualizeRows
-          , minRowIndex = cullDataRows ? minVisibleFreeRow : 0
-          , maxRowIndex = cullDataRows ?
+      const actualHeight = rows.actualHeight,
+        lastRowIndex = rows.length - 1,
+        cullDataRows = sV && virtualizeRows,
+        minRowIndex = cullDataRows ? minVisibleFreeRow : 0,
+        maxRowIndex = cullDataRows ?
               Math.min(lastRowIndex, maxVisibleFreeRow)
-            : lastRowIndex
+            : lastRowIndex,
 
-          , visibleLeafColumns = columns.leafColumns.filter(visibleColumns)
-          , block = createCellBlock(rows)
+        visibleLeafColumns = columns.leafColumns.filter(visibleColumns),
+        block = createCellBlock(rows)
 
       block.measuredWidth = columns.measuredWidth
       block.measuredHeight = rows.measuredHeight
@@ -99,12 +101,12 @@ export function createBodyBlockLayout() {
 
       return block
 
-      function createCellBlock(rows) {
+      function createCellBlock (rows) {
         const result = []
 
-        let cells
-          , i = minRowIndex
-          , row
+        let cells,
+          i = minRowIndex,
+          row
 
         if (!columns.length) return result
 
@@ -117,9 +119,9 @@ export function createBodyBlockLayout() {
         return result
       }
 
-      function createCells(row, i, a) {
-        const top = i * rowHeight
-            , cells = visibleLeafColumns.map(valueFromRow)
+      function createCells (row, i, a) {
+        const top = i * rowHeight,
+          cells = visibleLeafColumns.map(valueFromRow)
 
         cells.id = rowKey ? rowKey(row) : i
         cells.index = i
@@ -130,22 +132,21 @@ export function createBodyBlockLayout() {
 
         return cells
 
-        function valueFromRow(column, i, a) {
-
+        function valueFromRow (column, i, a) {
           return {
-            id: column.id
-          , column: column
-          , row: row
-          , value: column.value(row)
-          , isFirst: i == 0
-          , isLast: i + 1 == a.length
+            id: column.id,
+            column: column,
+            row: row,
+            value: column.value(row),
+            isFirst: i == 0,
+            isLast: i + 1 == a.length
           }
         }
       }
 
-      function visibleColumns(c) {
-        let left
-          , right
+      function visibleColumns (c) {
+        let left,
+          right
 
         if (c.hidden) return false
         if (!virtualizeColumns) return true
@@ -160,19 +161,19 @@ export function createBodyBlockLayout() {
     }
   }
 
-  bodyBlockLayout.virtualizeRows = function(value) {
+  bodyBlockLayout.virtualizeRows = function (value) {
     if (!arguments.length) return virtualizeRows
     virtualizeRows = value
     return bodyBlockLayout
   }
 
-  bodyBlockLayout.virtualizeColumns = function(value) {
+  bodyBlockLayout.virtualizeColumns = function (value) {
     if (!arguments.length) return virtualizeColumns
     virtualizeColumns = value
     return bodyBlockLayout
   }
 
-  bodyBlockLayout.rowKey = function(value) {
+  bodyBlockLayout.rowKey = function (value) {
     if (!arguments.length) return rowKey
     rowKey = value
     return bodyBlockLayout
@@ -181,10 +182,10 @@ export function createBodyBlockLayout() {
   return bodyBlockLayout
 }
 
-function orderHash(previous, current) {
+function orderHash (previous, current) {
   return (
     (previous ? previous + '※' : '')
   + current.id
-  + (current.children ? '(' + current.children.reduce(orderHash, '')+ ')' : '')
+  + (current.children ? '(' + current.children.reduce(orderHash, '') + ')' : '')
   )
 }

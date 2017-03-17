@@ -3,16 +3,15 @@ import { defaultTemplate } from './basic-grid-template'
 import { isIE } from './is-ie'
 import { select } from 'd3-selection'
 
-export function createSetupGridTemplate() {
-
+export function createSetupGridTemplate () {
   const appendStirrup = appendIfMissing('div.zambezi-grid-stirrup')
-  let  template = defaultTemplate
+  let template = defaultTemplate
 
-  function setupTemplate(s) {
+  function setupTemplate (s) {
     s.each(setupTemplateEach)
   }
 
-  setupTemplate.template = function(value) {
+  setupTemplate.template = function (value) {
     if (!arguments.length) return template
     template = value
     return setupTemplate
@@ -20,9 +19,9 @@ export function createSetupGridTemplate() {
 
   return setupTemplate
 
-  function setupTemplateEach(d, i) {
-    const target = select(this)
-      , stirrup = target.select('.zambezi-grid-stirrup')
+  function setupTemplateEach (d, i) {
+    const target = select(this),
+      stirrup = target.select('.zambezi-grid-stirrup')
 
     if (stirrup.empty()) {
       target.classed('zambezi-grid', true)

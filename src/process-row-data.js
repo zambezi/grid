@@ -2,23 +2,22 @@ import { nestedRowsFilter } from './nested-rows-filter'
 import { select } from 'd3-selection'
 import { wrap } from './wrap-row'
 
-export function createProcessRowData() {
+export function createProcessRowData () {
+  let cache,
+    filters = [],
+    nestFriendlyFilters,
+    skipRowLocking = false
 
-  let cache
-    , filters = []
-    , nestFriendlyFilters
-    , skipRowLocking = false
-
-  function processRowData(s) {
+  function processRowData (s) {
     s.each(processRowDataEach)
   }
 
-  processRowData.filtersUse = function(filter) {
+  processRowData.filtersUse = function (filter) {
     filters.push(filter)
     return processRowData
   }
 
-  processRowData.filters = function(v) {
+  processRowData.filters = function (v) {
     if (!arguments.length) return filters
     filters = v
     return processRowData
@@ -26,7 +25,7 @@ export function createProcessRowData() {
 
   return processRowData
 
-  function processRowDataEach(d, i) {
+  function processRowDataEach (d, i) {
     nestFriendlyFilters = filters.map(nestedRowsFilter)
     if (!cache) cache = processRows(d, d.serverSideFilterAndSort)
     select(this).on('data-dirty.process-row-data', onDataDirty)
@@ -34,13 +33,13 @@ export function createProcessRowData() {
     d.filters = nestFriendlyFilters
   }
 
-  function processRows(d, skipFilters) {
-    const rows = d.rows || d
-        , rowGroups = group(rows, skipFilters, skipRowLocking, filter)
-        , rowsTop = rowGroups.top
-        , rowsFree = rowGroups.free
-        , rowsBottom = rowGroups.bottom
-        , rowsOut = rowGroups.out
+  function processRows (d, skipFilters) {
+    const rows = d.rows || d,
+      rowGroups = group(rows, skipFilters, skipRowLocking, filter),
+      rowsTop = rowGroups.top,
+      rowsFree = rowGroups.free,
+      rowsBottom = rowGroups.bottom,
+      rowsOut = rowGroups.out
 
     rowsTop.name = 'top'
     rowsFree.name = 'free'
@@ -55,24 +54,24 @@ export function createProcessRowData() {
 
     return result
 
-    function filter(d, i, a) {
+    function filter (d, i, a) {
       if (skipFilters) return true
       return nestFriendlyFilters.every(runFilter)
-      function runFilter(f) {
+      function runFilter (f) {
         return f(d, i, a)
       }
     }
   }
 
-  function onDataDirty() {
+  function onDataDirty () {
     cache = null
   }
 
-  function group(rows, skipFilters, skipLock, filter) {
-    const top = []
-        , bottom = []
-        , free = []
-        , out = []
+  function group (rows, skipFilters, skipLock, filter) {
+    const top = [],
+      bottom = [],
+      free = [],
+      out = []
 
     let freeIndexShift = 0
 
@@ -85,22 +84,21 @@ export function createProcessRowData() {
 
     return { top, free, bottom, out }
 
-    function segregate(originalRow, i) {
+    function segregate (originalRow, i) {
       if (!originalRow) return
 
-      let row = wrap(originalRow) 
-        , locked = row.locked
+      let row = wrap(originalRow),
+        locked = row.locked
 
       if (!skipFilters && !filter(row)) pluck(row, out)
       else if (!skipLock && locked == 'top') pluck(row, top)
       else if (!skipLock && locked == 'bottom') pluck(row, bottom)
       else free[i + freeIndexShift] = row
 
-      function pluck(row, target) {
+      function pluck (row, target) {
         target.push(row)
         freeIndexShift--
       }
     }
   }
-
 }

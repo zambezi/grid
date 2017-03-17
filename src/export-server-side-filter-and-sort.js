@@ -1,12 +1,11 @@
-export function createExportServerSideFilterAndSort() {
-
+export function createExportServerSideFilterAndSort () {
   let serverSideFilterAndSort = false
 
-  function exportServerSideFilterAndSort(s) {
+  function exportServerSideFilterAndSort (s) {
     s.each(exportServerSideFilterAndSortEach)
   }
 
-  exportServerSideFilterAndSort.serverSideFilterAndSort = function(value) {
+  exportServerSideFilterAndSort.serverSideFilterAndSort = function (value) {
     if (!arguments.length) return serverSideFilterAndSort
     serverSideFilterAndSort = value
     return exportServerSideFilterAndSort
@@ -14,7 +13,7 @@ export function createExportServerSideFilterAndSort() {
 
   return exportServerSideFilterAndSort
 
-  function exportServerSideFilterAndSortEach(d, i) {
+  function exportServerSideFilterAndSortEach (d, i) {
     d.serverSideFilterAndSort = serverSideFilterAndSort
   }
 }

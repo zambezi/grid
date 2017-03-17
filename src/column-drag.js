@@ -9,39 +9,38 @@ import './column-drag.css'
 const template = `<li class="zambezi-grid-column-drop-target">
         <div class="zambezi-grid-column-drop-indicator"></div>
         <div class="zambezi-grid-column-drop-indicator-overlay"></div>
-      </li>`
-    , dropWidth = 20
-    , dropCenterTolerance = 3
-    , append = appendFromTemplate(template)
-    , left = pixels('left')
+      </li>`,
+  dropWidth = 20,
+  dropCenterTolerance = 3,
+  append = appendFromTemplate(template),
+  left = pixels('left')
 
-export function createColumnDrag() {
+export function createColumnDrag () {
+  const sheet = createGridSheet(),
+    draggableChanged = selectionChanged(),
+    dropCriteria = [ notDroppingNestedInNested, customCriteria ]
 
-  const sheet = createGridSheet()
-      , draggableChanged = selectionChanged()
-      , dropCriteria = [ notDroppingNestedInNested , customCriteria ]
+  let dragColumnsByDefault = true,
+    columnDragged,
+    acceptColumnDrop,
+    previousParent,
+    columnOriginList,
+    targetParent,
+    targetLocked,
+    targetColumnLeft,
+    targetColumnRight
 
-  let dragColumnsByDefault = true
-    , columnDragged
-    , acceptColumnDrop
-    , previousParent
-    , columnOriginList
-    , targetParent
-    , targetLocked
-    , targetColumnLeft
-    , targetColumnRight
-
-  function columnDrag(s) {
+  function columnDrag (s) {
     s.each(columnDragEach)
   }
 
-  columnDrag.acceptColumnDrop = function(value) {
+  columnDrag.acceptColumnDrop = function (value) {
     if (!arguments.length) return acceptColumnDrop
     acceptColumnDrop = value
     return columnDrag
   }
 
-  columnDrag.dragColumnsByDefault = function(value) {
+  columnDrag.dragColumnsByDefault = function (value) {
     if (!arguments.length) return dragColumnsByDefault
     dragColumnsByDefault = value
     return columnDrag
@@ -49,27 +48,27 @@ export function createColumnDrag() {
 
   return columnDrag
 
-  function columnDragEach(d, i) {
-    const bundle = d
-        , root = select(this).call(setTransitionAnimationListeners)
-        , componentId = root.attr('id')
-        , list = root.select('.zambezi-grid-column-drop')
-              .classed('zambezi-grid-overlay', true)
-        , headers = root.select('.zambezi-grid-headers')
-        , leafHeaders = headers.selectAll('.zambezi-grid-header')
+  function columnDragEach (d, i) {
+    const bundle = d,
+      root = select(this).call(setTransitionAnimationListeners),
+      componentId = root.attr('id'),
+      list = root.select('.zambezi-grid-column-drop')
+              .classed('zambezi-grid-overlay', true),
+      headers = root.select('.zambezi-grid-headers'),
+      leafHeaders = headers.selectAll('.zambezi-grid-header')
               .on('dragstart.column-drag', onDragStart)
               .on('dragend.column-drag', onDragEnd)
             .select(draggableChanged.key(changed))
-              .call(setDraggableProperties)
-        , groupHeaders = headers.selectAll('.zambezi-grid-double-header')
+              .call(setDraggableProperties),
+      groupHeaders = headers.selectAll('.zambezi-grid-double-header')
               .on('dragstart.column-drag', onDragStart)
               .on('dragend.column-drag', onDragEnd)
             .select(draggableChanged)
               .call(setDraggableProperties)
 
-    function onDragStart(d) {
-      const dataTransfer = event.dataTransfer
-          , source = select(this)
+    function onDragStart (d) {
+      const dataTransfer = event.dataTransfer,
+        source = select(this)
 
       columnDragged = d
       previousParent = columnDragged.parentColumn
@@ -84,26 +83,26 @@ export function createColumnDrag() {
 
       event.stopPropagation()
 
-      function setDragStyle() {
+      function setDragStyle () {
         source.classed('is-column-drag-source', true)
         dataTransfer.setDragImage(source.node(), 20, 20)
         requestAnimationFrame(clearDragStyle)
       }
 
-      function clearDragStyle() {
+      function clearDragStyle () {
         source.classed('is-column-drag-source', false)
       }
     }
 
-    function drawOverlay() {
+    function drawOverlay () {
       const targets = list.classed('is-reordering', true)
               .selectAll('.zambezi-grid-column-drop-target')
-              .data(dragTargetLayout(bundle), d => d.id)
+              .data(dragTargetLayout(bundle), d => d.id),
 
-          , targetsEnter = targets.enter()
-              .select(append)
+        targetsEnter = targets.enter()
+              .select(append),
 
-          , merged = targets.merge(targetsEnter)
+        merged = targets.merge(targetsEnter)
                 .on('dragover.column-drag', onDragOver)
                 .on('dragleave.column-drag', clearDropStyles)
                 .on(
@@ -116,8 +115,8 @@ export function createColumnDrag() {
                     , removeColumnFromOrigin
                     , cancelDropNavigation
                   )
-                )
-          , targetsExit = targets.exit()
+                ),
+        targetsExit = targets.exit()
                 .on('dragover.column-drag', null)
                 .on('dragleave.column-drag', null)
                 .on('drop.column-drag', null)
@@ -126,39 +125,39 @@ export function createColumnDrag() {
       targets.merge(targetsEnter).each(clearDropStyles).style('left', left)
     }
 
-    function onDragEnd(d) {
+    function onDragEnd (d) {
       columnDragged = null
       list.classed('is-reordering', false)
     }
 
-    function setDraggableProperties(s) {
+    function setDraggableProperties (s) {
       s.classed('is-draggable', draggable)
         .attr('draggable', draggable)
     }
 
-    function draggable(d) {
+    function draggable (d) {
       return (isUndefined(d.draggable) ? dragColumnsByDefault : d.draggable)
     }
 
-    function changed(d, i) {
+    function changed (d, i) {
       return list.empty() ? '×'
         : (dragColumnsByDefault ? '✓' : '✗') + (draggable(d) ? '✓' : '✗')
     }
 
-    function onDragOver(d, i) {
-      const dropPositionX = mouse(this)[0]
-          , dropSide = dropPositionX - (dropWidth / 2)
-          , dropCenter = Math.abs(dropSide) < dropCenterTolerance
-          , dropLeft = !dropCenter && dropSide < 0
-          , dropRight = !dropCenter && dropSide > 0
+    function onDragOver (d, i) {
+      const dropPositionX = mouse(this)[0],
+        dropSide = dropPositionX - (dropWidth / 2),
+        dropCenter = Math.abs(dropSide) < dropCenterTolerance,
+        dropLeft = !dropCenter && dropSide < 0,
+        dropRight = !dropCenter && dropSide > 0
 
       targetParent =
-          dropLeft    ? d.parentForLeft
-        : dropRight   ? d.parentForRight
+          dropLeft ? d.parentForLeft
+        : dropRight ? d.parentForRight
         : d.parentForCenter
 
       targetLocked =
-          dropLeft  ? d.lockedForLeft
+          dropLeft ? d.lockedForLeft
         : dropRight ? d.lockedForRight
         : d.lockedForCenter
 
@@ -173,7 +172,7 @@ export function createColumnDrag() {
 
       event.preventDefault()
 
-      function isOk(d, i) {
+      function isOk (d, i) {
         return d.call(
           null
         , columnDragged
@@ -185,7 +184,7 @@ export function createColumnDrag() {
       }
     }
 
-    function highlightMovedColumnCells() {
+    function highlightMovedColumnCells () {
       if (!columnDragged) return
 
       const rules = (columnDragged.children || [columnDragged])
@@ -194,74 +193,73 @@ export function createColumnDrag() {
       applyRules(rules.clear)
       requestAnimationFrame(applyRules.bind(null, rules.highlight))
 
-      function applyRules(rules) {
+      function applyRules (rules) {
         Object.keys(rules).forEach(applyRule)
-        function applyRule(key) {
+        function applyRule (key) {
           sheet(key, rules[key])
         }
       }
 
-      function makeRule(rules, column) {
+      function makeRule (rules, column) {
         rules.clear[cellSelector(column)] = {
-          animationName: ''
-        , webkitAnimationName: ''
+          animationName: '',
+          webkitAnimationName: ''
         }
 
         rules.highlight[cellSelector(column)] = {
-          animationName: 'column-dropped'
-        , webkitAnimationName: 'column-dropped'
+          animationName: 'column-dropped',
+          webkitAnimationName: 'column-dropped'
         }
 
         return rules
       }
     }
 
-    function cellSelector(column) {
-      return `#${ componentId } .zambezi-grid-cell.c-${ column.id }`
+    function cellSelector (column) {
+      return `#${componentId} .zambezi-grid-cell.c-${column.id}`
     }
 
-    function removeColumnFromOrigin() {
+    function removeColumnFromOrigin () {
       columnOriginList.splice(columnOriginList.indexOf(columnDragged), 1)
     }
 
-    function cancelDropNavigation() {
+    function cancelDropNavigation () {
       event.preventDefault()
     }
 
-    function dropColumnInDestination() {
-
-      const targetList = targetParent ? targetParent.children : bundle.columns
-          , newIndex  = findTargetDropIndex()
+    function dropColumnInDestination () {
+      const targetList = targetParent ? targetParent.children : bundle.columns,
+        newIndex = findTargetDropIndex()
 
       targetList.splice(newIndex, 0, columnDragged)
       columnDragged.locked = targetLocked
 
-      function findTargetDropIndex() {
-        const columnLeftIndex = findTargetIndex(targetColumnLeft)
-            , targetIndex = ~columnLeftIndex ?
+      function findTargetDropIndex () {
+        const columnLeftIndex = findTargetIndex(targetColumnLeft),
+          targetIndex = ~columnLeftIndex ?
                   columnLeftIndex + 1 : findTargetIndex(targetColumnRight)
 
         return targetIndex
       }
 
-      function findTargetIndex(c) {
+      function findTargetIndex (c) {
         if (!c) return -1
-        if (!targetParent) return targetList
-            .indexOf(c.isChild ? c.parentColumn : c)
+        if (!targetParent) { return targetList
+            .indexOf(c.isChild ? c.parentColumn : c) }
         return targetList.indexOf(c)
       }
     }
 
-    function setTransitionAnimationListeners(s) {
+    function setTransitionAnimationListeners (s) {
       s.on('animationend.column-drag', fromTarget(clearHighlightTransition))
       ;['webkit', 'moz', 'MS', 'o'].forEach(addPrefixListener)
-      function addPrefixListener(prefix) {
+      function addPrefixListener (prefix) {
         s.on(
           prefix + 'AnimationEnd.column-drag.' + componentId
         , clearHighlightTransition
         )
       }
-      function clearHighlightTransition(d, i) {
+      function clearHighlightTransition (d, i) {
         if (this !== s.node()) return
         sheet(
           cellSelector(d.column)
@@ -271,22 +269,22 @@ export function createColumnDrag() {
     }
   }
 
-  function customCriteria() {
+  function customCriteria () {
     if (acceptColumnDrop) return acceptColumnDrop.apply(this, arguments)
     return true
   }
 }
 
-function notDroppingNestedInNested(column, left, right, newParent) {
+function notDroppingNestedInNested (column, left, right, newParent) {
   if (newParent && column.children) return false
   return true
 }
 
-function clearDropStyles(d, i) {
+function clearDropStyles (d, i) {
   select(this).classed('is-accepting', false)
     .classed('is-nested', false)
 }
 
-function pixels(field) {
-  return function px(d, i) { return d[field] + 'px' }
+function pixels (field) {
+  return function px (d, i) { return d[field] + 'px' }
 }

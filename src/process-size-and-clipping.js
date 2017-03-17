@@ -3,19 +3,19 @@ import { isIE } from './is-ie'
 import { isNumber, clone } from 'underscore'
 import { select } from 'd3-selection'
 
-const scrollerWidth = isIE ? 16 : 14
-    , minDefaultColumnWidth = 35
-    , clippingTolerance = 0.5
+const scrollerWidth = isIE ? 16 : 14,
+  minDefaultColumnWidth = 35,
+  clippingTolerance = 0.5
 
-export function createProcessSizeAndClipping() {
-  let scroll = { top: 0, left: 0 }
-    , rowHeight
+export function createProcessSizeAndClipping () {
+  let scroll = { top: 0, left: 0 },
+    rowHeight
 
-  function processSizeAndClipping(s) {
+  function processSizeAndClipping (s) {
     s.each(processSizeAndClippingEach)
   }
 
-  processSizeAndClipping.scroll = function(value) {
+  processSizeAndClipping.scroll = function (value) {
     if (!arguments.length) return scroll
     scroll = value
     return processSizeAndClipping
@@ -23,15 +23,15 @@ export function createProcessSizeAndClipping() {
 
   return processSizeAndClipping
 
-  function processSizeAndClippingEach(d) {
-    let bodyBounds = d.bodyBounds
-      , rows = d.rows
-      , columns = d.columns
-      , clippedVertical
-      , clippedHorizontal
-      , availableFreeHeight
-      , availableFreeWidth
-      , root = select(this)
+  function processSizeAndClippingEach (d) {
+    let bodyBounds = d.bodyBounds,
+      rows = d.rows,
+      columns = d.columns,
+      clippedVertical,
+      clippedHorizontal,
+      availableFreeHeight,
+      availableFreeWidth,
+      root = select(this)
 
     if (!rowHeight) rowHeight = produceRowHeight()
 
@@ -49,7 +49,7 @@ export function createProcessSizeAndClipping() {
     updateBoundsClipping()
     updateRowAndScrollerSize()
 
-    function calculateVerticalClipping() {
+    function calculateVerticalClipping () {
       availableFreeHeight = bodyBounds.height
       availableFreeHeight =
           bodyBounds.height
@@ -58,10 +58,10 @@ export function createProcessSizeAndClipping() {
         - (clippedHorizontal ? scrollerWidth : 0)
 
       clippedVertical = availableFreeHeight
-        - rows.free.measuredHeight <-clippingTolerance
+        - rows.free.measuredHeight < -clippingTolerance
     }
 
-    function calculateHorizontalClipping() {
+    function calculateHorizontalClipping () {
       availableFreeWidth = bodyBounds.width
         - columns.left.measuredWidth
         - columns.right.measuredWidth
@@ -71,15 +71,15 @@ export function createProcessSizeAndClipping() {
         - columns.free.measuredWidth < -clippingTolerance
     }
 
-    function setColumnWidths() {
-      var leafColumns = columns.leafColumns
-        , definedWidths = columns.leafColumns
-              .reduce(findDefinedWidths, { cols: 0, sum: 0 })
-        , availableWidth = bodyBounds.width
+    function setColumnWidths () {
+      var leafColumns = columns.leafColumns,
+        definedWidths = columns.leafColumns
+              .reduce(findDefinedWidths, { cols: 0, sum: 0 }),
+        availableWidth = bodyBounds.width
               - (clippedVertical ? scrollerWidth : 0)
-              - definedWidths.sum
-        , undefinedColumnCount = leafColumns.length - definedWidths.cols
-        , defaultWidth = Math.max(
+              - definedWidths.sum,
+        undefinedColumnCount = leafColumns.length - definedWidths.cols,
+        defaultWidth = Math.max(
             availableWidth / undefinedColumnCount
           , minDefaultColumnWidth
           )
@@ -87,19 +87,19 @@ export function createProcessSizeAndClipping() {
       leafColumns.forEach(updateLeafColumnWidths)
       columns.forEach(updateGroupColumnWidths)
 
-      function updateLeafColumnWidths(column) {
+      function updateLeafColumnWidths (column) {
         if (isNumber(column.width)) return
         column.width = defaultWidth
       }
 
-      function updateGroupColumnWidths(column) {
+      function updateGroupColumnWidths (column) {
         const children = column.children
         if (!children) return
         column.width = children.reduce(sumColumnWidth, 0)
       }
     }
 
-    function validateScroll() {
+    function validateScroll () {
       scroll.top = Math.max(
         0
       , Math.min(
@@ -116,28 +116,28 @@ export function createProcessSizeAndClipping() {
       )
     }
 
-    function measureBlocks() {
+    function measureBlocks () {
       ;[rows.top, rows.bottom, rows.free].forEach(measureBlock)
     }
 
-    function layoutColumnBlocks() {
+    function layoutColumnBlocks () {
       ;[columns.left, columns.right, columns.free]
           .forEach(layOutColumnBlockWithOffset(0))
     }
 
-    function calculateActualSizeForFreeBlocks() {
+    function calculateActualSizeForFreeBlocks () {
       var actualFreeHeight = bodyBounds.height
               - rows.top.measuredHeight
               - rows.bottom.measuredHeight
-              - (clippedHorizontal ? scrollerWidth : 0)
-        , actualFreeWidth =  bodyBounds.width
+              - (clippedHorizontal ? scrollerWidth : 0),
+        actualFreeWidth = bodyBounds.width
               - columns.left.measuredWidth
               - columns.right.measuredWidth
-              - (clippedVertical ? scrollerWidth : 0)
-        , verticalDifference = scroll.top
+              - (clippedVertical ? scrollerWidth : 0),
+        verticalDifference = scroll.top
               + actualFreeHeight
-              - rows.free.measuredHeight
-        , horizontalDifference = scroll.left
+              - rows.free.measuredHeight,
+        horizontalDifference = scroll.left
               + actualFreeWidth
               - columns.free.measuredWidth
 
@@ -152,42 +152,42 @@ export function createProcessSizeAndClipping() {
       rows.bottom.isVerticalShort = verticalDifference > 0
     }
 
-    function updateScroll() {
+    function updateScroll () {
       d.scroll = clone(scroll)
     }
 
-    function produceRowHeight() {
-      const body = root.select('.zambezi-grid-body')
-          , fakeSection = body.append('ul').classed('body-section transient', true)
-          , fakeRow = fakeSection.append('li').classed('zambezi-grid-row', true)
-          , rowStyle = window.getComputedStyle(fakeRow.node(), null)
-          , rowHeight = parseFloat(rowStyle.height)
+    function produceRowHeight () {
+      const body = root.select('.zambezi-grid-body'),
+        fakeSection = body.append('ul').classed('body-section transient', true),
+        fakeRow = fakeSection.append('li').classed('zambezi-grid-row', true),
+        rowStyle = window.getComputedStyle(fakeRow.node(), null),
+        rowHeight = parseFloat(rowStyle.height)
 
       fakeSection.remove()
       return rowHeight
     }
 
-    function updateBoundsClipping() {
+    function updateBoundsClipping () {
       bodyBounds.clippedVertical = clippedVertical
       bodyBounds.clippedHorizontal = clippedHorizontal
     }
 
-    function updateRowAndScrollerSize() {
+    function updateRowAndScrollerSize () {
       d.rowHeight = rowHeight
       d.scrollerWidth = scrollerWidth
     }
 
-    function onGridScroll(d) {
+    function onGridScroll (d) {
       scroll = d
-      scroll.changed =  new Date().toString()
+      scroll.changed = new Date().toString()
     }
   }
 
-  function measureBlock(block) {
+  function measureBlock (block) {
     block.measuredHeight = block.length * rowHeight
   }
 
-  function findDefinedWidths(p, c) {
+  function findDefinedWidths (p, c) {
     if (isNumber(c.width) || c.hidden) {
       p.sum += c.hidden ? 0 : c.width
       p.cols++
@@ -195,18 +195,18 @@ export function createProcessSizeAndClipping() {
     return p
   }
 
-  function sumColumnWidth(p, c) {
+  function sumColumnWidth (p, c) {
     if (c.hidden) return p
     return p + c.width
   }
 
-  function layOutColumnBlockWithOffset(offset) {
-    return function layOutBlockEach(block) {
+  function layOutColumnBlockWithOffset (offset) {
+    return function layOutBlockEach (block) {
       let measuredWidth = 0
       block.forEach(layOutColumn)
       block.measuredWidth = measuredWidth
       block.leafColumns = block.reduce(findLeafColumns, [])
-      function layOutColumn(column) {
+      function layOutColumn (column) {
         if (column.hidden) return
         column.offset = measuredWidth
         column.absoluteOffset = offset + measuredWidth
@@ -217,7 +217,7 @@ export function createProcessSizeAndClipping() {
     }
   }
 
-  function findLeafColumns(p, c) {
+  function findLeafColumns (p, c) {
     return p.concat(c.children || c)
   }
 }
