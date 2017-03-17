@@ -1,8 +1,8 @@
 import { select } from 'd3-selection'
 
-const markTop = markRowIndex('top'),
-  markFree = markRowIndex('free'),
-  markBottom = markRowIndex('bottom')
+const markTop = markRowIndex('top')
+const markFree = markRowIndex('free')
+const markBottom = markRowIndex('bottom')
 
 export function createMarkRowIndices () {
   let done

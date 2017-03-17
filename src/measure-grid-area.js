@@ -4,9 +4,9 @@ import { select } from 'd3-selection'
 
 export function createMeasureGridArea () {
   const sheet = createGridSheet()
-  let bounds,
-    bodyBounds,
-    headersBounds
+  let bounds
+  let bodyBounds
+  let headersBounds
 
   function measureGridArea (s) {
     s.on('size-dirty.measure-grid-body', onSizeDirty)
@@ -50,8 +50,8 @@ export function createMeasureGridArea () {
     }
 
     function measureBody () {
-      const body = target.select('.zambezi-grid-body'),
-        offsetTop = body.node().offsetTop
+      const body = target.select('.zambezi-grid-body')
+      const offsetTop = body.node().offsetTop
 
       bodyBounds = {
         height: bounds.height - offsetTop,
@@ -80,7 +80,7 @@ export function createMeasureGridArea () {
     }
 
     function checkBoundsValid () {
-      if (bounds.width == 0 || bounds.height == 0) {
+      if (bounds.width === 0 || bounds.height === 0) {
         console.error('Illegal size for grid', bounds, target.node())
       }
     }
