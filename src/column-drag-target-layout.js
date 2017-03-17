@@ -9,7 +9,6 @@ export function columnDragTargetLayout(d) {
       , rightBound = d.bodyBounds.width - (d.clippedVertical ? d.scrollerWidth : 0)
       , freeL = d.columns.left.measuredWidth
       , freeR = rightBound - d.columns.right.measuredWidth
-      , positions = []
       , isShort = ~~d.columns.free.measuredWidth < ~~d.columns.free.actualWidth
 
       , positionsLeft = colsL.length
@@ -42,7 +41,6 @@ export function columnDragTargetLayout(d) {
         , columnLeft = leafColumns[i - 1]
         , columnRight = leafColumns[i]
         , lastFreeWhenShort = isFree &&  isShort && isLastInBlock
-        , firstRightWhenShort = isLockedRight && isShort && isFirstInBlock
         , x = (
                 isLastInBlock ?
                 columnLeft.absoluteOffset + columnLeft.width

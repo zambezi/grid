@@ -1,6 +1,6 @@
 {
   "name": "@zambezi/grid",
-  "version": "0.18.2",
+  "version": "0.18.3-selection-changed-leak-fix.1",
   "description": "D3 component for drawing financial grids.",
   "keywords": [
     "d3",

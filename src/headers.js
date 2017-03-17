@@ -22,15 +22,15 @@ const append = appendFromTemplate(
     , offset = pixels('offset')
     , left = pixels('left')
     , right = pixels('right')
-    , columnCellsChanged = selectionChanged()
-          .key(columnChangeKey)
-    , scrollChanged = selectionChanged()
     , scrollLeft = property('scrollLeft')
     , isScrolledLeft = property('cols.isScrolledLeft')
     , isScrolledRight = property('cols.isScrolledRight')
     , isHorizontalShort = property('cols.isHorizontalShort')
 
 export function createHeaders() {
+  const columnCellsChanged = selectionChanged()
+            .key(columnChangeKey)
+      , scrollChanged = selectionChanged()
 
   function headers(s) {
     s.each(headersEach)

@@ -4,6 +4,7 @@ import { selectionChanged } from '@zambezi/d3-utils'
 import { unwrap } from './unwrap-row'
 
 export function createSimpleNestedRowExpanders() {
+
   const changed = selectionChanged()
 
   function simpleNestedRowExpanders(d) {

@@ -9,16 +9,15 @@ const appendDefaultCell = appendFromTemplate(
       + '</span>'
       )
     , appendRow = appendFromTemplate('<li class="zambezi-grid-row"></li>')
-    , changed = selectionChanged()
-    , firstLastChanged = selectionChanged().key(firstAndLast)
-    , indexChanged = selectionChanged().key(d => d.index)
     , id = property('id')
     , isFirst = property('isFirst')
     , isLast = property('isLast')
 
 export function createCells() {
-
-  const dispatcher = createDispatch(
+  const changed = selectionChanged()
+      , firstLastChanged = selectionChanged().key(firstAndLast)
+      , indexChanged = selectionChanged().key(d => d.index)
+      , dispatcher = createDispatch(
           'cell-enter'
         , 'cell-exit'
         , 'cell-update'
@@ -167,12 +166,6 @@ function columnClass(d, i) {
     .classed(d.column.className, !!d.column.className)
 }
 
-function useClass(rowClass) {
-  return function oldClass(c) {
-    return (c ? '' : ' ') +  rowClass
-  }
-}
-
 function top(d) {
   return d.top + 'px'
 }
@@ -199,4 +192,5 @@ function dataKey(rowKey) {
 function firstAndLast(d) {
   return d.isFirst + '★' + d.isLast
 }
+
 

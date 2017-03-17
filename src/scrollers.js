@@ -9,16 +9,16 @@ import { selectionChanged, appendIfMissing } from '@zambezi/d3-utils'
 import './scrollers.css'
 
 
-const verticalScrollChanged = selectionChanged()
-    , horizontalScrollChanged = selectionChanged()
-    , clippingChanged = selectionChanged()
-    , scrollTop = property('scroll.top')
+const scrollTop = property('scroll.top')
     , scrollLeft = property('scroll.left')
     , appendScrollerContent = appendIfMissing('div.scroller-content')
 
 export function createScrollers() {
 
-  const sheet = createGridSheet()
+  const verticalScrollChanged = selectionChanged()
+      , horizontalScrollChanged = selectionChanged()
+      , clippingChanged = selectionChanged()
+      , sheet = createGridSheet()
       , internalDispatcher = createDispatch('consolidate')
       , trackLastUpdate = debounce(() => internalDispatcher.call('consolidate'), 10)
 

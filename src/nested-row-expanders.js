@@ -13,9 +13,9 @@ const collapse = 'is-collapse'
     , classes = [
         collapse, expand, upRight, verticalRight, horizontal, vertical
       ]
-    , changed = selectionChanged()
 
 export function createNestedRowExpanders() {
+  const changed = selectionChanged()
 
   function nestedRowExpanders(d, i) {
 

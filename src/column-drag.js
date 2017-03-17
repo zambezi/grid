@@ -146,9 +146,7 @@ export function createColumnDrag() {
     }
 
     function onDragOver(d, i) {
-      const target = select(this)
-          , position = d
-          , dropPositionX = mouse(this)[0]
+      const dropPositionX = mouse(this)[0]
           , dropSide = dropPositionX - (dropWidth / 2)
           , dropCenter = Math.abs(dropSide) < dropCenterTolerance
           , dropLeft = !dropCenter && dropSide < 0
@@ -279,7 +277,7 @@ export function createColumnDrag() {
   }
 }
 
-function notDroppingNestedInNested(column, left, right, newParent, locked) {
+function notDroppingNestedInNested(column, left, right, newParent) {
   if (newParent && column.children) return false
   return true
 }
