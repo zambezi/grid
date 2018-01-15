@@ -37,6 +37,28 @@ const columns = [
   ...
 ```
 
+#### Column header hints
+
+  You can specify a `hint` string for the label on the column header.
+  If the `hint` field is not provided, the `label` will be used instead, if `label` is not provided, `key` will be used
+  If `hint` is specified as empty string then hint will not be displayed
+
+```javascript
+const columns = [
+  {
+    key: "bid"
+  , label: "Bid Price"
+  , hint: "Bid Price long descripion"
+  },
+  {
+    key: "bidName"
+  , label: "Bid Name"
+  , hint: ""
+  }
+  ...
+```
+
+
 #### Hidden columns
 
 Columns can be hidden or shown using the default column selector.

@@ -1,6 +1,6 @@
 import { functor, property } from '@zambezi/fun'
 import { headerBlockLayout } from './header-block-layout'
-import { isNumber, isString } from 'underscore'
+import { isNumber, isString, isUndefined } from 'underscore'
 import { select } from 'd3-selection'
 import { selectionChanged, appendFromTemplate } from '@zambezi/d3-utils'
 
@@ -75,7 +75,7 @@ export function createHeaders () {
         .style('left', offset)
       .select('.cell-text')
         .text(labelOrKey)
-        .attr('title', labelOrKey)
+        .attr('title', hintOrLabelOrKey)
   }
 
   function updateBlock (s) {
@@ -131,6 +131,10 @@ function scrollLeftDefined (d) {
 
 function labelOrKey (d) {
   return isString(d.label) ? d.label : d.key
+}
+
+function hintOrLabelOrKey (d) {
+  return (isUndefined(d.hint) ? (isString(d.label) ? d.label : d.key) : d.hint)
 }
 
 function children (d) {
